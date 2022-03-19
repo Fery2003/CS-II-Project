@@ -1,5 +1,5 @@
-public class Champions extends MainSkeleton {
-//yf;yifyi;yiyi;fyiflyuifyuiflyuiflyuif
+public class Champions {
+
     String name;
     String type;
     int healthPoints;
