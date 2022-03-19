@@ -1,5 +1,6 @@
 public class Champions {
 
+    int effectDuration;
     String name;
     String type;
     int healthPoints;
