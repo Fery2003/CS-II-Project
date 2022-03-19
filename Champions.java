@@ -53,6 +53,6 @@ public class Champions {
         // x = Math.abs(c2.x - c1.x);
         // y = Math.abs(c2.y - c1.y);
         // return x + y;
-    }
+    // }
 
 }
