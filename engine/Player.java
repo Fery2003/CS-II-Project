@@ -25,8 +25,8 @@ public class Player {
         this.leader = leader;
     }
 
-    public void getTeam() {
-        System.out.println(team);
+    public ArrayList<Champion> getTeam() {
+        return this.team;
     }
 
 }
