@@ -13,6 +13,10 @@ public class Cover {
         int currentHP = (int) (Math.random() * 900) + 100;
     }
 
+    public void test(){
+        
+    }
+
     public int getCurrentHP() {
         return this.currentHP;
     }
