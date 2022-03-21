@@ -22,14 +22,14 @@ public class Ability {
     }
 
     public Ability() { // Empty constructor just in case
-        
+
         this.name = "";
         this.manaCost = 0;
         this.baseCooldown = 0;
         this.castRange = 0;
         // this.castArea = ???;
         this.requiredActionPoints = 0;
-        
+
     }
 
     public String getName() {

@@ -1,11 +1,8 @@
 package model.effects;
 
-public class Shield extends Effect{
+public class Shield extends Effect {
 
-	public Shield(String name, int duration, EffectType type) {
+	public Shield(String name, int duration) {
 		super(name, duration, EffectType.BUFF);
-		}
-
-
-
+	}
 }

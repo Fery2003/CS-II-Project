@@ -4,10 +4,9 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.PriorityQueue;
 
-import model.abilities.Ability;
-import model.abilities.AreaOfEffect;
-import model.world.Champion;
-import model.world.Cover;
+import model.abilities.*;
+import model.effects.*;
+import model.world.*;
 
 public class Game {
 
@@ -50,12 +49,48 @@ public class Game {
         BufferedReader br = new BufferedReader(new FileReader(filePath));
         while (br.readLine() != null) {
             String[] availableAbilitiesEntries = br.readLine().split(",");
+            // Abilities.csv line format:-
+            // Type, name, manaCost, castRange, baseCooldown, AreaOfEffect,
+            // requiredActionsPerTurn, damageAmount/healAmount/effect name,
+            // effect duration (in case the ability is a CrowdControl ability)
             if (!availableAbilitiesEntries[0].equals("CC"))
-                availableAbilities.add(new Ability(availableAbilitiesEntries[1], Integer.parseInt(availableAbilitiesEntries[2]), Integer.parseInt(availableAbilitiesEntries[4]), Integer.parseInt(availableAbilitiesEntries[3]), AreaOfEffect.valueOf(availableAbilitiesEntries[5]), Integer.parseInt(availableAbilitiesEntries[6])));
+                availableAbilities.add(new Ability(availableAbilitiesEntries[1], // name
+                        Integer.parseInt(availableAbilitiesEntries[2]), // manaCost
+                        Integer.parseInt(availableAbilitiesEntries[4]), // baseCooldown
+                        Integer.parseInt(availableAbilitiesEntries[3]), // castRange
+                        AreaOfEffect.valueOf(availableAbilitiesEntries[5]), // AreaOfEffect
+                        Integer.parseInt(availableAbilitiesEntries[6]))); // requiredActionPointsPerTurn
+
             else {
-                availableAbilities.add(new Ability(availableAbilitiesEntries[1], Integer.parseInt(availableAbilitiesEntries[2]), Integer.parseInt(availableAbilitiesEntries[4]), Integer.parseInt(availableAbilitiesEntries[3]), AreaOfEffect.valueOf(availableAbilitiesEntries[5]), Integer.parseInt(availableAbilitiesEntries[6])));
-                // CC duration
+                Effect tempEffect = new Effect(availableAbilitiesEntries[7], // name
+                        Integer.parseInt(availableAbilitiesEntries[8]), // duration
+                        EffectType.valueOf(availableAbilitiesEntries[0])); // type
+
+                availableAbilities.add(new CrowdControlAbility(availableAbilitiesEntries[1], // name
+                        Integer.parseInt(availableAbilitiesEntries[2]), // manaCost
+                        Integer.parseInt(availableAbilitiesEntries[4]), // baseCooldown
+                        Integer.parseInt(availableAbilitiesEntries[3]), // castRange
+                        AreaOfEffect.valueOf(availableAbilitiesEntries[5]), // AreaOfEffect
+                        Integer.parseInt(availableAbilitiesEntries[6]), // requiredActionPointsPerTurn
+                        tempEffect)); // effect applied due to the type (availableAbilitesEntries[0]) being "CC"
             }
+        }
+    }
+
+    public static void loadChampions(String filePath) throws IOException {
+        BufferedReader br = new BufferedReader(new FileReader(filePath));
+        while (br.readLine() != null) {
+            String[] availableChampionsEntries = br.readLine().split(",");
+            // Champions.csv line format:-
+            // Type, name, maxHP, mana, actions, speed, attackRange, attackDamage,
+            // ability1 name, ability2 name, ability3 name
+            availableChampions.add(new Champion(availableChampionsEntries[1], // name
+                    Integer.parseInt(availableChampionsEntries[2]), // maxHP
+                    Integer.parseInt(availableChampionsEntries[3]), // mana
+                    Integer.parseInt(availableChampionsEntries[4]), // actions
+                    Integer.parseInt(availableChampionsEntries[5]), // speed
+                    Integer.parseInt(availableChampionsEntries[6]), // attackRange
+                    Integer.parseInt(availableChampionsEntries[7]))); // attackDamage
         }
     }
 }
