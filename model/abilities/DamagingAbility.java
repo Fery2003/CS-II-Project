@@ -4,8 +4,7 @@ public class DamagingAbility extends Ability {
 
     private int damageAmount; // READ AND WRITE
 
-    public DamagingAbility(String name, int cost, int baseCooldown, int castRange, AreaOfEffect area, int required,
-            int damageAmount) {
+    public DamagingAbility(String name, int cost, int baseCooldown, int castRange, AreaOfEffect area, int required, int damageAmount) {
         super(name, cost, baseCooldown, castRange, area, required);
         this.damageAmount = damageAmount;
     }

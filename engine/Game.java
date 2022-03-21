@@ -2,7 +2,6 @@ package engine;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.PriorityQueue;
 
 import model.abilities.*;
 import model.effects.*;
@@ -37,10 +36,9 @@ public class Game {
     }
 
     private void placeCovers() {
-        for (int i = 0; i <= BOARDWIDTH; i++)
-            for (int j = 0; j <= BOARDHEIGHT; j++) // place cover if not on corners
-                if (!(i == 0 && j == BOARDHEIGHT - 1) || !(i == BOARDWIDTH - 1 && j == 0)
-                        || !(i == BOARDWIDTH - 1 && j == BOARDHEIGHT - 1) || !(i == 0 && j == 0))
+        for (int i = 0; i <= BOARDHEIGHT; i++)
+            for (int j = 0; j <= BOARDWIDTH; j++) // place cover if not on corners
+                if (!(i == 0 && j == BOARDWIDTH - 1) || !(i == BOARDHEIGHT - 1 && j == 0) || !(i == BOARDHEIGHT - 1 && j == BOARDWIDTH - 1) || !(i == 0 && j == 0))
                     if (board[i][j] == null)
                         board[i][j] = new Cover(i, j);
     }
@@ -93,4 +91,40 @@ public class Game {
                     Integer.parseInt(availableChampionsEntries[7]))); // attackDamage
         }
     }
+
+    // #region Getters/Setters
+
+    public Player getFirstPlayer() {
+        return firstPlayer;
+    }
+
+    public Player getSecondPlayer() {
+        return secondPlayer;
+    }
+
+    public boolean isFirstLeaderAbilityUsed() {
+        return firstLeaderAbilityUsed;
+    }
+
+    public boolean isSecondLeaderAbilityUsed() {
+        return secondLeaderAbilityUsed;
+    }
+
+    public Object[][] getBoard() {
+        return board;
+    }
+
+    public static ArrayList<Champion> getAvailableChampions() {
+        return availableChampions;
+    }
+
+    public static ArrayList<Ability> getAvailableAbilities() {
+        return availableAbilities;
+    }
+
+    public PriorityQueue getTurnOrder() {
+        return turnOrder;
+    }
+
+    // #endregion
 }

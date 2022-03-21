@@ -11,6 +11,8 @@ public class Effect {
 		this.type = type;
 	}
 
+	// #region Getters/Setters
+
 	public String getName() {
 		return this.name;
 	}
@@ -27,4 +29,5 @@ public class Effect {
 		return this.type;
 	}
 
+	// #endregion
 }

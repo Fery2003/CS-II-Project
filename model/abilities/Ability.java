@@ -31,6 +31,8 @@ public class Ability {
         this.requiredActionPoints = 0;
 
     }
+    
+    // #region Getters/Setters
 
     public String getName() {
         return this.name;
@@ -63,5 +65,7 @@ public class Ability {
     public AreaOfEffect getCastArea() {
         return this.castArea;
     }
+
+    // #endregion
 
 }
