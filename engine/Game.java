@@ -55,31 +55,31 @@ public class Game {
         BufferedReader br = new BufferedReader(new FileReader(filePath));
 
         while (br.readLine() != null) {
-            String[] availableAbilitiesEntries = br.readLine().split(",");
+            String[] abilitiesLine = br.readLine().split(",");
             
             // Abilities.csv line format:-
             // Type, name, manaCost, castRange, baseCooldown, AreaOfEffect,
             // requiredActionsPerTurn, damageAmount/healAmount/effect name,
             // effect duration (in case the ability is a CrowdControl ability)
 
-            if (!availableAbilitiesEntries[0].equals("CC"))
-                availableAbilities.add(new Ability(availableAbilitiesEntries[1], // name
-                        Integer.parseInt(availableAbilitiesEntries[2]), // manaCost
-                        Integer.parseInt(availableAbilitiesEntries[4]), // baseCooldown
-                        Integer.parseInt(availableAbilitiesEntries[3]), // castRange
-                        AreaOfEffect.valueOf(availableAbilitiesEntries[5]), // AreaOfEffect
-                        Integer.parseInt(availableAbilitiesEntries[6]))); // requiredActionPointsPerTurn
+            if (!abilitiesLine[0].equals("CC"))
+                availableAbilities.add(new Ability(abilitiesLine[1], // name
+                        Integer.parseInt(abilitiesLine[2]), // manaCost
+                        Integer.parseInt(abilitiesLine[4]), // baseCooldown
+                        Integer.parseInt(abilitiesLine[3]), // castRange
+                        AreaOfEffect.valueOf(abilitiesLine[5]), // AreaOfEffect
+                        Integer.parseInt(abilitiesLine[6]))); // requiredActionPointsPerTurn
 
             else
-                availableAbilities.add(new CrowdControlAbility(availableAbilitiesEntries[1], // name
-                        Integer.parseInt(availableAbilitiesEntries[2]), // manaCost
-                        Integer.parseInt(availableAbilitiesEntries[4]), // baseCooldown
-                        Integer.parseInt(availableAbilitiesEntries[3]), // castRange
-                        AreaOfEffect.valueOf(availableAbilitiesEntries[5]), // AreaOfEffect
-                        Integer.parseInt(availableAbilitiesEntries[6]), // requiredActionPointsPerTurn
-                        new Effect(availableAbilitiesEntries[7], // Effect name
-                        Integer.parseInt(availableAbilitiesEntries[8]), // Effect duration
-                        EffectType.valueOf(availableAbilitiesEntries[0])))); // Effect type
+                availableAbilities.add(new CrowdControlAbility(abilitiesLine[1], // name
+                        Integer.parseInt(abilitiesLine[2]), // manaCost
+                        Integer.parseInt(abilitiesLine[4]), // baseCooldown
+                        Integer.parseInt(abilitiesLine[3]), // castRange
+                        AreaOfEffect.valueOf(abilitiesLine[5]), // AreaOfEffect
+                        Integer.parseInt(abilitiesLine[6]), // requiredActionPointsPerTurn
+                        new Effect(abilitiesLine[7], // Effect name
+                        Integer.parseInt(abilitiesLine[8]), // Effect duration
+                        EffectType.valueOf(abilitiesLine[0])))); // Effect type
         }
         br.close();
     }
@@ -88,19 +88,19 @@ public class Game {
         BufferedReader br = new BufferedReader(new FileReader(filePath));
         
         while (br.readLine() != null) {
-            String[] availableChampionsEntries = br.readLine().split(",");
+            String[] championsLine = br.readLine().split(",");
             
             // Champions.csv line format:-
             // Type, name, maxHP, mana, actions, speed, attackRange, attackDamage,
             // ability1 name, ability2 name, ability3 name
 
-            availableChampions.add(new Champion(availableChampionsEntries[1], // name
-                    Integer.parseInt(availableChampionsEntries[2]), // maxHP
-                    Integer.parseInt(availableChampionsEntries[3]), // mana
-                    Integer.parseInt(availableChampionsEntries[4]), // actions
-                    Integer.parseInt(availableChampionsEntries[5]), // speed
-                    Integer.parseInt(availableChampionsEntries[6]), // attackRange
-                    Integer.parseInt(availableChampionsEntries[7]))); // attackDamage
+            availableChampions.add(new Champion(championsLine[1], // name
+                    Integer.parseInt(championsLine[2]), // maxHP
+                    Integer.parseInt(championsLine[3]), // mana
+                    Integer.parseInt(championsLine[4]), // actions
+                    Integer.parseInt(championsLine[5]), // speed
+                    Integer.parseInt(championsLine[6]), // attackRange
+                    Integer.parseInt(championsLine[7]))); // attackDamage
         }
         br.close();
     }
