@@ -49,6 +49,7 @@ public class Game {
 
     public static void loadAbilities(String filePath) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader(filePath));
+        
         while (br.readLine() != null) {
             String[] availableAbilitiesEntries = br.readLine().split(",");
             
