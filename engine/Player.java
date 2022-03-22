@@ -13,6 +13,8 @@ public class Player {
         this.name = name;
     }
 
+    // #region Getters/Setters
+
     public String getName() {
         return this.name;
     }
@@ -28,5 +30,7 @@ public class Player {
     public ArrayList<Champion> getTeam() {
         return this.team;
     }
+
+    // #endregion
 
 }
