@@ -2,3 +2,4 @@
 /GameActionException.class
 /LeaderAbilityAlreadyUsedException.class
 /UnallowedMovementException.class
+/NotEnoughResourcesException.class
