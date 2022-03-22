@@ -49,7 +49,7 @@ public class Game {
 
     public static void loadAbilities(String filePath) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader(filePath));
-        
+
         while (br.readLine() != null) {
             String[] availableAbilitiesEntries = br.readLine().split(",");
             
@@ -77,6 +77,7 @@ public class Game {
                         Integer.parseInt(availableAbilitiesEntries[8]), // Effect duration
                         EffectType.valueOf(availableAbilitiesEntries[0])))); // Effect type
         }
+        br.close();
     }
 
     public static void loadChampions(String filePath) throws IOException {
@@ -97,6 +98,7 @@ public class Game {
                     Integer.parseInt(availableChampionsEntries[6]), // attackRange
                     Integer.parseInt(availableChampionsEntries[7]))); // attackDamage
         }
+        br.close();
     }
 
     // #region Getters/Setters
