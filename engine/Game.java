@@ -35,22 +35,28 @@ public class Game {
             board[i][BOARDHEIGHT - 1] = secondPlayer.getTeam().get(i);
     }
 
-    private void placeCovers() {
-        for (int i = 0; i <= BOARDHEIGHT; i++)
-            for (int j = 0; j <= BOARDWIDTH; j++) // place cover if not on corners
-                if (!(i == 0 && j == BOARDWIDTH - 1) || !(i == BOARDHEIGHT - 1 && j == 0) || !(i == BOARDHEIGHT - 1 && j == BOARDWIDTH - 1) || !(i == 0 && j == 0))
-                    if (board[i][j] == null)
-                        board[i][j] = new Cover(i, j);
+    private void placeCovers() { // place cover randomly unless on corners
+        for (int i = 0; i <= 5; i++) {
+            
+            int x = (int) (Math.random() * 5);
+            int y = (int) (Math.random() * 5);
+
+            if (!(x <= 0 && y >= BOARDHEIGHT - 1) || !(x >= BOARDWIDTH - 1 && y <= 0) || !(x >= BOARDWIDTH - 1 && y >= BOARDHEIGHT - 1) || !(x <= 0 && y <= 0))
+                if (board[x][y] == null)
+                    board[x][y] = new Cover(x, y);
+        }
     }
 
     public static void loadAbilities(String filePath) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader(filePath));
         while (br.readLine() != null) {
             String[] availableAbilitiesEntries = br.readLine().split(",");
+            
             // Abilities.csv line format:-
             // Type, name, manaCost, castRange, baseCooldown, AreaOfEffect,
             // requiredActionsPerTurn, damageAmount/healAmount/effect name,
             // effect duration (in case the ability is a CrowdControl ability)
+
             if (!availableAbilitiesEntries[0].equals("CC"))
                 availableAbilities.add(new Ability(availableAbilitiesEntries[1], // name
                         Integer.parseInt(availableAbilitiesEntries[2]), // manaCost
@@ -59,29 +65,29 @@ public class Game {
                         AreaOfEffect.valueOf(availableAbilitiesEntries[5]), // AreaOfEffect
                         Integer.parseInt(availableAbilitiesEntries[6]))); // requiredActionPointsPerTurn
 
-            else {
-                Effect tempEffect = new Effect(availableAbilitiesEntries[7], // name
-                        Integer.parseInt(availableAbilitiesEntries[8]), // duration
-                        EffectType.valueOf(availableAbilitiesEntries[0])); // type
-
+            else
                 availableAbilities.add(new CrowdControlAbility(availableAbilitiesEntries[1], // name
                         Integer.parseInt(availableAbilitiesEntries[2]), // manaCost
                         Integer.parseInt(availableAbilitiesEntries[4]), // baseCooldown
                         Integer.parseInt(availableAbilitiesEntries[3]), // castRange
                         AreaOfEffect.valueOf(availableAbilitiesEntries[5]), // AreaOfEffect
                         Integer.parseInt(availableAbilitiesEntries[6]), // requiredActionPointsPerTurn
-                        tempEffect)); // effect applied due to the type (availableAbilitesEntries[0]) being "CC"
-            }
+                        new Effect(availableAbilitiesEntries[7], // Effect name
+                        Integer.parseInt(availableAbilitiesEntries[8]), // Effect duration
+                        EffectType.valueOf(availableAbilitiesEntries[0])))); // Effect type
         }
     }
 
     public static void loadChampions(String filePath) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader(filePath));
+        
         while (br.readLine() != null) {
             String[] availableChampionsEntries = br.readLine().split(",");
+            
             // Champions.csv line format:-
             // Type, name, maxHP, mana, actions, speed, attackRange, attackDamage,
             // ability1 name, ability2 name, ability3 name
+
             availableChampions.add(new Champion(availableChampionsEntries[1], // name
                     Integer.parseInt(availableChampionsEntries[2]), // maxHP
                     Integer.parseInt(availableChampionsEntries[3]), // mana
