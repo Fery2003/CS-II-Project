@@ -20,9 +20,13 @@ public class Game {
     private static int BOARDHEIGHT = 5;
     private static int BOARDWIDTH = 5;
 
-    public Game(Player first, Player second) {
+    public Game(Player first, Player second) throws IOException {
         this.firstPlayer = first;
         this.secondPlayer = second;
+        
+        loadAbilities("Abilities.csv");
+        loadChampions("Champions.csv");
+        
         placeChampions();
         placeCovers();
     }
