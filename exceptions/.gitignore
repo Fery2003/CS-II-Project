@@ -1,5 +1,5 @@
 /AbilityUseException.class
 /GameActionException.class
 /LeaderAbilityAlreadyUsedException.class
-/UnallowedMovementException.class
 /NotEnoughResourcesException.class
+/UnallowedMovementException.class

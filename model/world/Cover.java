@@ -10,7 +10,7 @@ public class Cover {
     public Cover(int x, int y) {
         location.x = x;
         location.y = y;
-        int currentHP = (int) (Math.random() * 900) + 99; //1000 being exclusive
+        int currentHP = (int) (Math.random() * 900) + 99; // 1000 being exclusive
     }
 
     public int getCurrentHP() {
