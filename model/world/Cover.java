@@ -18,7 +18,9 @@ public class Cover {
     }
 
     public void setCurrentHP(int hp) { // since it's READ & WRITE not READ ONLY
-        this.currentHP = hp;
+        if(currentHP >= 0) { //Validation check, make sure it's >= 0.
+            this.currentHP = hp;
+        }
     }
 
     public Point getLocation() {
