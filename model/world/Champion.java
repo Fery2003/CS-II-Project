@@ -44,6 +44,8 @@ public class Champion {
         this.condition = Condition.ACTIVE;
     }
 
+    // #region Getters/Setters
+
     public String getName() {
         return this.name;
     }
@@ -119,5 +121,7 @@ public class Champion {
     public void setLocation(Point location) {
         this.location = location;
     }
+
+    // #endregion
 
 }
