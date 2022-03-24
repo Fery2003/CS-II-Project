@@ -2,4 +2,5 @@
 .classpath
 .idea
 lib
+.vscode
 /CS-II-Project.iml
