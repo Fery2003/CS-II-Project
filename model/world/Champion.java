@@ -66,6 +66,10 @@ public class Champion {
         return this.mana;
     }
 
+    public void setMana(int mana) {
+        this.mana = mana;
+    }
+
     public int getMaxActionPointsPerTurn() {
         return this.maxActionPointsPerTurn;
     }
@@ -76,6 +80,10 @@ public class Champion {
 
     public int getCurrentActionPoints() {
         return this.currentActionPoints;
+    }
+
+    public void setCurrentActionPoints(int a) {
+        this.currentActionPoints = a;
     }
 
     public int getAttackRange() {
