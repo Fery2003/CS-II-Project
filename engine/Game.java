@@ -17,8 +17,8 @@ public class Game {
     private static ArrayList<Champion> availableChampions;
     private static ArrayList<Ability> availableAbilities;
     private PriorityQueue turnOrder;
-    private static int BOARDHEIGHT = 5;
-    private static int BOARDWIDTH = 5;
+    private final static int BOARDHEIGHT = 5;
+    private final static int BOARDWIDTH = 5;
 
     public Game(Player first, Player second) throws IOException {
         this.firstPlayer = first;
@@ -137,6 +137,14 @@ public class Game {
 
     public PriorityQueue getTurnOrder() {
         return turnOrder;
+    }
+
+    public int getBoardheight() {
+        return BOARDHEIGHT;
+    }
+
+    public int getBoardwidth() {
+        return BOARDWIDTH;
     }
 
     // #endregion

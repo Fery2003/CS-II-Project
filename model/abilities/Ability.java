@@ -38,7 +38,7 @@ public class Ability {
         return this.name;
     }
 
-    public int getCost() {
+    public int getManaCost() {
         return this.manaCost;
     }
 
