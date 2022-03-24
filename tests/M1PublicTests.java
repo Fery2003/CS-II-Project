@@ -1,4 +1,4 @@
-package finalTests;
+package tests;
 
 import java.awt.*;
 import java.io.BufferedReader;
