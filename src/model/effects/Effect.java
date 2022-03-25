@@ -25,7 +25,7 @@ public class Effect {
 		return this.duration;
 	}
 
-	public EffectType getType() {
+	public EffectType getEffectType() {
 		return this.type;
 	}
 
