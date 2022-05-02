@@ -11,27 +11,14 @@ public class Ability {
     private AreaOfEffect castArea;
 
     public Ability(String name, int cost, int baseCooldown, int castRange, AreaOfEffect area, int required) {
-
         this.name = name;
         this.manaCost = cost;
         this.baseCooldown = baseCooldown;
         this.castRange = castRange;
         this.castArea = area;
         this.requiredActionPoints = required;
-
     }
 
-    public Ability() { // Empty constructor just in case
-
-        this.name = "";
-        this.manaCost = 0;
-        this.baseCooldown = 0;
-        this.castRange = 0;
-        // this.castArea = ???;
-        this.requiredActionPoints = 0;
-
-    }
-    
     // #region Getters/Setters
 
     public String getName() {
@@ -52,6 +39,8 @@ public class Ability {
 
     public void setCurrentCooldown(int c) { // since it's READ & WRITE not READ ONLY
         this.currentCooldown = c;
+        if (c > this.baseCooldown) // if the input cooldown is greater than the base cooldown then set it to the base cooldown
+            this.currentCooldown = baseCooldown;
     }
 
     public int getCastRange() {

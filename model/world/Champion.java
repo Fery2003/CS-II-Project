@@ -18,7 +18,7 @@ public class Champion {
     private int attackDamage;
     private int speed;
     private ArrayList<Ability> abilities;
-    private ArrayList<Effect> appliedEffects; // What would these default attributes be?
+    private ArrayList<Effect> appliedEffects;
     private Condition condition;
     private Point location;
 
@@ -31,17 +31,10 @@ public class Champion {
         this.attackDamage = attackDamage;
         this.speed = speed;
         this.condition = Condition.ACTIVE;
-    }
-
-    public Champion() {
-        this.name = "";
-        this.maxHP = 0;
-        this.mana = 0;
-        this.maxActionPointsPerTurn = 0;
-        this.attackRange = 0;
-        this.attackDamage = 0;
-        this.speed = 0;
-        this.condition = Condition.ACTIVE;
+        this.abilities = new ArrayList<Ability>();
+        this.appliedEffects = new ArrayList<Effect>();
+        this.currentHP = maxHP; // set the current HP to the max HP at the start of the game
+        this.currentActionPoints = maxActions; // set the current action points to the max action points at the start of the game
     }
 
     // #region Getters/Setters
@@ -58,8 +51,13 @@ public class Champion {
         return this.currentHP;
     }
 
-    public void setCurrentHP(int currentHP) {
-        this.currentHP = currentHP;
+    public void setCurrentHP(int hp) {
+        if (hp > this.maxHP)
+            this.currentHP = this.maxHP;
+        else if (hp < 0)
+            this.currentHP = 0;
+        else
+            this.currentHP = hp;
     }
 
     public int getMana() {
@@ -74,8 +72,8 @@ public class Champion {
         return this.maxActionPointsPerTurn;
     }
 
-    public void setMaxActionPointsPerTurn(int maxActionPointsPerTurn) {
-        this.maxActionPointsPerTurn = maxActionPointsPerTurn;
+    public void setMaxActionPointsPerTurn(int m) {
+        this.maxActionPointsPerTurn = m;
     }
 
     public int getCurrentActionPoints() {
@@ -84,6 +82,10 @@ public class Champion {
 
     public void setCurrentActionPoints(int a) {
         this.currentActionPoints = a;
+        if (this.currentActionPoints > this.maxActionPointsPerTurn)
+            this.currentActionPoints = this.maxActionPointsPerTurn;
+        if (this.currentActionPoints < 0)
+            this.currentActionPoints = 0;
     }
 
     public int getAttackRange() {

@@ -1,6 +1,8 @@
-.project
-.classpath
 .idea
-lib
 .vscode
+src
+lib
 /CS-II-Project.iml
+/test_abilities.csv
+/test_champions.csv
+/bin/

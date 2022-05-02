@@ -117,23 +117,13 @@ public class M1PublicTests {
 		try {
 			Enum.valueOf((Class<Enum>) Class.forName(conditionPath), "ACTIVE");
 		} catch (IllegalArgumentException e) {
-			fail("Condition enum can be ACTIVE");
+			fail("Status enum can be ACTIVE");
 		}
 
 		try {
 			Enum.valueOf((Class<Enum>) Class.forName(conditionPath), "INACTIVE");
 		} catch (IllegalArgumentException e) {
-			fail("Condition enum can be INACTIVE");
-		}
-		try {
-			Enum.valueOf((Class<Enum>) Class.forName(conditionPath), "ROOTED");
-		} catch (IllegalArgumentException e) {
-			fail("Condition enum can be ROOTED");
-		}
-		try {
-			Enum.valueOf((Class<Enum>) Class.forName(conditionPath), "ROOTED");
-		} catch (IllegalArgumentException e) {
-			fail("Condition enum can be KNOCKEDOUT");
+			fail("Status enum can be INACTIVE");
 		}
 	}
 
