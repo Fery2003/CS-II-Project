@@ -1,133 +1,137 @@
 package model.world;
 
-import java.awt.Point;
-import java.util.ArrayList;
-
 import model.abilities.Ability;
 import model.effects.Effect;
 
+import java.awt.Point;
+import java.util.ArrayList;
+
 public class Champion {
 
-	private String name;
-	private int mana;
-	private int attackRange;
-	private int attackDamage;
-	private int speed;
-	private int maxHP;
-	private int currentHP;
-	private ArrayList<Ability> abilities;
-	private ArrayList<Effect> appliedEffects;
-	private Point location;
-	private Condition condition;
-	private int maxActionPointsPerTurn;
-	private int currentActionPoints;
+    private String name;
+    private int maxHP;
+    private int currentHP;
+    private int mana;
+    private int maxActionPointsPerTurn;
+    private int currentActionPoints;
+    private int attackRange;
+    private int attackDamage;
+    private int speed;
+    private ArrayList<Ability> abilities;
+    private ArrayList<Effect> appliedEffects;
+    private Condition condition;
+    private Point location;
 
-	public Champion(String name, int maxHP, int mana, int maxActionsPerTurn, int speed, int attackRange,
-			int attackDamage) {
-		this.name = name;
-		this.mana = mana;
-		this.attackRange = attackRange;
-		this.attackDamage = attackDamage;
-		this.speed = speed;
-		this.maxHP = maxHP;
-		this.maxActionPointsPerTurn = maxActionsPerTurn;
-		this.currentActionPoints = maxActionsPerTurn;
-		this.currentHP = maxHP;
-		this.abilities = new ArrayList<Ability>();
-		this.appliedEffects = new ArrayList<Effect>();
-		this.condition = Condition.ACTIVE;
-	}
+    public Champion(String name, int maxHP, int mana, int maxActions, int speed, int attackRange, int attackDamage) {
+        this.name = name;
+        this.maxHP = maxHP;
+        this.mana = mana;
+        this.maxActionPointsPerTurn = maxActions;
+        this.attackRange = attackRange;
+        this.attackDamage = attackDamage;
+        this.speed = speed;
+        this.condition = Condition.ACTIVE;
+        this.abilities = new ArrayList<Ability>();
+        this.appliedEffects = new ArrayList<Effect>();
+        this.currentHP = maxHP; // set the current HP to the max HP at the start of the game
+        this.currentActionPoints = maxActions; // set the current action points to the max action points at the start of the game
+    }
 
-	public int getAttackDamage() {
-		return attackDamage;
-	}
+    // #region Getters/Setters
 
-	public void setAttackDamage(int attackDamage) {
-		this.attackDamage = attackDamage;
-	}
+    public String getName() {
+        return this.name;
+    }
 
-	public int getSpeed() {
-		return speed;
-	}
+    public int getMaxHP() {
+        return this.maxHP;
+    }
 
-	public void setSpeed(int speed) {
-		this.speed = speed;
-	}
+    public int getCurrentHP() {
+        return this.currentHP;
+    }
 
-	public int getCurrentHP() {
-		return currentHP;
-	}
+    public void setCurrentHP(int hp) {
+        if (hp > this.maxHP)
+            this.currentHP = this.maxHP;
+        else if (hp < 0)
+            this.currentHP = 0;
+        else
+            this.currentHP = hp;
+    }
 
-	public void setCurrentHP(int currentHP) {
-		this.currentHP = currentHP;
-		if (currentHP < 0)
-			this.currentHP = 0;
-		else if (currentHP > maxHP)
-			this.currentHP = maxHP;
-	}
+    public int getMana() {
+        return this.mana;
+    }
 
-	public Point getLocation() {
-		return location;
-	}
+    public void setMana(int mana) {
+        this.mana = mana;
+    }
 
-	public void setLocation(Point location) {
-		this.location = location;
-	}
+    public int getMaxActionPointsPerTurn() {
+        return this.maxActionPointsPerTurn;
+    }
 
-	public Condition getCondition() {
-		return condition;
-	}
+    public void setMaxActionPointsPerTurn(int m) {
+        this.maxActionPointsPerTurn = m;
+    }
 
-	public void setCondition(Condition condtion) {
-		this.condition = condtion;
-	}
+    public int getCurrentActionPoints() {
+        return this.currentActionPoints;
+    }
 
-	public int getMaxActionPointsPerTurn() {
-		return maxActionPointsPerTurn;
-	}
+    public void setCurrentActionPoints(int a) {
+        this.currentActionPoints = a;
+        if (this.currentActionPoints > this.maxActionPointsPerTurn)
+            this.currentActionPoints = this.maxActionPointsPerTurn;
+        if (this.currentActionPoints < 0)
+            this.currentActionPoints = 0;
+    }
 
-	public void setMaxActionPointsPerTurn(int maxActionsPerTurn) {
-		this.maxActionPointsPerTurn = maxActionsPerTurn;
-	}
+    public int getAttackRange() {
+        return this.attackRange;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public int getAttackDamage() {
+        return this.attackDamage;
+    }
 
-	public int getMana() {
-		return mana;
-	}
+    public void setAttackDamage(int attackDamage) {
+        this.attackDamage = attackDamage;
+    }
 
-	public void setMana(int mana) {
-		this.mana = mana;
-	}
+    public int getSpeed() {
+        return this.speed;
+    }
 
-	public int getAttackRange() {
-		return attackRange;
-	}
+    public void setSpeed(int speed) {
+        this.speed = speed;
+    }
 
-	public int getMaxHP() {
-		return maxHP;
-	}
+    public ArrayList<Ability> getAbilities() {
+        return this.abilities;
+    }
 
-	public ArrayList<Ability> getAbilities() {
-		return abilities;
-	}
+    public ArrayList<Effect> getAppliedEffects() {
+        return this.appliedEffects;
+    }
 
-	public ArrayList<Effect> getAppliedEffects() {
-		return appliedEffects;
-	}
+    public Condition getCondition() {
+        return this.condition;
+    }
 
-	public int getCurrentActionPoints() {
-		return currentActionPoints;
-	}
+    public void setCondition(Condition condition) {
+        this.condition = condition;
+    }
 
-	public void setCurrentActionPoints(int currentActionPoints) {
-		this.currentActionPoints = currentActionPoints;
-		if (currentActionPoints > maxActionPointsPerTurn)
-			this.currentActionPoints = maxActionPointsPerTurn;
-		if (currentActionPoints < 0)
-			this.currentActionPoints = 0;
-	}
+    public Point getLocation() {
+        return this.location;
+    }
+
+    public void setLocation(Point location) {
+        this.location = location;
+    }
+
+    // #endregion
 
 }

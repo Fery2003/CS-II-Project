@@ -2,56 +2,59 @@ package model.abilities;
 
 public class Ability {
 
-	private String name;
-	private int manaCost;
-	private int requiredActionPoints;
-	private int castRange;
-	private int baseCooldown;
-	private int currentCooldown;
-	private AreaOfEffect castArea;
+    private String name;
+    private int manaCost;
+    private int baseCooldown;
+    private int currentCooldown; // READ AND WRITE
+    private int castRange;
+    private int requiredActionPoints;
+    private AreaOfEffect castArea;
 
-	public Ability(String name, int manaCost, int baseCooldown, int castRange, AreaOfEffect castArea,
-			int actionsRequired) {
-		this.name = name;
-		this.manaCost = manaCost;
-		this.requiredActionPoints = actionsRequired;
-		this.castRange = castRange;
-		this.baseCooldown = baseCooldown;
-		this.castArea = castArea;
-	}
+    public Ability(String name, int cost, int baseCooldown, int castRange, AreaOfEffect area, int required) {
+        this.name = name;
+        this.manaCost = cost;
+        this.baseCooldown = baseCooldown;
+        this.castRange = castRange;
+        this.castArea = area;
+        this.requiredActionPoints = required;
+    }
 
-	public int getCurrentCooldown() {
-		return currentCooldown;
-	}
+    // #region Getters/Setters
 
-	public void setCurrentCooldown(int currentCooldown) {
-		this.currentCooldown = currentCooldown;
-		if (currentCooldown > baseCooldown)
-			this.currentCooldown = baseCooldown;
-	}
+    public String getName() {
+        return this.name;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public int getManaCost() {
+        return this.manaCost;
+    }
 
-	public int getManaCost() {
-		return manaCost;
-	}
+    public int getBaseCooldown() {
+        return this.baseCooldown;
+    }
 
-	public int getRequiredActionPoints() {
-		return requiredActionPoints;
-	}
+    public int getCurrentCooldown() {
+        return this.currentCooldown;
+    }
 
-	public int getCastRange() {
-		return castRange;
-	}
+    public void setCurrentCooldown(int c) { // since it's READ & WRITE not READ ONLY
+        this.currentCooldown = c;
+        if (c > this.baseCooldown) // if the input cooldown is greater than the base cooldown then set it to the base cooldown
+            this.currentCooldown = baseCooldown;
+    }
 
-	public int getBaseCooldown() {
-		return baseCooldown;
-	}
+    public int getCastRange() {
+        return this.castRange;
+    }
 
-	public AreaOfEffect getCastArea() {
-		return castArea;
-	}
+    public int getRequiredActionPoints() {
+        return this.requiredActionPoints;
+    }
+
+    public AreaOfEffect getCastArea() {
+        return this.castArea;
+    }
+
+    // #endregion
 
 }

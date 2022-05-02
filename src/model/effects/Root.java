@@ -2,8 +2,8 @@ package model.effects;
 
 public class Root extends Effect {
 
-	public Root(int d) {
-		super("Root", d, EffectType.DEBUFF);
+	public Root(int duration) {
+		super("Root", duration, EffectType.DEBUFF);
 	}
 
 }

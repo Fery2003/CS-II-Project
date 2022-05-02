@@ -2,8 +2,8 @@ package model.effects;
 
 public class Dodge extends Effect {
 
-	public Dodge(int d) {
-		super("Dodge", d, EffectType.BUFF);
+	public Dodge(int duration) {
+		super("Dodge", duration, EffectType.BUFF);
 	}
 
 }

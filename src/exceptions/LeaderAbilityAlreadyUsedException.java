@@ -3,12 +3,11 @@ package exceptions;
 public class LeaderAbilityAlreadyUsedException extends GameActionException {
 
 	public LeaderAbilityAlreadyUsedException() {
-		// TODO Auto-generated constructor stub
+		super();
 	}
 
-	public LeaderAbilityAlreadyUsedException(String message) {
-		super(message);
-		// TODO Auto-generated constructor stub
+	public LeaderAbilityAlreadyUsedException(String s) {
+		super(s);
 	}
 
 }

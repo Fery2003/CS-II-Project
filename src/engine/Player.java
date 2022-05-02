@@ -1,34 +1,36 @@
 package engine;
 
 import java.util.ArrayList;
-
 import model.world.Champion;
 
 public class Player {
-	
-	private String name;
-	private ArrayList<Champion> team;
-	private Champion leader;
 
-	public Player(String n) {
-		this.name = n;
-		this.team = new ArrayList<Champion>();
-	}
+    private String name;
+    private Champion leader; // READ AND WRITE
+    private ArrayList<Champion> team;
 
-	public Champion getLeader() {
-		return leader;
-	}
+    public Player(String name) {
+        this.name = name;
+        this.team = new ArrayList<Champion>();
+    }
 
-	public void setLeader(Champion leader) {
-		this.leader = leader;
-	}
+    // #region Getters/Setters
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return this.name;
+    }
 
-	public ArrayList<Champion> getTeam() {
-		return team;
-	}
+    public Champion getLeader() {
+        return this.leader;
+    }
 
+    public void setLeader(Champion leader) { // since it's READ & WRITE not READ ONLY
+        this.leader = leader;
+    }
+
+    public ArrayList<Champion> getTeam() {
+        return this.team;
+    }
+
+    // #endregion
 }

@@ -2,8 +2,8 @@ package model.effects;
 
 public class PowerUp extends Effect {
 
-	public PowerUp(int d) {
-		super("PowerUp", d, EffectType.BUFF);
+	public PowerUp(int duration) {
+		super("PowerUp", duration, EffectType.BUFF);
 	}
 
 }

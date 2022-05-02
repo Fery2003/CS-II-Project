@@ -2,20 +2,19 @@ package model.abilities;
 
 public class HealingAbility extends Ability {
 
-	private int healAmount;
+    private int healAmount; // READ AND WRITE
 
-	public HealingAbility(String name, int manaCost, int baseCooldown, int castRange, AreaOfEffect castArea,
-			int actionsRequired, int healAmount) {
-		super(name, manaCost, baseCooldown, castRange, castArea, actionsRequired);
-		this.healAmount = healAmount;
-	}
+    public HealingAbility(String name, int cost, int baseCooldown, int castRange, AreaOfEffect area, int required, int healAmount) {
+        super(name, cost, baseCooldown, castRange, area, required);
+        this.healAmount = healAmount;
+    }
 
-	public int getHealAmount() {
-		return healAmount;
-	}
+    public int getHealAmount() {
+        return this.healAmount;
+    }
 
-	public void setHealAmount(int healAmount) {
-		this.healAmount = healAmount;
-	}
+    public void setHealAmount(int h) { // since it's READ & WRITE not READ ONLY
+        this.healAmount = h;
+    }
 
 }
