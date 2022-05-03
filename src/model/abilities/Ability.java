@@ -1,6 +1,6 @@
 package model.abilities;
 
-public class Ability {
+public abstract class Ability {
 
     private String name;
     private int manaCost;
@@ -18,6 +18,10 @@ public class Ability {
         this.castArea = area;
         this.requiredActionPoints = required;
     }
+
+    // public void execute(ArrayList<Damageable> targets) {
+    //    
+    // }
 
     // #region Getters/Setters
 
