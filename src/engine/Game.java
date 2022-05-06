@@ -34,6 +34,11 @@ public class Game {
         placeCovers();
 
         this.turnOrder = new PriorityQueue(firstPlayer.getTeam().size() + secondPlayer.getTeam().size());
+        
+        for (Champion c : firstPlayer.getTeam()) 
+            this.turnOrder.insert(c.getSpeed());
+        for (Champion c : secondPlayer.getTeam())
+            this.turnOrder.insert(c.getSpeed());
     }
 
     private void placeChampions() {

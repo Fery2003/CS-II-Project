@@ -6,7 +6,7 @@ import model.effects.Effect;
 import java.awt.Point;
 import java.util.ArrayList;
 
-public class Champion implements Damageable {
+public abstract class Champion implements Damageable, Comparable {
 
     private String name;
     private int maxHP;
@@ -35,6 +35,10 @@ public class Champion implements Damageable {
         this.appliedEffects = new ArrayList<Effect>();
         this.currentHP = maxHP; // set the current HP to the max HP at the start of the game
         this.currentActionPoints = maxActions; // set the current action points to the max action points at the start of the game
+    }
+
+    public void useLeaderAbility(ArrayList<Champion> targets) {
+        
     }
 
     // #region Getters/Setters
