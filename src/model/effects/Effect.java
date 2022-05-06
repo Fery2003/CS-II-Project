@@ -1,6 +1,6 @@
 package model.effects;
 
-import exceptions.GameActionException;
+// import exceptions.GameActionException;
 import model.world.Champion;
 
 public abstract class Effect implements Cloneable {
@@ -22,11 +22,11 @@ public abstract class Effect implements Cloneable {
 		}
 	}
 
-	public void apply(Champion c) throws GameActionException {
+	public void apply(Champion c) {
 		c.getAppliedEffects().add(this);
 	}
 
-	public void remove(Champion c) throws GameActionException {
+	public void remove(Champion c) {
 		c.getAppliedEffects().remove(this); // TODO: check for any permenent effects (INCOMPLETE)
 	}
 

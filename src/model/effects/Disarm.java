@@ -1,6 +1,6 @@
 package model.effects;
 
-import exceptions.ChampionDisarmedException;
+// import exceptions.ChampionDisarmedException;
 import model.abilities.*;
 import model.world.Champion;
 
@@ -12,10 +12,10 @@ public class Disarm extends Effect {
 		super("Disarm", duration, EffectType.DEBUFF);
 	}
 
-	public void apply(Champion c) throws ChampionDisarmedException  {
+	public void apply(Champion c) {
 		c.getAppliedEffects().add(this);
 		c.getAbilities().add(Punch);
-		throw new ChampionDisarmedException("You can't use normal attacks while disarmed!");
+		// throw new ChampionDisarmedException("You can't use normal attacks while disarmed!");
 	}
 
 	public void remove(Champion c) {
