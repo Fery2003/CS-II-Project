@@ -1,6 +1,9 @@
 package model.effects;
 
-public class Effect {
+import exceptions.GameActionException;
+import model.world.Champion;
+
+public abstract class Effect implements Cloneable {
 	private String name;
 	private int duration;
 	private EffectType type;
@@ -9,6 +12,22 @@ public class Effect {
 		this.name = name;
 		this.duration = duration;
 		this.type = type;
+	}
+
+	public Effect clone() throws CloneNotSupportedException{
+		try {
+			return (Effect) this.clone();
+		} catch (CloneNotSupportedException e) {
+			return null;
+		}
+	}
+
+	public void apply(Champion c) throws GameActionException {
+		c.getAppliedEffects().add(this);
+	}
+
+	public void remove(Champion c) throws GameActionException {
+		c.getAppliedEffects().remove(this); // TODO: check for any permenent effects (INCOMPLETE)
 	}
 
 	// #region Getters/Setters
