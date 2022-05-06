@@ -16,7 +16,7 @@ public abstract class Effect implements Cloneable {
 
 	public Effect clone() throws CloneNotSupportedException{
 		try {
-			return (Effect) this.clone();
+			return (Effect) super.clone();
 		} catch (CloneNotSupportedException e) {
 			return null;
 		}

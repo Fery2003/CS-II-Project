@@ -1,5 +1,9 @@
 package model.abilities;
 
+import java.util.ArrayList;
+
+import model.world.Damageable;
+
 public class DamagingAbility extends Ability {
 
     private int damageAmount; // READ AND WRITE
@@ -15,5 +19,11 @@ public class DamagingAbility extends Ability {
 
     public void setDamageAmount(int d) { // since it's READ & WRITE not READ ONLY
         this.damageAmount = d;
+    }
+
+    public void execute(ArrayList<Damageable> targets) {
+        for (Damageable target : targets) {
+            target.setCurrentHP(target.getCurrentHP() - this.damageAmount);
+        }
     }
 }

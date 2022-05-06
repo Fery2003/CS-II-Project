@@ -1,5 +1,8 @@
 package model.abilities;
 
+import java.util.ArrayList;
+import model.world.Damageable;
+
 public abstract class Ability {
 
     private String name;
@@ -19,9 +22,9 @@ public abstract class Ability {
         this.requiredActionPoints = required;
     }
 
-    // public void execute(ArrayList<Damageable> targets) {
-    //    
-    // }
+    public void execute(ArrayList<Damageable> targets) {
+            
+    }
 
     // #region Getters/Setters
 
