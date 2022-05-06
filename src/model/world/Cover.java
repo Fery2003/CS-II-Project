@@ -2,7 +2,7 @@ package model.world;
 
 import java.awt.Point;
 
-public class Cover {
+public class Cover implements Damageable {
 
     private int currentHP; // READ AND WRITE
     private Point location = new Point(0, 0);
