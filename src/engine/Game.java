@@ -7,6 +7,7 @@ import java.awt.*;
 import model.abilities.*;
 import model.effects.*;
 import model.world.*;
+import exceptions.*;
 
 public class Game {
 
@@ -34,11 +35,39 @@ public class Game {
         placeCovers();
 
         this.turnOrder = new PriorityQueue(firstPlayer.getTeam().size() + secondPlayer.getTeam().size());
-        
-        for (Champion c : firstPlayer.getTeam()) 
+
+        for (Champion c : firstPlayer.getTeam())
             this.turnOrder.insert(c.getSpeed());
         for (Champion c : secondPlayer.getTeam())
             this.turnOrder.insert(c.getSpeed());
+    }
+
+    public Champion getCurrentChampion() {
+        return (Champion) this.turnOrder.peekMin();
+    }
+
+    public Player checkGameOver() {
+        if (firstPlayer.getTeam().size() == 0)
+            return secondPlayer;
+        else if (secondPlayer.getTeam().size() == 0)
+            return firstPlayer;
+        else
+            return null;
+    }
+
+    // public boolean moveCheck(Champion c, Direction d) {
+
+    // }
+
+    public void move(Direction d) throws UnallowedMovementException {
+        if (getCurrentChampion().getCurrentActionPoints() <= 0)
+            throw new UnallowedMovementException("Not enough action points");
+        if (getCurrentChampion().getCondition() == Condition.INACTIVE || getCurrentChampion().getCondition() == Condition.ROOTED || getCurrentChampion().getCondition() == Condition.KNOCKEDOUT)
+            throw new UnallowedMovementException("Champion is inactive, knocked out or rooted");
+        // check if the cell we wanna move to doesn't contain a champion, cover or isn't out of board bounds
+        // switch (d) { 
+        //     case RIGHT: if (getCurrentChampion().getX() + 1 >= BOARDWIDTH) // TODO: check if the cell we wanna move to isn't out of board bounds
+        // }
     }
 
     private void placeChampions() {
@@ -50,7 +79,8 @@ public class Game {
 
         for (int i = 0; i < secondPlayer.getTeam().size(); i++) {
             board[BOARDHEIGHT - 1][i + 1] = secondPlayer.getTeam().get(i);
-            secondPlayer.getTeam().get(i).setLocation(new Point(BOARDHEIGHT - 1, i + 1)); // x and y are flipped so this makes sense
+            secondPlayer.getTeam().get(i).setLocation(new Point(BOARDHEIGHT - 1, i + 1)); // x and y are flipped so this
+                                                                                          // makes sense
         }
 
     }

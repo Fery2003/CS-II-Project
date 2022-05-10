@@ -22,7 +22,7 @@ public class CrowdControlAbility extends Ability {
         for (Damageable target : targets)
             if (target instanceof Champion) {
                 Champion c = (Champion) target;
-                c.getAppliedEffects().add(this.effect); // should an UnallowedMovementException be added?
+                c.getAppliedEffects().add(this.effect);
             }
     }
 }

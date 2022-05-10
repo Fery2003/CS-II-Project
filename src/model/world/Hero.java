@@ -11,7 +11,7 @@ public class Hero extends Champion {
     }
 
     public void useLeaderAbility(ArrayList<Champion> targets) {
-        for (Champion target : targets) {
+        for (Champion target : targets) { // targets = own team validation check in game class
             for (Effect effect : target.getAppliedEffects()) {
                 if (effect.getType() == EffectType.DEBUFF)
                     effect.remove(target);
@@ -20,9 +20,8 @@ public class Hero extends Champion {
         }
     }
 
-    @Override
     public int compareTo(Object o) {
-        // TODO Auto-generated method stub
+        
         return 0;
     }
 }

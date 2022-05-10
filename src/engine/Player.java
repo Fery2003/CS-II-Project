@@ -31,6 +31,6 @@ public class Player {
     public ArrayList<Champion> getTeam() {
         return this.team;
     }
-
+    
     // #endregion
 }

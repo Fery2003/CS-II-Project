@@ -13,13 +13,13 @@ public class AntiHero extends Champion {
     }
 
     public void useLeaderAbility(ArrayList<Champion> targets) {
-        for (Champion target : targets)
+        for (Champion target : targets) { // && target != leader validation check in game class
                 target.getAppliedEffects().add(new Stun(2));
+        }
     }
 
-    @Override
     public int compareTo(Object o) {
-        // TODO Auto-generated method stub
+        
         return 0;
     }
 

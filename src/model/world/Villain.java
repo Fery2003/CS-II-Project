@@ -11,14 +11,13 @@ public class Villain extends Champion {
     }
 
     public void useLeaderAbility(ArrayList<Champion> targets) {
-        for (Champion target : targets)
+        for (Champion target : targets) // targets = enemy team validation check in game class
             if (target.getCurrentHP() < target.getMaxHP() * (30.0 / 100.0)) {
                 target.setCondition(Condition.KNOCKEDOUT);
                 target.setCurrentHP(0); // set the current HP to 0?
             }
     }
 
-    @Override
     public int compareTo(Object o) {
 
         return 0;
