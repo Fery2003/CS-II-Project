@@ -37,9 +37,7 @@ public abstract class Champion implements Damageable, Comparable {
         this.currentActionPoints = maxActions; // set the current action points to the max action points at the start of the game
     }
 
-    public void useLeaderAbility(ArrayList<Champion> targets) {
-        
-    }
+    abstract public void useLeaderAbility(ArrayList<Champion> targets);
 
     // #region Getters/Setters
 

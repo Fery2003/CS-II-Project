@@ -22,13 +22,9 @@ public abstract class Effect implements Cloneable {
 		}
 	}
 
-	public void apply(Champion c) {
-		c.getAppliedEffects().add(this);
-	}
+	abstract public void apply(Champion c);
 
-	public void remove(Champion c) {
-		c.getAppliedEffects().remove(this); // TODO: check for any permenent effects (INCOMPLETE)
-	}
+	abstract public void remove(Champion c);
 
 	// #region Getters/Setters
 

@@ -22,9 +22,7 @@ public abstract class Ability {
         this.requiredActionPoints = required;
     }
 
-    public void execute(ArrayList<Damageable> targets) {
-            
-    }
+    abstract public void execute(ArrayList<Damageable> targets);
 
     // #region Getters/Setters
 
