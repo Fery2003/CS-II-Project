@@ -2,9 +2,6 @@ package engine;
 
 import java.io.*;
 import java.util.ArrayList;
-
-import javax.swing.text.Position;
-
 import java.awt.*;
 
 import model.abilities.*;
