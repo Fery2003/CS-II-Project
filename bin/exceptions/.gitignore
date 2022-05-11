@@ -1,8 +1,0 @@
-AbilityUseException.class
-ChampionDisarmedException.class
-GameActionException.class
-InvalidTargetException.class
-LeaderAbilityAlreadyUsedException.class
-LeaderNotCurrentException.class
-NotEnoughResourcesException.class
-UnallowedMovementException.class
