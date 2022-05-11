@@ -2,6 +2,9 @@ package engine;
 
 import java.io.*;
 import java.util.ArrayList;
+
+import javax.swing.text.Position;
+
 import java.awt.*;
 
 import model.abilities.*;
@@ -55,51 +58,51 @@ public class Game {
             return null;
     }
 
-    public boolean moveCheck(Champion c, Direction d) throws UnallowedMovementException { // HELPER METHOD
-        switch (d) {
-            case RIGHT:
-                return c.getLocation().getX() + 1 > BOARDWIDTH
-                        || board[(int) c.getLocation().getY()][(int) (c.getLocation().getX() + 1)] != null;
-            case LEFT:
-                return c.getLocation().getX() - 1 < 0
-                        || board[(int) c.getLocation().getY()][(int) (c.getLocation().getX() - 1)] != null;
-            case UP:
-                return c.getLocation().getY() + 1 < 0
-                        || board[(int) (c.getLocation().getY() + 1)][(int) c.getLocation().getX()] != null;
-            case DOWN:
-                return c.getLocation().getY() - 1 > BOARDHEIGHT
-                        || board[(int) (c.getLocation().getY() - 1)][(int) c.getLocation().getX()] != null;
-            default:
-                throw new UnallowedMovementException();
-        }
+    public boolean actionCheck(Champion c, Direction d) throws UnallowedMovementException { // HELPER METHOD
+        if (getCurrentChampion().getCondition() != Condition.ACTIVE) {
+            throw new UnallowedMovementException("Champion is inactive, knocked out or rooted");
+        } else if (getCurrentChampion().getCurrentActionPoints() <= 0)
+            throw new UnallowedMovementException("Not enough action points");
+        else
+            switch (d) {
+                case RIGHT:
+                    return c.getLocation().getX() + 1 < BOARDWIDTH
+                            || board[(int) c.getLocation().getY()][(int) (c.getLocation().getX() + 1)] != null;
+                case LEFT:
+                    return c.getLocation().getX() - 1 >= 0
+                            || board[(int) c.getLocation().getY()][(int) (c.getLocation().getX() - 1)] != null;
+                case UP:
+                    return c.getLocation().getY() + 1 < BOARDHEIGHT
+                            || board[(int) (c.getLocation().getY() + 1)][(int) c.getLocation().getX()] != null;
+                case DOWN:
+                    return c.getLocation().getY() - 1 >= 0
+                            || board[(int) (c.getLocation().getY() - 1)][(int) c.getLocation().getX()] != null;
+                default:
+                    throw new UnallowedMovementException();
+            }
+
     }
 
     public void move(Direction d) throws UnallowedMovementException {
-        if (getCurrentChampion().getCurrentActionPoints() <= 0)
-            throw new UnallowedMovementException("Not enough action points");
-        if (getCurrentChampion().getCondition() == Condition.INACTIVE
-                || getCurrentChampion().getCondition() == Condition.ROOTED
-                || getCurrentChampion().getCondition() == Condition.KNOCKEDOUT)
-            throw new UnallowedMovementException("Champion is inactive, knocked out or rooted");
         // check if the cell we wanna move to doesn't contain a champion, cover or isn't
         // out of board bounds (is an empty cell)
-        if (moveCheck(getCurrentChampion(), d)) {
+
+        // getCurrentChampion().setLocation(new Point((int)
+        // (getCurrentChampion().getLocation().getX()),
+        // (int) (getCurrentChampion().getLocation().getY() - 1)));
+        if (actionCheck(getCurrentChampion(), d)) {
             switch (d) {
                 case RIGHT:
-                    getCurrentChampion().setLocation(new Point((int) (getCurrentChampion().getLocation().getX() + 1),
-                            (int) (getCurrentChampion().getLocation().getY())));
+                    getCurrentChampion().getLocation().x++;
                     break;
                 case LEFT:
-                    getCurrentChampion().setLocation(new Point((int) (getCurrentChampion().getLocation().getX() - 1),
-                            (int) (getCurrentChampion().getLocation().getY())));
+                    getCurrentChampion().getLocation().x--;
                     break;
                 case UP:
-                    getCurrentChampion().setLocation(new Point((int) (getCurrentChampion().getLocation().getX()),
-                            (int) (getCurrentChampion().getLocation().getY() + 1)));
+                    getCurrentChampion().getLocation().y++;
                     break;
                 case DOWN:
-                    getCurrentChampion().setLocation(new Point((int) (getCurrentChampion().getLocation().getX()),
-                            (int) (getCurrentChampion().getLocation().getY() - 1)));
+                    getCurrentChampion().getLocation().y--;
                     break;
                 default:
             }
@@ -108,14 +111,20 @@ public class Game {
             throw new UnallowedMovementException();
     }
 
-    // disarmed, rooted, knocked out, inactive, stunned, out of action points, out of range, attacking opposite type
-    public void attack(Direction d) throws ChampionDisarmedException, InvalidTargetException, NotEnoughResourcesException {
-        if (getCurrentChampion().getCurrentActionPoints() <= 1) 
-            throw new NotEnoughResourcesException("Not enough action points");
-        if (getCurrentChampion().getCondition() == Condition.INACTIVE || getCurrentChampion().getCondition() == Condition.KNOCKEDOUT)
+    // disarmed, rooted, knocked out, inactive, stunned, out of action points, out
+    // of range, attacking opposite type
+    public void attack(Direction d)
+            throws ChampionDisarmedException, InvalidTargetException, NotEnoughResourcesException {
+
+        if (getCurrentChampion().getCondition() == Condition.INACTIVE
+                || getCurrentChampion().getCondition() == Condition.KNOCKEDOUT)
             throw new ChampionDisarmedException("Champion is inactive or knocked out"); // TODO: no exception?
-        // if (getCurrentChampion().getAppliedEffects().contains())
-        //     throw new ChampionDisarmedException("Champion is disarmed");
+        if (getCurrentChampion().getCurrentActionPoints() <= 1)
+            throw new NotEnoughResourcesException("Not enough action points");
+        for (Effect effect : getCurrentChampion().getAppliedEffects())
+                if (effect instanceof Disarm)
+                    throw new ChampionDisarmedException("Champion is disarmed");
+                    
     }
 
     private void placeChampions() {
