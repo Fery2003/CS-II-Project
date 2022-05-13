@@ -35,7 +35,7 @@ public class PriorityQueue {
 		return (nItems == maxSize);
 	}
 
-	public Comparable peekMin() { // returns the first element (most speed)
+	public Comparable peekMin() { // returns the first element
 		return elements[nItems - 1];
 	}
 

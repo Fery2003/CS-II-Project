@@ -14,13 +14,15 @@ public class AntiHero extends Champion {
 
     public void useLeaderAbility(ArrayList<Champion> targets) {
         for (Champion target : targets) { // && target != leader validation check in game class
-                target.getAppliedEffects().add(new Stun(2));
+            target.getAppliedEffects().add(new Stun(2));
         }
     }
 
     public int compareTo(Object o) {
-        
-        return 0;
+        if (o instanceof AntiHero)
+            return 0;
+        else if (o instanceof Villain || o instanceof Hero)
+            return 1;
+        return -1; // o instanceof Cover
     }
-
 }

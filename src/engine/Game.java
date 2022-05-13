@@ -55,7 +55,7 @@ public class Game {
             return null;
     }
 
-    public boolean actionCheck(Champion c, Direction d) throws UnallowedMovementException { // HELPER METHOD
+    public boolean moveCheck(Champion c, Direction d) throws UnallowedMovementException { // HELPER METHOD
         if (getCurrentChampion().getCondition() != Condition.ACTIVE) {
             throw new UnallowedMovementException("Champion is inactive, knocked out or rooted");
         } else if (getCurrentChampion().getCurrentActionPoints() <= 0)
@@ -63,21 +63,93 @@ public class Game {
         else
             switch (d) {
                 case RIGHT:
-                    return c.getLocation().getX() + 1 < BOARDWIDTH
-                            || board[(int) c.getLocation().getY()][(int) (c.getLocation().getX() + 1)] != null;
+                    return c.getLocation().x + 1 < BOARDWIDTH
+                            || board[(int) c.getLocation().y][(int) (c.getLocation().x + 1)] != null;
                 case LEFT:
-                    return c.getLocation().getX() - 1 >= 0
-                            || board[(int) c.getLocation().getY()][(int) (c.getLocation().getX() - 1)] != null;
+                    return c.getLocation().x - 1 >= 0
+                            || board[(int) c.getLocation().y][(int) (c.getLocation().x - 1)] != null;
                 case UP:
-                    return c.getLocation().getY() + 1 < BOARDHEIGHT
-                            || board[(int) (c.getLocation().getY() + 1)][(int) c.getLocation().getX()] != null;
+                    return c.getLocation().y + 1 < BOARDHEIGHT
+                            || board[(int) (c.getLocation().y + 1)][(int) c.getLocation().x] != null;
                 case DOWN:
-                    return c.getLocation().getY() - 1 >= 0
-                            || board[(int) (c.getLocation().getY() - 1)][(int) c.getLocation().getX()] != null;
+                    return c.getLocation().y - 1 >= 0
+                            || board[(int) (c.getLocation().y - 1)][(int) c.getLocation().x] != null;
                 default:
                     throw new UnallowedMovementException();
             }
 
+    }
+
+    public Damageable attackCheck(Champion c, Direction d) throws InvalidTargetException, ChampionDisarmedException, NotEnoughResourcesException { // HELPER METHOD
+        Damageable tempDamageable = null;
+        for (Effect effect : c.getAppliedEffects())
+            if (effect instanceof Disarm)
+                throw new ChampionDisarmedException("Champion is disarmed");
+        if (c.getCondition() != Condition.ACTIVE)
+            throw new InvalidTargetException("Champion is inactive, knocked out or rooted");
+        else if (c.getCurrentActionPoints() <= 1)
+            throw new InvalidTargetException("Not enough action points");
+        else
+            switch (d) {
+                case RIGHT:
+                    for (int i = 1; i <= c.getAttackRange(); i++)
+                        if (c.getLocation().x + i < BOARDWIDTH)
+                            if (board[c.getLocation().y][(int) (c.getLocation().x + i)] != null) {
+                                tempDamageable = (Damageable) board[(int) c.getLocation().y][(int) (c.getLocation().x + i)];
+                                break;
+                            } else
+                                continue;
+                        else // target not found
+                            return tempDamageable;
+                    if ((firstPlayer.getTeam().contains(tempDamageable) && firstPlayer.getTeam().contains(c)) || (secondPlayer.getTeam().contains(tempDamageable) && secondPlayer.getTeam().contains(c)))
+                        throw new InvalidTargetException("Champion is on the same team");
+                    else
+                        return tempDamageable;
+                case LEFT:
+                    for (int i = 1; i <= c.getAttackRange(); i++)
+                        if (c.getLocation().x - i < BOARDWIDTH)
+                            if (board[c.getLocation().y][(int) (c.getLocation().x - i)] != null) {
+                                tempDamageable = (Damageable) board[(int) c.getLocation().y][(int) (c.getLocation().x - i)];
+                                break;
+                            } else
+                                continue;
+                        else // target not found
+                            return tempDamageable;
+                    if ((firstPlayer.getTeam().contains(tempDamageable) && firstPlayer.getTeam().contains(c)) || (secondPlayer.getTeam().contains(tempDamageable) && secondPlayer.getTeam().contains(c)))
+                        throw new InvalidTargetException("Champion is on the same team");
+                    else
+                        return tempDamageable;
+                case UP:
+                    for (int i = 1; i <= c.getAttackRange(); i++)
+                        if (c.getLocation().y - i < BOARDHEIGHT)
+                            if (board[c.getLocation().y - i][(int) (c.getLocation().x)] != null) {
+                                tempDamageable = (Damageable) board[(int) c.getLocation().y - i][(int) (c.getLocation().x)];
+                                break;
+                            } else
+                                continue;
+                        else // target not found
+                            return tempDamageable;
+                    if ((firstPlayer.getTeam().contains(tempDamageable) && firstPlayer.getTeam().contains(c)) || (secondPlayer.getTeam().contains(tempDamageable) && secondPlayer.getTeam().contains(c)))
+                        throw new InvalidTargetException("Champion is on the same team");
+                    else
+                        return tempDamageable;
+                case DOWN:
+                    for (int i = 1; i <= c.getAttackRange(); i++)
+                        if (c.getLocation().y - i < BOARDHEIGHT)
+                            if (board[c.getLocation().y - i][(int) (c.getLocation().x)] != null) {
+                                tempDamageable = (Damageable) board[(int) c.getLocation().y - i][(int) (c.getLocation().x)];
+                                break;
+                            } else
+                                continue;
+                        else // target not found
+                            return tempDamageable;
+                    if ((firstPlayer.getTeam().contains(tempDamageable) && firstPlayer.getTeam().contains(c)) || (secondPlayer.getTeam().contains(tempDamageable) && secondPlayer.getTeam().contains(c)))
+                        throw new InvalidTargetException("Champion is on the same team");
+                    else
+                        return tempDamageable;
+                default:
+            }
+        return tempDamageable;
     }
 
     public void move(Direction d) throws UnallowedMovementException {
@@ -85,9 +157,9 @@ public class Game {
         // out of board bounds (is an empty cell)
 
         // getCurrentChampion().setLocation(new Point((int)
-        // (getCurrentChampion().getLocation().getX()),
-        // (int) (getCurrentChampion().getLocation().getY() - 1)));
-        if (actionCheck(getCurrentChampion(), d)) {
+        // (getCurrentChampion().getLocation().x),
+        // (int) (getCurrentChampion().getLocation().y - 1)));
+        if (moveCheck(getCurrentChampion(), d)) {
             switch (d) {
                 case RIGHT:
                     getCurrentChampion().getLocation().x++;
@@ -108,20 +180,16 @@ public class Game {
             throw new UnallowedMovementException();
     }
 
-    // disarmed, rooted, knocked out, inactive, stunned, out of action points, out
-    // of range, attacking opposite type
-    public void attack(Direction d)
-            throws ChampionDisarmedException, InvalidTargetException, NotEnoughResourcesException {
-
-        if (getCurrentChampion().getCondition() == Condition.INACTIVE
-                || getCurrentChampion().getCondition() == Condition.KNOCKEDOUT)
-            throw new ChampionDisarmedException("Champion is inactive or knocked out"); // TODO: no exception?
-        if (getCurrentChampion().getCurrentActionPoints() <= 1)
-            throw new NotEnoughResourcesException("Not enough action points");
-        for (Effect effect : getCurrentChampion().getAppliedEffects())
-                if (effect instanceof Disarm)
-                    throw new ChampionDisarmedException("Champion is disarmed");
-                    
+    public void attack(Direction d) throws ChampionDisarmedException, InvalidTargetException, NotEnoughResourcesException {
+        Damageable tempDamageable = attackCheck(getCurrentChampion(), d);
+        
+        if (tempDamageable != null)
+            if (((((Comparable) tempDamageable).compareTo(getCurrentChampion()))) <= 0)
+                tempDamageable.setCurrentHP(tempDamageable.getCurrentHP() - getCurrentChampion().getAttackDamage());
+            else if (((((Comparable) tempDamageable).compareTo(getCurrentChampion()))) > 0)
+                tempDamageable.setCurrentHP((int) (tempDamageable.getCurrentHP() - (getCurrentChampion().getAttackDamage() * 1.5)));
+        
+        getCurrentChampion().setCurrentActionPoints(getCurrentChampion().getCurrentActionPoints() - 2);
     }
 
     private void placeChampions() {

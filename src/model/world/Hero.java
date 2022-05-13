@@ -21,7 +21,10 @@ public class Hero extends Champion {
     }
 
     public int compareTo(Object o) {
-        
-        return 0;
+        if (o instanceof Hero)
+            return 0;
+        else if (o instanceof Villain || o instanceof AntiHero)
+            return 1;
+        return -1; // o instanceof Cover
     }
 }
