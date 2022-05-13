@@ -1,5 +1,6 @@
 package engine;
 
+@SuppressWarnings("all")
 public class PriorityQueue {
 
 	private Comparable[] elements;
@@ -35,7 +36,7 @@ public class PriorityQueue {
 		return (nItems == maxSize);
 	}
 
-	public Comparable peekMin() { // returns the first element
+	public Comparable peekMin() { // returns the last element
 		return elements[nItems - 1];
 	}
 

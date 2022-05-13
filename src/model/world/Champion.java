@@ -6,6 +6,7 @@ import model.effects.Effect;
 import java.awt.Point;
 import java.util.ArrayList;
 
+@SuppressWarnings("all")
 public abstract class Champion implements Damageable, Comparable {
 
     private String name;
@@ -38,6 +39,15 @@ public abstract class Champion implements Damageable, Comparable {
     }
 
     abstract public void useLeaderAbility(ArrayList<Champion> targets);
+
+    public int compareTo(Object o) {
+        if (((Champion) o).getSpeed() < this.getSpeed())
+            return 1;
+        else if (((Champion) o).getSpeed() > this.getSpeed())
+            return -1;
+        else
+            return 0;
+    }
 
     // #region Getters/Setters
 
