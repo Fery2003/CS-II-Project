@@ -41,12 +41,12 @@ public abstract class Champion implements Damageable, Comparable {
     abstract public void useLeaderAbility(ArrayList<Champion> targets);
 
     public int compareTo(Object o) {
-        if (((Champion) o).getSpeed() < this.getSpeed())
+        if (((Champion) o).getSpeed() > this.getSpeed())
             return 1;
-        else if (((Champion) o).getSpeed() > this.getSpeed())
+        else if (((Champion) o).getSpeed() < this.getSpeed())
             return -1;
         else
-            return 0;
+            return this.getName().compareTo(((Champion) o).getName());
     }
 
     // #region Getters/Setters

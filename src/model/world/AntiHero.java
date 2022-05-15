@@ -18,7 +18,7 @@ public class AntiHero extends Champion {
         }
     }
 
-    public int compareTo(Object o) {
+    public int isOppositeType(Object o) {
         if (o instanceof AntiHero)
             return 0;
         else if (o instanceof Villain || o instanceof Hero)
