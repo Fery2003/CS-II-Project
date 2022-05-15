@@ -6,20 +6,19 @@ import model.world.Champion;
 
 public class Disarm extends Effect {
 
+	private DamagingAbility punchAbility = new DamagingAbility("Punch", 0, 1, 1, AreaOfEffect.SINGLETARGET, 1, 50);
+	
 	public Disarm(int duration) {
 		super("Disarm", duration, EffectType.DEBUFF);
 	}
 
-	public void apply(Champion c) {
+	public void apply(Champion c) { // Already validated in game class to not perform normal attacks when disarmed. Should we throw an exception here?
 		c.getAppliedEffects().add(this);
-		c.getAbilities().add(new DamagingAbility("Punch", 0, 1, 1, AreaOfEffect.SINGLETARGET, 1, 50));
+		c.getAbilities().add(punchAbility);
 	}
 
 	public void remove(Champion c) {
 		c.getAppliedEffects().remove(this);
-		c.getAbilities().remove(new DamagingAbility("Punch", 0, 1, 1, AreaOfEffect.SINGLETARGET, 1, 50));
+		c.getAbilities().remove(punchAbility);
 	}
-
-	// TODO: come back to this after completing section 6
-
 }

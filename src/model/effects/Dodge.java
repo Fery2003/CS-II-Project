@@ -9,12 +9,12 @@ public class Dodge extends Effect {
 	}
 
 	public void apply(Champion c) {
-		c.setSpeed((int) (c.getSpeed()*(5.0/100.0)));
-		// TODO: DODGING ALGORITHM???
+		c.getAppliedEffects().add(this);
+		c.setSpeed((int) (c.getSpeed() * 1.05));
 	}
 
 	public void remove(Champion c) {
-		c.setSpeed((int) (c.getSpeed()*(5.0/100.0)));
+		c.getAppliedEffects().remove(this);
+		c.setSpeed((int) (c.getSpeed() * (100.0 / 105.0)));
 	}
-
 }

@@ -22,7 +22,7 @@ public abstract class Ability {
         this.requiredActionPoints = required;
     }
 
-    abstract public void execute(ArrayList<Damageable> targets);
+    abstract public void execute(ArrayList<Damageable> targets) throws CloneNotSupportedException;
 
     // #region Getters/Setters
 

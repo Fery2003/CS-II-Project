@@ -1,6 +1,7 @@
 package model.effects;
 
 import model.world.Champion;
+import model.world.Condition;
 
 public class Root extends Effect {
 
@@ -8,16 +9,19 @@ public class Root extends Effect {
 		super("Root", duration, EffectType.DEBUFF);
 	}
 
-	@Override
 	public void apply(Champion c) {
-		// TODO Auto-generated method stub
-		
+		c.getAppliedEffects().add(this);
+		for (Effect effect : c.getAppliedEffects())
+			if (effect instanceof Stun)
+				break;
+			else
+				c.setCondition(Condition.ROOTED);
 	}
 
-	@Override
 	public void remove(Champion c) {
-		// TODO Auto-generated method stub
-		
-	}
 
+		c.getAppliedEffects().remove(this);
+		// if (c.getAppliedEffects().contains(instanceof Stun))
+	}
+	// TODO: check if this is correct after completing section 6.9 & 6.10
 }

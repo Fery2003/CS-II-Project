@@ -1,6 +1,7 @@
 package model.effects;
 
 import model.world.Champion;
+import model.world.Condition;
 
 public class Stun extends Effect {
 
@@ -8,16 +9,14 @@ public class Stun extends Effect {
 		super("Stun", duration, EffectType.DEBUFF);
 	}
 
-	@Override
 	public void apply(Champion c) {
-		// TODO Auto-generated method stub
-		
+		c.getAppliedEffects().add(this);
+		c.setCondition(Condition.INACTIVE);
 	}
 
-	@Override
 	public void remove(Champion c) {
-		// TODO Auto-generated method stub
-		
+		c.getAppliedEffects().add(this);
+		c.setCondition(Condition.ACTIVE);
 	}
-
+	// TODO: check if this is correct after completing section 6.9 & 6.10
 }

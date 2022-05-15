@@ -1,5 +1,6 @@
 package model.effects;
 
+import model.abilities.*;
 import model.world.Champion;
 
 public class PowerUp extends Effect {
@@ -8,16 +9,22 @@ public class PowerUp extends Effect {
 		super("PowerUp", duration, EffectType.BUFF);
 	}
 
-	@Override
 	public void apply(Champion c) {
-		// TODO Auto-generated method stub
-		
+		c.getAppliedEffects().add(this);
+		for (Ability a : c.getAbilities())
+			if (a instanceof DamagingAbility)
+				((DamagingAbility) a).setDamageAmount((int) (((DamagingAbility) a).getDamageAmount() * 1.2));
+			else if (a instanceof HealingAbility)
+				((HealingAbility) a).setHealAmount((int) (((HealingAbility) a).getHealAmount() * 1.2));
 	}
 
-	@Override
 	public void remove(Champion c) {
-		// TODO Auto-generated method stub
-		
+		c.getAppliedEffects().remove(this);
+		for (Ability a : c.getAbilities())
+			if (a instanceof DamagingAbility)
+				((DamagingAbility) a).setDamageAmount((int) (((DamagingAbility) a).getDamageAmount() * (100 / 120)));
+			else if (a instanceof HealingAbility)
+				((HealingAbility) a).setHealAmount((int) (((HealingAbility) a).getHealAmount() * (100 / 120)));
 	}
 
 }
