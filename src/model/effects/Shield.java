@@ -10,18 +10,12 @@ public class Shield extends Effect {
 	}
 
 	public void apply(Champion c) {
-		c.getAppliedEffects().add(this);
-		c.setSpeed((int) (c.getSpeed() * 1.2));
+		// c.getAppliedEffects().add(this);
+		c.setSpeed((int) (c.getSpeed() * 1.02));
 	}
 
 	public void remove(Champion c) {
 		c.getAppliedEffects().remove(this);
-		// listen to any added abilities to appliedAbilities arraylist and check if they're instanceof DamagingAbility
-		// c.getAbilities().forEach(a -> {
-		// 	if (a instanceof DamagingAbility) {
-		// 		((DamagingAbility) a).setDamageAmount((int) (((DamagingAbility) a).getDamageAmount() * (100 / 120)));
-		// };
-		// });
-		c.setSpeed((int) (c.getSpeed() * (100 / 120)));
+		c.setSpeed((int) (c.getSpeed() * (100.0 / 102.0)));
 	}
 }

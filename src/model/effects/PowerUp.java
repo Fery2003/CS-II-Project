@@ -22,9 +22,9 @@ public class PowerUp extends Effect {
 		c.getAppliedEffects().remove(this);
 		for (Ability a : c.getAbilities())
 			if (a instanceof DamagingAbility)
-				((DamagingAbility) a).setDamageAmount((int) (((DamagingAbility) a).getDamageAmount() * (100 / 120)));
+				((DamagingAbility) a).setDamageAmount((int) (((DamagingAbility) a).getDamageAmount() * (100.0 / 120.0)));
 			else if (a instanceof HealingAbility)
-				((HealingAbility) a).setHealAmount((int) (((HealingAbility) a).getHealAmount() * (100 / 120)));
+				((HealingAbility) a).setHealAmount((int) (((HealingAbility) a).getHealAmount() * (100.0 / 120.0)));
 	}
 
 }

@@ -9,14 +9,25 @@ public class Stun extends Effect {
 		super("Stun", duration, EffectType.DEBUFF);
 	}
 
+	public Boolean isRooted(Champion c) { // HELPER METHOD
+		for (Effect effect : c.getAppliedEffects())
+			if (effect instanceof Root)
+				return true;
+		return false;
+	}
+
 	public void apply(Champion c) {
-		c.getAppliedEffects().add(this);
+		// c.getAppliedEffects().add(this);
 		c.setCondition(Condition.INACTIVE);
 	}
 
 	public void remove(Champion c) {
 		c.getAppliedEffects().add(this);
-		c.setCondition(Condition.ACTIVE);
+		// for (Effect effect : c.getAppliedEffects())
+		if (isRooted(c))
+			c.setCondition(Condition.ROOTED);
+		else
+			c.setCondition(Condition.ACTIVE);
 	}
 	// TODO: check if this is correct after completing section 6.9 & 6.10
 }

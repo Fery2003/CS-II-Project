@@ -20,12 +20,12 @@ public class Hero extends Champion {
         }
     }
 
-    public int isOppositeType(Object o) {
-        if (o instanceof Hero)
+    public int heroTypeChecker(Champion targetChampion) { // HELPER METHOD, 0 -> no extra dmg, 1 -> extra dmg, -1 -> cover
+        if (this instanceof Hero && targetChampion instanceof Hero)
             return 0;
-        else if (o instanceof Villain || o instanceof AntiHero)
+        else if (this instanceof Hero && targetChampion instanceof Villain)
             return 1;
-        return -1; // o instanceof Cover
+        return -1;
     }
 
 }
