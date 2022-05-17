@@ -19,7 +19,7 @@ public class Root extends Effect {
 
 	public void remove(Champion c) {
 
-		c.getAppliedEffects().remove(this);
+		// c.getAppliedEffects().remove(this);
 		// if (c.getAppliedEffects().contains(instanceof Stun))
 	}
 	// TODO: check if this is correct after completing section 6.9 & 6.10

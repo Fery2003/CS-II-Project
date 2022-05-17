@@ -16,7 +16,7 @@ public class Disarm extends Effect {
 	}
 
 	public void remove(Champion c) {
-		c.getAppliedEffects().remove(this);
+		// c.getAppliedEffects().remove(this);
 		for (Ability a : c.getAbilities()) {
 			if (a.getName().equals("Punch")) {
 				c.getAbilities().remove(a);

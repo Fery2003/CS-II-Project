@@ -10,7 +10,7 @@ public class Embrace extends Effect {
 
 	public void apply(Champion c) {
 		// c.getAppliedEffects().add(this);
-		c.setCurrentHP((int) (c.getCurrentHP() + (c.getMaxHP() * 0.2)));
+		c.setCurrentHP(c.getCurrentHP() + ((int) (c.getMaxHP() * 0.2)));
 		c.setMana((int) (c.getMana() * 1.2));
 		c.setSpeed((int) (c.getSpeed() * 1.2));
 		c.setAttackDamage((int) (c.getAttackDamage() * 1.2));

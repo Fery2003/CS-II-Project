@@ -41,29 +41,42 @@ public class Game {
 
     // #region HELPER METHODS
 
-    public boolean isMoveable(Direction d) throws UnallowedMovementException { // HELPER METHOD
-        if (getCurrentChampion().getCondition() != Condition.ACTIVE) {
+    public boolean isMoveable(Direction d) throws UnallowedMovementException, NotEnoughResourcesException { // HELPER METHOD
+        if (getCurrentChampion().getCondition() != Condition.ACTIVE)
             throw new UnallowedMovementException("Champion is inactive, knocked out or rooted");
-        } else if (getCurrentChampion().getCurrentActionPoints() < 1)
-            throw new UnallowedMovementException("Not enough action points");
-        else
-            switch (d) {
-            case RIGHT:
-                if (getCurrentChampion().getLocation().x + 1 < BOARDWIDTH)
-                    return board[getCurrentChampion().getLocation().x + 1][getCurrentChampion().getLocation().y] == null;
-            case LEFT:
-                if (getCurrentChampion().getLocation().x - 1 >= 0)
-                    return board[getCurrentChampion().getLocation().x - 1][getCurrentChampion().getLocation().y] == null;
-            case UP:
-                if (getCurrentChampion().getLocation().y + 1 < BOARDHEIGHT)
-                    return board[getCurrentChampion().getLocation().x][getCurrentChampion().getLocation().y + 1] == null;
-            case DOWN:
-                if (getCurrentChampion().getLocation().y - 1 >= 0)
-                    return board[getCurrentChampion().getLocation().x][getCurrentChampion().getLocation().y - 1] == null;
-            default:
-                throw new UnallowedMovementException();
-            }
+        if (getCurrentChampion().getCurrentActionPoints() < 1)
+            throw new NotEnoughResourcesException("Not enough action points");
+        // switch (d) {
+        // case RIGHT:
+        //     if (getCurrentChampion().getLocation().x + 1 >= BOARDWIDTH && board[getCurrentChampion().getLocation().y][getCurrentChampion().getLocation().x + 1] != null)
+        //         throw new UnallowedMovementException("Right not allowed");
+        // case LEFT:
+        //     if (getCurrentChampion().getLocation().x - 1 < 0 && board[getCurrentChampion().getLocation().y][getCurrentChampion().getLocation().x - 1] != null)
+        //         throw new UnallowedMovementException("Left not allowed");
+        // case UP:
+        //     if (getCurrentChampion().getLocation().y + 1 >= BOARDHEIGHT && board[getCurrentChampion().getLocation().y + 1][getCurrentChampion().getLocation().x] != null)
+        //         throw new UnallowedMovementException("Up not allowed");
+        // case DOWN:
+        //     if (getCurrentChampion().getLocation().y - 1 < 0 && board[getCurrentChampion().getLocation().y - 1][getCurrentChampion().getLocation().x] != null)
+        //         throw new UnallowedMovementException("Down not allowed");
+        // default:
+        //     return true;
+        // }
 
+        if (d == Direction.RIGHT) {
+            if (getCurrentChampion().getLocation().x + 1 < BOARDWIDTH && board[getCurrentChampion().getLocation().y][getCurrentChampion().getLocation().x + 1] == null)
+                return true;
+        } else if (d == Direction.LEFT) {
+            if (getCurrentChampion().getLocation().x - 1 >= 0 && board[getCurrentChampion().getLocation().y][getCurrentChampion().getLocation().x - 1] == null)
+                return true;
+        } else if (d == Direction.UP) {
+            if (getCurrentChampion().getLocation().y + 1 < BOARDHEIGHT && board[getCurrentChampion().getLocation().y + 1][getCurrentChampion().getLocation().x] == null)
+                return true;
+        } else if (d == Direction.DOWN) {
+            if (getCurrentChampion().getLocation().y - 1 >= 0 && board[getCurrentChampion().getLocation().y - 1][getCurrentChampion().getLocation().x] == null)
+                return true;
+        }
+        throw new UnallowedMovementException("Champion cannot move in that direction");
     }
 
     public Damageable normalAttackChecker(Champion c, Direction d) throws InvalidTargetException, ChampionDisarmedException, NotEnoughResourcesException { // HELPER METHOD
@@ -78,57 +91,44 @@ public class Game {
         else
             switch (d) {
             case RIGHT:
-                for (int i = 1; i <= c.getAttackRange(); i++)
+                for (int i = 1; i < c.getAttackRange(); i++)
                     if (board[c.getLocation().y][c.getLocation().x + i] != null) {
                         tempDamageable = (Damageable) board[c.getLocation().y][c.getLocation().x + i];
-                        if (tempDamageable instanceof Champion && isSameTeam(c, (Champion) tempDamageable))
-                            throw new InvalidTargetException("Champion is on the same team");
-                        break;
+                        if (!(tempDamageable instanceof Champion) && !(isSameTeam(c, (Champion) tempDamageable)))
+                            return tempDamageable;
                     } else
                         continue;
                 break;
             case LEFT:
-                for (int i = 1; i <= c.getAttackRange(); i++)
+                for (int i = 1; i < c.getAttackRange(); i++)
                     if (board[c.getLocation().y][c.getLocation().x - i] != null) {
                         tempDamageable = (Damageable) board[c.getLocation().y][c.getLocation().x - i];
                         if (tempDamageable instanceof Champion && isSameTeam(c, (Champion) tempDamageable))
-                            throw new InvalidTargetException("Champion is on the same team");
-                        break;
+                            return tempDamageable;
                     } else
                         continue;
                 break;
             case UP:
-                for (int i = 1; i <= c.getAttackRange(); i++)
+                for (int i = 1; i < c.getAttackRange(); i++)
                     if (board[c.getLocation().y + i][c.getLocation().x] != null) {
                         tempDamageable = (Damageable) board[c.getLocation().y + i][c.getLocation().x];
                         if (tempDamageable instanceof Champion && isSameTeam(c, (Champion) tempDamageable))
-                            throw new InvalidTargetException("Champion is on the same team");
-                        break;
+                            return tempDamageable;
                     } else
                         continue;
                 break;
             case DOWN:
-                for (int i = 1; i <= c.getAttackRange(); i++)
+                for (int i = 1; i < c.getAttackRange(); i++)
                     if (board[c.getLocation().y - i][c.getLocation().x] != null) {
                         tempDamageable = (Damageable) board[c.getLocation().y - i][c.getLocation().x];
                         if (tempDamageable instanceof Champion && isSameTeam(c, (Champion) tempDamageable))
-                            throw new InvalidTargetException("Champion is on the same team");
-                        break;
+                            return tempDamageable;
                     } else
                         continue;
                 break;
             default:
+                throw new InvalidTargetException("Champion is on the same team!");
             }
-
-        // if (tempDamageable instanceof Champion)
-        //     for (Effect effect : ((Champion) tempDamageable).getAppliedEffects())
-        //         if (effect instanceof Dodge) {
-        //             int dodgeChance = (int) Math.random() * 2; // 0 if dodged, 1 if not dodged
-        //             if (dodgeChance == 0)
-        //                 tempDamageable = null;
-        //         } else if (effect instanceof Shield) {
-        //             tempDamageable = null;
-        //         }
         return tempDamageable;
     }
 
@@ -138,14 +138,13 @@ public class Game {
     }
 
     public Boolean isShielded(Champion target) { // HELPER METHOD
-        for (Effect effect : (target.getAppliedEffects()))
-            if (!(effect instanceof Shield))
-                return false;
-            else {
+        for (Effect effect : target.getAppliedEffects())
+            if (effect instanceof Shield) {
                 effect.remove(target);
-                break;
+                target.getAppliedEffects().remove(effect);
+                return true;
             }
-        return true;
+        return false;
     }
 
     public Boolean isSilenced(Champion c) { // HELPER METHOD
@@ -177,8 +176,8 @@ public class Game {
             if (championLocation.y + i >= 0 && championLocation.y + i < BOARDHEIGHT)
                 for (int j = -1; j <= 1; j++)
                     if (championLocation.x + j >= 0 && championLocation.x + j < BOARDWIDTH)
-                        if (board[championLocation.x + i][championLocation.y + j] != null && !(i == 0 && j == 0))
-                            targets.add((Damageable) board[championLocation.x + i][championLocation.y + j]);
+                        if (board[championLocation.y + i][championLocation.x + j] != null && !(i == 0 && j == 0))
+                            targets.add((Damageable) board[championLocation.y + i][championLocation.x + j]);
         return targets;
     }
 
@@ -200,20 +199,27 @@ public class Game {
                 if (getCurrentChampion().getLocation().y + i < BOARDHEIGHT)
                     if (board[getCurrentChampion().getLocation().y + i][getCurrentChampion().getLocation().x] != null)
                         targets.add((Damageable) board[getCurrentChampion().getLocation().y + i][getCurrentChampion().getLocation().x]);
+                break;
             case DOWN:
                 if (getCurrentChampion().getLocation().y - i >= 0)
                     if (board[getCurrentChampion().getLocation().y - i][getCurrentChampion().getLocation().x] != null)
                         targets.add((Damageable) board[getCurrentChampion().getLocation().y - i][getCurrentChampion().getLocation().x]);
+                break;
+
             case RIGHT:
                 if (getCurrentChampion().getLocation().x + i < BOARDWIDTH)
                     if (board[getCurrentChampion().getLocation().y][getCurrentChampion().getLocation().x + i] != null)
                         targets.add((Damageable) board[getCurrentChampion().getLocation().y][getCurrentChampion().getLocation().x + i]);
+                break;
+
             case LEFT:
                 if (getCurrentChampion().getLocation().x - i >= 0)
                     if (board[getCurrentChampion().getLocation().y][getCurrentChampion().getLocation().x - i] != null)
                         targets.add((Damageable) board[getCurrentChampion().getLocation().y][getCurrentChampion().getLocation().x - i]);
+                break;
+
             default:
-                // return null;
+
             }
         return targets;
     }
@@ -238,6 +244,14 @@ public class Game {
         return Math.abs(target.getLocation().x - getCurrentChampion().getLocation().x) + Math.abs(target.getLocation().y - getCurrentChampion().getLocation().y) <= range;
     }
 
+    public ArrayList<Effect> effectsToRemove() { // HELPER METHOD
+        ArrayList<Effect> effectsToRemove = new ArrayList<Effect>();
+        for (Effect effect : getCurrentChampion().getAppliedEffects())
+            if (effect.getDuration() <= 0)
+                effectsToRemove.add(effect);
+        return effectsToRemove;
+    }
+
     // #endregion
 
     public Champion getCurrentChampion() {
@@ -253,7 +267,7 @@ public class Game {
             return null;
     }
 
-    public void move(Direction d) throws UnallowedMovementException {
+    public void move(Direction d) throws UnallowedMovementException, NotEnoughResourcesException {
         // check if the cell we wanna move to doesn't contain a champion, cover or isn't
         // out of board bounds (is an empty cell)
 
@@ -293,9 +307,9 @@ public class Game {
         getCurrentChampion().setCurrentActionPoints(getCurrentChampion().getCurrentActionPoints() - 2);
 
         if (tempDamageable.getCurrentHP() <= 0) {
-            if (tempDamageable instanceof Champion && ((Champion) tempDamageable).getCondition() == Condition.INACTIVE)
+            if (tempDamageable instanceof Champion && ((Champion) tempDamageable).getCondition() == Condition.KNOCKEDOUT)
                 turnOrder.remove();
-            board[tempDamageable.getLocation().x][tempDamageable.getLocation().y] = null;
+            board[tempDamageable.getLocation().y][tempDamageable.getLocation().x] = null;
         }
     }
 
@@ -333,12 +347,13 @@ public class Game {
             } else if (a.getCastArea().equals(AreaOfEffect.TEAMTARGET)) {
                 if (getCurrentChampionTeam() == 1) {
                     for (Champion c : secondPlayer.getTeam())
-                        if (isInCastRange(c, a.getCastRange()) && !isShielded(c))
+                        if (isInCastRange(c, a.getCastRange()))
                             targets.add(c);
-                } else
+                } else {
                     for (Champion c : firstPlayer.getTeam())
-                        if (isInCastRange(c, a.getCastRange()) && !isShielded(c))
+                        if (isInCastRange(c, a.getCastRange()))
                             targets.add(c);
+                }
             }
         } else if (a instanceof CrowdControlAbility) {
             if (a.getCastArea().equals(AreaOfEffect.SURROUND)) {
@@ -375,9 +390,9 @@ public class Game {
                                 targets.add((Damageable) c);
                     }
                 }
+            } else if (a.getCastArea().equals(AreaOfEffect.SELFTARGET)) {
+                targets.add(getCurrentChampion());
             }
-        } else if (a.getCastArea().equals(AreaOfEffect.SELFTARGET)) {
-            targets.add(getCurrentChampion());
         }
 
         a.execute(targets);
@@ -405,10 +420,10 @@ public class Game {
             for (Damageable c : directionalTileChecker(d, a.getCastRange()))
                 if (c instanceof Champion)
                     if (((CrowdControlAbility) a).getEffect().getType().equals(EffectType.DEBUFF)) {
-                        if (!isSameTeam(getCurrentChampion(), (Champion) c))
+                        if (!isSameTeam(getCurrentChampion(), (Champion) c)) // if debuff add to enemy team
                             targets.add(c);
                     } else {
-                        if (isSameTeam(getCurrentChampion(), (Champion) c))
+                        if (isSameTeam(getCurrentChampion(), (Champion) c)) // else if buff add to own team
                             targets.add(c);
                     }
         }
@@ -425,26 +440,26 @@ public class Game {
         // int distance = Math.abs(x1-x0) + Math.abs(y1-y0);
         int distance = Math.abs(x - getCurrentChampion().getLocation().x) + Math.abs(y - getCurrentChampion().getLocation().y);
         if (a instanceof HealingAbility) {
-            if (board[x][y] != null && board[x][y] instanceof Champion)
-                if (isSameTeam(getCurrentChampion(), (Champion) board[x][y]))
-                    targets.add((Champion) board[x][y]);
+            if (board[y][x] != null && board[y][x] instanceof Champion)
+                if (isSameTeam(getCurrentChampion(), (Champion) board[y][x]))
+                    targets.add((Champion) board[y][x]);
             // ((HealingAbility) a).execute(targets);
         } else if (a instanceof DamagingAbility) {
-            if (board[x][y] != null)
-                if (board[x][y] instanceof Champion) {
-                    if (!isShielded((Champion) board[x][y]) && !isSameTeam(getCurrentChampion(), (Champion) board[x][y]))
-                        targets.add((Damageable) board[x][y]);
+            if (board[y][x] != null)
+                if (board[y][x] instanceof Champion) {
+                    if (!isShielded((Champion) board[y][x]) && !isSameTeam(getCurrentChampion(), (Champion) board[y][x]))
+                        targets.add((Damageable) board[y][x]);
                 } else
-                    targets.add((Damageable) board[x][y]);
+                    targets.add((Damageable) board[y][x]);
             // ((DamagingAbility) a).execute(targets);
         } else if (a instanceof CrowdControlAbility) {
-            if (board[x][y] != null && board[x][y] instanceof Champion)
+            if (board[y][x] != null && board[y][x] instanceof Champion)
                 if (((CrowdControlAbility) a).getEffect().getType().equals(EffectType.DEBUFF)) {
-                    if (!isSameTeam(getCurrentChampion(), (Champion) board[x][y]))
-                        targets.add((Damageable) board[x][y]);
+                    if (!isSameTeam(getCurrentChampion(), (Champion) board[y][x]))
+                        targets.add((Damageable) board[y][x]);
                 } else {
-                    if (isSameTeam(getCurrentChampion(), (Champion) board[x][y]))
-                        targets.add((Damageable) board[x][y]);
+                    if (isSameTeam(getCurrentChampion(), (Champion) board[y][x]))
+                        targets.add((Damageable) board[y][x]);
                 }
             // ((CrowdControlAbility) a).execute(targets);
         }
@@ -497,15 +512,35 @@ public class Game {
     }
 
     public void endTurn() {
+        // update current champion's ability cooldowns, ability durations and remove all expired effects
+        // if current champion is stunned (Condition.INACTIVE), update their stun duration and remove if expired
+        for (Effect effect : getCurrentChampion().getAppliedEffects())
+            effect.setDuration(effect.getDuration() - 1);
+        for (Effect effect : getCurrentChampion().getAppliedEffects()) {
+            if (effect.getDuration() <= 0)
+                effect.remove(getCurrentChampion());
+        }
+        for (Effect e : effectsToRemove())
+            getCurrentChampion().getAppliedEffects().remove(e);
+
+        for (Ability ability : getCurrentChampion().getAbilities())
+            ability.setCurrentCooldown(ability.getCurrentCooldown() - 1);
+        getCurrentChampion().setCurrentActionPoints(getCurrentChampion().getMaxActionPointsPerTurn());
         turnOrder.remove();
-        if (turnOrder.isEmpty())
+
+        if (turnOrder.isEmpty()) // prepare a new turnOrder if the current one is empty (aka all turns have ended)
             prepareChampionTurns();
-        while (getCurrentChampion().getCondition() == Condition.INACTIVE) { // decrement all abilities for current too
+
+        while (getCurrentChampion().getCondition().equals(Condition.INACTIVE)) { // decrement all abilities for current too
             for (Effect effect : getCurrentChampion().getAppliedEffects())
                 effect.setDuration(effect.getDuration() - 1);
-            for (Effect effect : getCurrentChampion().getAppliedEffects())
-                if (effect.getDuration() == 0)
+            for (Effect effect : getCurrentChampion().getAppliedEffects()) {
+                if (effect.getDuration() <= 0)
                     effect.remove(getCurrentChampion());
+            }
+            for (Effect e : effectsToRemove())
+                getCurrentChampion().getAppliedEffects().remove(e);
+
             for (Ability ability : getCurrentChampion().getAbilities())
                 ability.setCurrentCooldown(ability.getCurrentCooldown() - 1);
             turnOrder.remove();
