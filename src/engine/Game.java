@@ -41,7 +41,7 @@ public class Game {
 
     // #region HELPER METHODS
 
-    public boolean isMoveable(Champion c, Direction d) throws UnallowedMovementException { // HELPER METHOD
+    public boolean isMoveable(Direction d) throws UnallowedMovementException { // HELPER METHOD
         if (getCurrentChampion().getCondition() != Condition.ACTIVE) {
             throw new UnallowedMovementException("Champion is inactive, knocked out or rooted");
         } else if (getCurrentChampion().getCurrentActionPoints() < 1)
@@ -49,13 +49,17 @@ public class Game {
         else
             switch (d) {
             case RIGHT:
-                return c.getLocation().x + 1 < BOARDWIDTH || board[(int) c.getLocation().y][(int) (c.getLocation().x + 1)] != null;
+                if (getCurrentChampion().getLocation().x + 1 < BOARDWIDTH)
+                    return board[getCurrentChampion().getLocation().x + 1][getCurrentChampion().getLocation().y] == null;
             case LEFT:
-                return c.getLocation().x - 1 >= 0 || board[(int) c.getLocation().y][(int) (c.getLocation().x - 1)] != null;
+                if (getCurrentChampion().getLocation().x - 1 >= 0)
+                    return board[getCurrentChampion().getLocation().x - 1][getCurrentChampion().getLocation().y] == null;
             case UP:
-                return c.getLocation().y + 1 < BOARDHEIGHT || board[(int) (c.getLocation().y + 1)][(int) c.getLocation().x] != null;
+                if (getCurrentChampion().getLocation().y + 1 < BOARDHEIGHT)
+                    return board[getCurrentChampion().getLocation().x][getCurrentChampion().getLocation().y + 1] == null;
             case DOWN:
-                return c.getLocation().y - 1 >= 0 || board[(int) (c.getLocation().y - 1)][(int) c.getLocation().x] != null;
+                if (getCurrentChampion().getLocation().y - 1 >= 0)
+                    return board[getCurrentChampion().getLocation().x][getCurrentChampion().getLocation().y - 1] == null;
             default:
                 throw new UnallowedMovementException();
             }
@@ -219,15 +223,15 @@ public class Game {
         getCurrentChampion().setCurrentActionPoints(getCurrentChampion().getCurrentActionPoints() - a.getRequiredActionPoints());
         a.setCurrentCooldown(a.getBaseCooldown());
 
-        if (a instanceof DamagingAbility) {
-            for (Damageable target : d) {
-                if (target.getCurrentHP() <= 0) {
-                    if (target instanceof Champion)
-                        turnOrder.remove();
-                }
-                board[target.getLocation().y][target.getLocation().x] = null;
-            }
-        }
+        // if (a instanceof DamagingAbility) {
+        //     for (Damageable target : d) {
+        //         if (target.getCurrentHP() <= 0) {
+        //             if (target instanceof Champion)
+        //                 turnOrder.remove();
+        //         }
+        //         board[target.getLocation().y][target.getLocation().x] = null;
+        //     }
+        // }
     }
 
     public Boolean isInCastRange(Damageable target, int range) { // HELPER METHOD, return true if in range
@@ -253,19 +257,19 @@ public class Game {
         // check if the cell we wanna move to doesn't contain a champion, cover or isn't
         // out of board bounds (is an empty cell)
 
-        if (isMoveable(getCurrentChampion(), d)) {
+        if (isMoveable(d)) {
             switch (d) {
             case RIGHT:
-                getCurrentChampion().getLocation().x++;
+                getCurrentChampion().setLocation(new Point(getCurrentChampion().getLocation().x++, getCurrentChampion().getLocation().y));
                 break;
             case LEFT:
-                getCurrentChampion().getLocation().x--;
+                getCurrentChampion().setLocation(new Point(getCurrentChampion().getLocation().x--, getCurrentChampion().getLocation().y));
                 break;
             case UP:
-                getCurrentChampion().getLocation().y++;
+                getCurrentChampion().setLocation(new Point(getCurrentChampion().getLocation().x, getCurrentChampion().getLocation().y++));
                 break;
             case DOWN:
-                getCurrentChampion().getLocation().y--;
+                getCurrentChampion().setLocation(new Point(getCurrentChampion().getLocation().x, getCurrentChampion().getLocation().y--));
                 break;
             default:
             }
@@ -391,8 +395,12 @@ public class Game {
                     targets.add(c);
         } else if (a instanceof DamagingAbility) {
             for (Damageable c : directionalTileChecker(d, a.getCastRange()))
-                if (!isShielded((Champion) c) && !isSameTeam(getCurrentChampion(), (Champion) c))
+                if (c instanceof Champion) {
+                    if (!isShielded((Champion) c) && !isSameTeam(getCurrentChampion(), (Champion) c))
+                        targets.add(c);
+                } else
                     targets.add(c);
+
         } else if (a instanceof CrowdControlAbility) {
             for (Damageable c : directionalTileChecker(d, a.getCastRange()))
                 if (c instanceof Champion)
@@ -490,10 +498,17 @@ public class Game {
 
     public void endTurn() {
         turnOrder.remove();
-        if (turnOrder.isEmpty()) {
+        if (turnOrder.isEmpty())
             prepareChampionTurns();
-            if (getCurrentChampion().getCondition() == Condition.INACTIVE)
-                turnOrder.remove();
+        while (getCurrentChampion().getCondition() == Condition.INACTIVE) { // decrement all abilities for current too
+            for (Effect effect : getCurrentChampion().getAppliedEffects())
+                effect.setDuration(effect.getDuration() - 1);
+            for (Effect effect : getCurrentChampion().getAppliedEffects())
+                if (effect.getDuration() == 0)
+                    effect.remove(getCurrentChampion());
+            for (Ability ability : getCurrentChampion().getAbilities())
+                ability.setCurrentCooldown(ability.getCurrentCooldown() - 1);
+            turnOrder.remove();
         }
     }
 
