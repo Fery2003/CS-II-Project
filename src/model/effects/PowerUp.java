@@ -10,7 +10,7 @@ public class PowerUp extends Effect {
 	}
 
 	public void apply(Champion c) {
-		c.getAppliedEffects().add(this);
+		// c.getAppliedEffects().add(this);
 		for (Ability a : c.getAbilities())
 			if (a instanceof DamagingAbility)
 				((DamagingAbility) a).setDamageAmount((int) (((DamagingAbility) a).getDamageAmount() * 1.2));

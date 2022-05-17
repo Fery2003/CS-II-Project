@@ -18,11 +18,11 @@ public class Villain extends Champion {
             }
     }
 
-    public int heroTypeChecker(Champion targetChampion) { // HELPER METHOD, 0 -> no extra dmg, 1 -> extra dmg, -1 -> cover
-        if (this instanceof Villain && targetChampion instanceof Villain)
-            return 0;
-        else if (this instanceof Villain && targetChampion instanceof Hero)
-            return 1;
-        return -1;
-    }
+    // public int heroTypeChecker(Champion targetChampion) { // HELPER METHOD, 0 -> no extra dmg, 1 -> extra dmg, -1 -> cover
+    //     if (this instanceof Villain && targetChampion instanceof Villain)
+    //         return 0;
+    //     else if (this instanceof Villain && targetChampion instanceof Hero)
+    //         return 1;
+    //     return -1;
+    // }
 }

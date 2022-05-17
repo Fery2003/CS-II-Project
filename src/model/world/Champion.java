@@ -40,7 +40,14 @@ public abstract class Champion implements Damageable, Comparable {
 
     abstract public void useLeaderAbility(ArrayList<Champion> targets);
 
-    abstract public int heroTypeChecker(Champion targetChampion); // HELPER METHOD, 0 -> no extra dmg, 1 -> extra dmg, -1 -> cover
+    public int heroTypeChecker(Damageable target) { // HELPER METHOD, 0 -> no extra dmg, 1 -> extra dmg, -1 -> cover
+        if ((this instanceof AntiHero && target instanceof AntiHero) || (this instanceof Hero && target instanceof Hero) || (this instanceof AntiHero && target instanceof AntiHero))
+            return 0;
+        else if (target instanceof Cover)
+            return -1;
+        else
+            return 1;
+    }
 
     public int compareTo(Object o) {
         if (((Champion) o).getSpeed() > this.getSpeed())

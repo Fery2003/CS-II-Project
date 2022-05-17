@@ -9,7 +9,7 @@ public class Embrace extends Effect {
 	}
 
 	public void apply(Champion c) {
-		c.getAppliedEffects().add(this);
+		// c.getAppliedEffects().add(this);
 		c.setCurrentHP((int) (c.getCurrentHP() + (c.getMaxHP() * 0.2)));
 		c.setMana((int) (c.getMana() * 1.2));
 		c.setSpeed((int) (c.getSpeed() * 1.2));
@@ -17,7 +17,7 @@ public class Embrace extends Effect {
 	}
 
 	public void remove(Champion c) {
-		c.getAppliedEffects().remove(this);
+		// c.getAppliedEffects().remove(this);
 		c.setSpeed((int) (c.getSpeed() * (100.0 / 120.0)));
 		c.setAttackDamage((int) (c.getAttackDamage() * (100.0 / 120.0)));
 	}

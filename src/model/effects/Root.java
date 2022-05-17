@@ -10,13 +10,11 @@ public class Root extends Effect {
 	}
 
 	public void apply(Champion c) {
-		c.getAppliedEffects().add(this);
-		for (Effect effect : c.getAppliedEffects())
-			if (c.getCondition() != Condition.INACTIVE)
-				if (effect instanceof Stun)
-					c.setCondition(Condition.INACTIVE);
-				else
-					c.setCondition(Condition.ROOTED);
+		// c.getAppliedEffects().add(this);
+		if (c.getCondition() == Condition.INACTIVE)
+			c.setCondition(Condition.INACTIVE);
+		else
+			c.setCondition(Condition.ROOTED);
 	}
 
 	public void remove(Champion c) {
