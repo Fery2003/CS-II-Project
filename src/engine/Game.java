@@ -43,14 +43,17 @@ public class Game {
 
     public Boolean willDodgeAttack(Champion c) { // HELPER METHOD
         SplittableRandom random = new SplittableRandom();
-        return random.nextInt(1, 101) <= 50 ? true : false;
+        for (Effect e : c.getAppliedEffects())
+            if (e instanceof Dodge)
+                return random.nextInt(1, 101) <= 50 ? true : false;
+        return false;
     }
 
-    public Boolean isShielded(Champion target) { // HELPER METHOD
-        for (Effect effect : target.getAppliedEffects())
+    public Boolean isShielded(Champion c) { // HELPER METHOD
+        for (Effect effect : c.getAppliedEffects())
             if (effect instanceof Shield) {
-                effect.remove(target);
-                target.getAppliedEffects().remove(effect);
+                effect.remove(c);
+                c.getAppliedEffects().remove(effect);
                 return true;
             }
         return false;
@@ -248,7 +251,7 @@ public class Game {
     }
 
     public void attack(Direction d) throws ChampionDisarmedException, InvalidTargetException, NotEnoughResourcesException {
-        Damageable target = null; // should we replace with a flag?
+        Damageable target = null;
 
         if (getCurrentChampion().getCurrentActionPoints() < 2)
             throw new NotEnoughResourcesException("Not enough action points!");
@@ -295,26 +298,31 @@ public class Game {
 
         getCurrentChampion().setCurrentActionPoints(getCurrentChampion().getCurrentActionPoints() - 2);
 
-        if (getCurrentChampion().heroTypeChecker(target) == 0) {
-            // if (!(isShielded((Champion) target) && willDodgeAttack((Champion) target)))
-            target.setCurrentHP(target.getCurrentHP() - getCurrentChampion().getAttackDamage());
-        } else if (getCurrentChampion().heroTypeChecker(target) == 1)
-            target.setCurrentHP(target.getCurrentHP() - ((int) (getCurrentChampion().getAttackDamage() * 1.5)));
-        else if (getCurrentChampion().heroTypeChecker(target) == -1)
-            target.setCurrentHP(target.getCurrentHP() - getCurrentChampion().getAttackDamage());
+        if (target != null) {
 
-        if (target.getCurrentHP() <= 0) {
+            if (getCurrentChampion().heroTypeChecker(target) == 0) {
+                if (!(isShielded((Champion) target) || willDodgeAttack((Champion) target)))
+                    target.setCurrentHP(target.getCurrentHP() - getCurrentChampion().getAttackDamage());
+            } else if (getCurrentChampion().heroTypeChecker(target) == 1) {
+                if (!(isShielded((Champion) target) || willDodgeAttack((Champion) target)))
+                    target.setCurrentHP(target.getCurrentHP() - ((int) (getCurrentChampion().getAttackDamage() * 1.5)));
+            } else if (getCurrentChampion().heroTypeChecker(target) == -1)
+                target.setCurrentHP(target.getCurrentHP() - getCurrentChampion().getAttackDamage());
 
-            if (target instanceof Champion)
-                if (getChampionTeam((Champion) target) == 1) {
-                    firstPlayer.getTeam().remove((Champion) target);
-                    ((Champion) target).setCondition(Condition.KNOCKEDOUT);
-                } else {
-                    secondPlayer.getTeam().remove((Champion) target);
-                    ((Champion) target).setCondition(Condition.KNOCKEDOUT);
-                }
+            if (target.getCurrentHP() <= 0) {
 
-            board[target.getLocation().x][target.getLocation().y] = null;
+                if (target instanceof Champion)
+                    if (getChampionTeam((Champion) target) == 1) {
+                        firstPlayer.getTeam().remove((Champion) target);
+                        ((Champion) target).setCondition(Condition.KNOCKEDOUT);
+                    } else {
+                        secondPlayer.getTeam().remove((Champion) target);
+                        ((Champion) target).setCondition(Condition.KNOCKEDOUT);
+                    }
+
+                board[target.getLocation().x][target.getLocation().y] = null;
+            }
+
         }
     }
 
@@ -497,7 +505,14 @@ public class Game {
         Champion firstPlayerLeader = firstPlayer.getLeader();
         Champion secondPlayerLeader = secondPlayer.getLeader();
 
-        //if (getCurrentChampion() instanceof Hero)
+        if (getCurrentChampion().equals(firstPlayerLeader)) {
+            if (firstLeaderAbilityUsed)
+                throw new LeaderAbilityAlreadyUsedException();
+        } else if (getCurrentChampion().equals(secondPlayerLeader)) {
+            if (secondLeaderAbilityUsed)
+                throw new LeaderAbilityAlreadyUsedException();
+        } else
+            throw new LeaderNotCurrentException();
 
     }
 
@@ -542,12 +557,14 @@ public class Game {
     }
 
     private void prepareChampionTurns() {
-        for (int i = 0; i < firstPlayer.getTeam().size(); i++)
-            if (firstPlayer.getTeam().get(i).getCondition() != Condition.KNOCKEDOUT)
-                turnOrder.insert(firstPlayer.getTeam().get(i));
-        for (int i = 0; i < secondPlayer.getTeam().size(); i++)
-            if (secondPlayer.getTeam().get(i).getCondition() != Condition.KNOCKEDOUT)
-                turnOrder.insert(secondPlayer.getTeam().get(i));
+        if (!turnOrder.isFull()) {
+            for (int i = 0; i < firstPlayer.getTeam().size(); i++)
+                if (firstPlayer.getTeam().get(i).getCondition() != Condition.KNOCKEDOUT)
+                    turnOrder.insert(firstPlayer.getTeam().get(i));
+            for (int i = 0; i < secondPlayer.getTeam().size(); i++)
+                if (secondPlayer.getTeam().get(i).getCondition() != Condition.KNOCKEDOUT)
+                    turnOrder.insert(secondPlayer.getTeam().get(i));
+        }
     }
 
     private void placeChampions() {
