@@ -12,10 +12,6 @@ public class Hero extends Champion {
 
     public void useLeaderAbility(ArrayList<Champion> targets) {
         for (Champion target : targets) { // targets = own team validation check in game class
-            for (Effect effect : target.getAppliedEffects()) {
-                if (effect.getType() == EffectType.DEBUFF)
-                    effect.remove(target);
-            }
             target.getAppliedEffects().add(new Embrace(2));
         }
     }
