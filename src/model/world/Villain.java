@@ -12,10 +12,10 @@ public class Villain extends Champion {
 
     public void useLeaderAbility(ArrayList<Champion> targets) {
         for (Champion target : targets) // targets = enemy team validation check in game class
-             {
-                target.setCondition(Condition.KNOCKEDOUT);
-                // target.setCurrentHP(0); // set the current HP to 0?
-            }
+        {
+            target.setCondition(Condition.KNOCKEDOUT);
+            target.setCurrentHP(0); // set the current HP to 0?
+        }
     }
 
     // public int heroTypeChecker(Champion targetChampion) { // HELPER METHOD, 0 -> no extra dmg, 1 -> extra dmg, -1 -> cover

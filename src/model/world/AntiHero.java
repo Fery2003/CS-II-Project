@@ -13,8 +13,10 @@ public class AntiHero extends Champion {
     }
 
     public void useLeaderAbility(ArrayList<Champion> targets) {
+        Stun temp = new Stun(2);
         for (Champion target : targets) { // && target != leader validation check in game class
-            target.getAppliedEffects().add(new Stun(2));
+            target.getAppliedEffects().add(temp);
+            temp.apply(target);
         }
     }
 

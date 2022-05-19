@@ -72,13 +72,21 @@ public abstract class Champion implements Damageable, Comparable {
         return this.currentHP;
     }
 
-    public void setCurrentHP(int hp) {
-        if (hp > this.maxHP)
-            this.currentHP = this.maxHP;
-        else if (hp < 0)
+    // public void setCurrentHP(int hp) {
+    //     if (hp > this.maxHP)
+    //         this.currentHP = this.maxHP;
+    //     else if (hp < 0)
+    //         this.currentHP = 0;
+    //     else
+    //         this.currentHP = hp;
+    // }
+
+    public void setCurrentHP(int currentHP) {
+        this.currentHP = currentHP;
+        if (currentHP < 0)
             this.currentHP = 0;
-        else
-            this.currentHP = hp;
+        else if (currentHP > maxHP)
+            this.currentHP = maxHP;
     }
 
     public int getMana() {
