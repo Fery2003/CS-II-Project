@@ -18,9 +18,12 @@ public class Root extends Effect {
 	}
 
 	public void remove(Champion c) {
-
-		// c.getAppliedEffects().remove(this);
-		// if (c.getAppliedEffects().contains(instanceof Stun))
+		int rootCounter = 0;
+		for (Effect e : c.getAppliedEffects())
+			if (e instanceof Root)
+				rootCounter++;
+		if (c.getCondition() != Condition.INACTIVE && rootCounter < 1)
+			c.setCondition(Condition.ACTIVE);
 	}
 	// TODO: check if this is correct after completing section 6.9 & 6.10
 }
