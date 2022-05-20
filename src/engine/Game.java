@@ -66,6 +66,13 @@ public class Game {
         return false;
     }
 
+    public Boolean isStunned(Champion c) { // HELPER METHOD
+        for (Effect effect : c.getAppliedEffects())
+            if (effect instanceof Stun)
+                return true;
+        return false;
+    }
+
     public Boolean isSameTeam(Champion c1, Champion c2) { // HELPER METHOD
         if (firstPlayer.getTeam().contains(c1) && firstPlayer.getTeam().contains(c2))
             return true;
@@ -173,10 +180,22 @@ public class Game {
         return Math.abs(target.getLocation().x - getCurrentChampion().getLocation().x) + Math.abs(target.getLocation().y - getCurrentChampion().getLocation().y) <= range;
     }
 
+    public void removeChampionFromTurnOrder() {
+        ArrayList<Champion> temp = new ArrayList<Champion>();
+
+        while (!turnOrder.isEmpty()) {
+            temp.add((Champion) turnOrder.peekMin());
+            turnOrder.remove();
+        }
+
+        for (Champion c : temp)
+            if (c.getCondition() != Condition.KNOCKEDOUT)
+                turnOrder.insert(c);
+    }
+
     // #endregion
 
     public Champion getCurrentChampion() {
-        // prepareChampionTurns();
         if (!turnOrder.isEmpty())
             return (Champion) turnOrder.peekMin();
         else
@@ -307,18 +326,20 @@ public class Game {
 
             if (target.getCurrentHP() <= 0) {
 
-                if (target instanceof Champion)
+                if (target instanceof Champion) // store dead champion in some arraylist and call remove on it later
                     if (getChampionTeam((Champion) target) == 1) {
 
                         firstPlayer.getTeam().remove((Champion) target);
                         ((Champion) target).setCondition(Condition.KNOCKEDOUT);
-                        // prepareChampionTurns();
+
                     } else {
 
                         secondPlayer.getTeam().remove((Champion) target);
                         ((Champion) target).setCondition(Condition.KNOCKEDOUT);
-                        // prepareChampionTurns();
+
                     }
+                removeChampionFromTurnOrder();
+
                 board[target.getLocation().x][target.getLocation().y] = null;
             }
         }
@@ -508,7 +529,7 @@ public class Game {
 
         if ((getChampionTeam() == 1 && firstLeaderAbilityUsed) || (getChampionTeam() == 2 && secondLeaderAbilityUsed))
             throw new LeaderAbilityAlreadyUsedException();
-            
+
         else if (getCurrentChampion() instanceof Hero) {
             if (getChampionTeam() == 1)
                 for (Champion c : firstPlayer.getTeam())
@@ -575,22 +596,22 @@ public class Game {
 
         getCurrentChampion().getAppliedEffects().removeAll(expiredEffects);
 
-        while (getCurrentChampion().getCondition().equals(Condition.INACTIVE)) {
-            turnOrder.remove();
+        while (isStunned(getCurrentChampion())) {
+            endTurn();
         }
 
     }
 
-    private void prepareChampionTurns() {
-        while (!turnOrder.isFull()) {
-            for (int i = 0; i < firstPlayer.getTeam().size(); i++)
-                if (firstPlayer.getTeam().get(i).getCondition() != Condition.KNOCKEDOUT)
-                    turnOrder.insert(firstPlayer.getTeam().get(i));
+    private void prepareChampionTurns() { //remove all until pq is empty
 
-            for (int i = 0; i < secondPlayer.getTeam().size(); i++)
-                if (secondPlayer.getTeam().get(i).getCondition() != Condition.KNOCKEDOUT)
-                    turnOrder.insert(secondPlayer.getTeam().get(i));
-        }
+        for (int i = 0; i < firstPlayer.getTeam().size(); i++)
+            if (firstPlayer.getTeam().get(i).getCondition() != Condition.KNOCKEDOUT)
+                turnOrder.insert(firstPlayer.getTeam().get(i));
+
+        for (int i = 0; i < secondPlayer.getTeam().size(); i++)
+            if (secondPlayer.getTeam().get(i).getCondition() != Condition.KNOCKEDOUT)
+                turnOrder.insert(secondPlayer.getTeam().get(i));
+
     }
 
     private void placeChampions() {
