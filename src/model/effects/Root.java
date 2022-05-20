@@ -25,5 +25,4 @@ public class Root extends Effect {
 		if (c.getCondition() != Condition.INACTIVE && rootCounter < 1)
 			c.setCondition(Condition.ACTIVE);
 	}
-	// TODO: check if this is correct after completing section 6.9 & 6.10
 }

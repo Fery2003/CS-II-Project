@@ -27,5 +27,4 @@ public class Stun extends Effect {
 		else
 			c.setCondition(Condition.ACTIVE);
 	}
-	// TODO: check if this is correct after completing section 6.9 & 6.10
 }
