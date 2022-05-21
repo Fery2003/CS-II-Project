@@ -488,11 +488,11 @@ public class Game {
                 throw new InvalidTargetException();
 
         } else if (a instanceof DamagingAbility) {
-            if (board[x][y].equals(getCurrentChampion()))
+            if (board[x][y].equals(getCurrentChampion()) || (isSameTeam(getCurrentChampion(), (Champion) board[x][y])))
                 throw new InvalidTargetException();
 
             if (board[x][y] instanceof Champion) {
-                if (!isShielded((Champion) board[x][y]) && !isSameTeam(getCurrentChampion(), (Champion) board[x][y]))
+                if (!isShielded((Champion) board[x][y]))
                     targets.add((Damageable) board[x][y]);
             } else if (board[x][y] instanceof Cover)
                 targets.add((Damageable) board[x][y]);
