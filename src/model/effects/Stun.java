@@ -9,7 +9,7 @@ public class Stun extends Effect {
 		super("Stun", duration, EffectType.DEBUFF);
 	}
 
-	public Boolean isRooted(Champion c) { // HELPER METHOD
+	public Boolean isRooted(Champion c) { // HELPER METHOD, returns true if the champion is rooted
 		for (Effect effect : c.getAppliedEffects())
 			if (effect instanceof Root)
 				return true;

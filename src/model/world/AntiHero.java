@@ -19,12 +19,4 @@ public class AntiHero extends Champion {
             temp.apply(target);
         }
     }
-
-    // public int heroTypeChecker(Champion targetChampion) { // HELPER METHOD, 0 -> no extra dmg, 1 -> extra dmg, -1 -> cover
-    //     if (this instanceof AntiHero && targetChampion instanceof AntiHero)
-    //         return 0;
-    //     else if ((this instanceof AntiHero && targetChampion instanceof Villain) || (this instanceof AntiHero && targetChampion instanceof Hero))
-    //         return 1;
-    //     return -1;
-    // }
 }
