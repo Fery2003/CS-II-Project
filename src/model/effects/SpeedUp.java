@@ -15,7 +15,7 @@ public class SpeedUp extends Effect {
 	}
 
 	public void remove(Champion c) {
-		c.setSpeed((int) (c.getSpeed() * (100.0 / 115.0)));
+		c.setSpeed((int) (c.getSpeed() / 1.15));
 		c.setMaxActionPointsPerTurn(c.getMaxActionPointsPerTurn() - 1);
 		c.setCurrentActionPoints(c.getCurrentActionPoints() - 1);
 	}

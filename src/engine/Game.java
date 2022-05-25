@@ -212,7 +212,7 @@ public class Game {
             throw new NotEnoughResourcesException("Not enough action points!");
         if (getCurrentChampion().getCondition() == Condition.ROOTED)
             throw new UnallowedMovementException("Champion is rooted!");
-            
+
         switch (d) {
         case UP:
             if (++getCurrentChampion().getLocation().x >= BOARDHEIGHT)
@@ -576,6 +576,7 @@ public class Game {
     }
 
     public void endTurn() {
+
         // update current champion's ability cooldowns, ability durations and remove all
         // expired effects
         // if current champion is stunned (Condition.INACTIVE), update their stun
@@ -605,6 +606,27 @@ public class Game {
         getCurrentChampion().getAppliedEffects().removeAll(expiredEffects);
 
         if (isStunned(getCurrentChampion())) {
+            for (Effect e : getCurrentChampion().getAppliedEffects())
+                if (e instanceof SpeedUp) {
+                    if (getChampionTeam() == 1) {
+                        for (Champion c : secondPlayer.getTeam()) {
+                            if (!isShielded(c))
+                                c.setCurrentHP(c.getCurrentHP() - getCurrentChampion().getAttackDamage());
+                            if (c.getCurrentHP() <= 0)
+                                board[c.getLocation().x][c.getLocation().y] = null;
+                        }
+                    } else {
+                        for (Champion c : firstPlayer.getTeam()) {
+                            if (!isShielded(c))
+                                c.setCurrentHP(c.getCurrentHP() - getCurrentChampion().getAttackDamage());
+                            if (c.getCurrentHP() <= 0)
+                                board[c.getLocation().x][c.getLocation().y] = null;
+                        }
+                    }
+                    getCurrentChampion().setMana(getCurrentChampion().getMana() + 30);
+                } else
+                    getCurrentChampion().setCurrentHP(getCurrentChampion().getCurrentHP() + 10);
+
             endTurn();
         }
 
