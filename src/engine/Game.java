@@ -606,27 +606,6 @@ public class Game {
         getCurrentChampion().getAppliedEffects().removeAll(expiredEffects);
 
         if (isStunned(getCurrentChampion())) {
-            for (Effect e : getCurrentChampion().getAppliedEffects())
-                if (e instanceof SpeedUp) {
-                    if (getChampionTeam() == 1) {
-                        for (Champion c : secondPlayer.getTeam()) {
-                            if (!isShielded(c))
-                                c.setCurrentHP(c.getCurrentHP() - getCurrentChampion().getAttackDamage());
-                            if (c.getCurrentHP() <= 0)
-                                board[c.getLocation().x][c.getLocation().y] = null;
-                        }
-                    } else {
-                        for (Champion c : firstPlayer.getTeam()) {
-                            if (!isShielded(c))
-                                c.setCurrentHP(c.getCurrentHP() - getCurrentChampion().getAttackDamage());
-                            if (c.getCurrentHP() <= 0)
-                                board[c.getLocation().x][c.getLocation().y] = null;
-                        }
-                    }
-                    getCurrentChampion().setMana(getCurrentChampion().getMana() + 30);
-                } else
-                    getCurrentChampion().setCurrentHP(getCurrentChampion().getCurrentHP() + 10);
-
             endTurn();
         }
 
