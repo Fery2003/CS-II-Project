@@ -5,12 +5,17 @@ import java.util.ArrayList;
 import java.util.SplittableRandom;
 import java.awt.*;
 
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.*;
+import javafx.stage.Stage;
+
 import model.abilities.*;
 import model.effects.*;
 import model.world.*;
 import exceptions.*;
 
-public class Game {
+public class Game extends Application {
 
     private Player firstPlayer;
     private Player secondPlayer;
@@ -22,6 +27,8 @@ public class Game {
     private PriorityQueue turnOrder;
     private final static int BOARDHEIGHT = 5;
     private final static int BOARDWIDTH = 5;
+
+    private static Scene scene;
     // private static ArrayList<Damageable> targets = new ArrayList<Damageable>(); // this is allowed
 
     public Game(Player first, Player second) throws IOException {
@@ -40,6 +47,9 @@ public class Game {
         placeCovers();
 
         this.turnOrder = new PriorityQueue(firstPlayer.getTeam().size() + secondPlayer.getTeam().size());
+    }
+
+    public Game() {
     }
 
     // #region HELPER METHODS
@@ -747,17 +757,17 @@ public class Game {
                 Ability a2 = null;
                 Ability a3 = null;
 
-                for (int i = 0; i < availableAbilities.size(); i++) {
-                    if (championsLine[8].equals(availableAbilities.get(i).getName())) {
-                        a1 = availableAbilities.get(i);
+                for (Ability a : availableAbilities) {
+                    if (championsLine[8].equals(a.getName())) {
+                        a1 = a;
                         tempVillain.getAbilities().add(a1);
                     }
-                    if (championsLine[9].equals(availableAbilities.get(i).getName())) {
-                        a2 = availableAbilities.get(i);
+                    if (championsLine[9].equals(a.getName())) {
+                        a2 = a;
                         tempVillain.getAbilities().add(a2);
                     }
-                    if (championsLine[10].equals(availableAbilities.get(i).getName())) {
-                        a3 = availableAbilities.get(i);
+                    if (championsLine[10].equals(a.getName())) {
+                        a3 = a;
                         tempVillain.getAbilities().add(a3);
                     }
                 }
@@ -777,21 +787,22 @@ public class Game {
                 Ability a2 = null;
                 Ability a3 = null;
 
-                for (int i = 0; i < availableAbilities.size(); i++) {
-                    if (championsLine[8].equals(availableAbilities.get(i).getName())) {
-                        a1 = availableAbilities.get(i);
+                for (Ability a : availableAbilities) {
+                    if (championsLine[8].equals(a.getName())) {
+                        a1 = a;
                         tempHero.getAbilities().add(a1);
                     }
-                    if (championsLine[9].equals(availableAbilities.get(i).getName())) {
-                        a2 = availableAbilities.get(i);
+                    if (championsLine[9].equals(a.getName())) {
+                        a2 = a;
                         tempHero.getAbilities().add(a2);
                     }
-                    if (championsLine[10].equals(availableAbilities.get(i).getName())) {
-                        a3 = availableAbilities.get(i);
+                    if (championsLine[10].equals(a.getName())) {
+                        a3 = a;
                         tempHero.getAbilities().add(a3);
                     }
                 }
                 availableChampions.add(tempHero);
+
             } else if (championsLine[0].equals("A")) {
                 AntiHero tempAntiHero = new AntiHero(championsLine[1], // name
                         Integer.parseInt(championsLine[2]), // maxHP
@@ -805,17 +816,17 @@ public class Game {
                 Ability a2 = null;
                 Ability a3 = null;
 
-                for (int i = 0; i < availableAbilities.size(); i++) {
-                    if (championsLine[8].equals(availableAbilities.get(i).getName())) {
-                        a1 = availableAbilities.get(i);
+                for (Ability a : availableAbilities) {
+                    if (championsLine[8].equals(a.getName())) {
+                        a1 = a;
                         tempAntiHero.getAbilities().add(a1);
                     }
-                    if (championsLine[9].equals(availableAbilities.get(i).getName())) {
-                        a2 = availableAbilities.get(i);
+                    if (championsLine[9].equals(a.getName())) {
+                        a2 = a;
                         tempAntiHero.getAbilities().add(a2);
                     }
-                    if (championsLine[10].equals(availableAbilities.get(i).getName())) {
-                        a3 = availableAbilities.get(i);
+                    if (championsLine[10].equals(a.getName())) {
+                        a3 = a;
                         tempAntiHero.getAbilities().add(a3);
                     }
                 }
@@ -868,4 +879,27 @@ public class Game {
     }
 
     // #endregion
+
+    public void start(Stage stage) throws IOException {
+        scene = new Scene(loadFXML("MainMenu"));
+        stage.setScene(scene);
+        stage.show();
+        stage.setTitle("Game");
+    }
+
+    // public Scene getScene() {
+    //     return scene;
+    // }
+
+    public static void setRoot(String fxml) throws IOException {
+        scene.setRoot(loadFXML(fxml));
+    }
+
+    public static Parent loadFXML(String fxml) throws IOException {
+        return FXMLLoader.load(Game.class.getClassLoader().getResource(fxml + ".fxml"));
+    }
+
+    public static void main(String[] args) {
+        launch();
+    }
 }

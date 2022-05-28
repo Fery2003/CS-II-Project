@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="646.0" prefWidth="823.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="engine.GameController">
+   <children>
+      <Label layoutX="94.0" layoutY="130.0" text="First Player's Name:" />
+      <Label layoutX="77.0" layoutY="170.0" text="Second Player's Name:" />
+      <TextField fx:id="firstPlayerName" layoutX="205.0" layoutY="130.0" />
+      <TextField fx:id="secondPlayerName" layoutX="205.0" layoutY="170.0" />
+      <Button layoutX="375.0" layoutY="530.0" mnemonicParsing="false" onAction="#onGameStart" text="Start Game" />
+   </children>
+</AnchorPane>
