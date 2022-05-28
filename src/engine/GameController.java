@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Group;
 // import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -17,7 +16,7 @@ public class GameController {
 
   private static Game game;
   private static int counter = 0;
-  private static int turn = ((int) (Math.random() * 2) + 1);
+  private static int turn = 1;
 
   // private static Scene scene = game.getScene();
 
@@ -50,7 +49,7 @@ public class GameController {
         e1.printStackTrace();
       }
     });
-    chooseLeader.setVisible(false);
+    // chooseLeader.setVisible(false);
   }
 
   @FXML
@@ -76,13 +75,15 @@ public class GameController {
       }
       b.setDisable(true);
       counter++;
-    } else {
+    }
+    if (counter == 6) {
       for (Champion c : game.getFirstPlayer().getTeam())
         System.out.println(c.getName());
       System.out.println("######################################");
       for (Champion c : game.getSecondPlayer().getTeam())
         System.out.println(c.getName());
       whosChoosing.setVisible(false);
+      chooseLeader.disableProperty().set(false);
     }
   }
 
