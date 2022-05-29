@@ -15,7 +15,7 @@ import model.effects.*;
 import model.world.*;
 import exceptions.*;
 
-public class Game extends Application {
+public class Game /*extends Application*/ {
 
     private Player firstPlayer;
     private Player secondPlayer;
@@ -880,26 +880,26 @@ public class Game extends Application {
 
     // #endregion
 
-    public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("MainMenu"));
-        stage.setScene(scene);
-        stage.show();
-        stage.setTitle("Game");
-    }
-
-    // public Scene getScene() {
-    //     return scene;
+    // public void start(Stage stage) throws IOException {
+    //     scene = new Scene(loadFXML("MainMenu"));
+    //     stage.setScene(scene);
+    //     stage.show();
+    //     stage.setTitle("Game");
     // }
 
-    public static void setRoot(String fxml) throws IOException {
-        scene.setRoot(loadFXML(fxml));
-    }
+    // // public Scene getScene() {
+    // //     return scene;
+    // // }
 
-    public static Parent loadFXML(String fxml) throws IOException {
-        return FXMLLoader.load(Game.class.getClassLoader().getResource(fxml + ".fxml"));
-    }
+    // public static void setRoot(String fxml) throws IOException {
+    //     scene.setRoot(loadFXML(fxml));
+    // }
 
-    public static void main(String[] args) {
-        launch();
-    }
+    // public static Parent loadFXML(String fxml) throws IOException {
+    //     return FXMLLoader.load(Game.class.getClassLoader().getResource(fxml + ".fxml"));
+    // }
+
+    // public static void main(String[] args) {
+    //     launch();
+    // }
 }

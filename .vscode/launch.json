@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Launch MainMenu",
+            "request": "launch",
+            "mainClass": "view.MainMenu",
+            "projectName": "CS-II-Project"
+        },
+        {
+            "type": "java",
             "name": "Launch StartingPage",
             "request": "launch",
             "mainClass": "views.StartingPage",
@@ -15,7 +22,7 @@
             "type": "java",
             "name": "Launch Game w/ JavaFX",
             "request": "launch",
-            "mainClass": "engine.Game",
+            "mainClass": "view.MainMenu",
             "projectName": "CS-II-Project",
             "vmArgs": "--module-path D:/openjfx-18.0.1_windows-x64_bin-sdk/javafx-sdk-18.0.1/lib --add-modules javafx.controls,javafx.fxml,javafx.graphics,javafx.media,javafx.swing,javafx.web"
         },
