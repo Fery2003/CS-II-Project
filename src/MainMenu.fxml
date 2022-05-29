@@ -3,20 +3,15 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
 
 
-<BorderPane prefHeight="653.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="engine.GameController">
-   <center>
-      <AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0">
-         <children>
-            <Label layoutX="94.0" layoutY="134.0" text="First Player's Name:" />
-            <Label layoutX="77.0" layoutY="174.0" text="Second Player's Name:" />
-            <TextField fx:id="firstPlayerName" layoutX="205.0" layoutY="130.0" />
-            <TextField fx:id="secondPlayerName" layoutX="205.0" layoutY="170.0" />
-            <Button layoutX="362.0" layoutY="523.0" mnemonicParsing="false" onAction="#onGameStart" prefHeight="35.0" prefWidth="76.0" text="Start Game" />
-         </children>
-      </AnchorPane>
-   </center>
-</BorderPane>
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label layoutX="146.0" layoutY="93.0" text="First Player Name:" />
+      <Label layoutX="129.0" layoutY="136.0" text="Second Player Name:" />
+      <TextField layoutX="247.0" layoutY="89.0" />
+      <TextField layoutX="247.0" layoutY="132.0" />
+      <Button layoutX="262.0" layoutY="289.0" mnemonicParsing="false" text="Start Game" />
+   </children>
+</Pane>
