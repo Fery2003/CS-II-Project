@@ -1,18 +1,19 @@
 package view;
 
-import java.io.IOException;
-
 import engine.Game;
 import engine.Player;
 import javafx.application.Application;
 
 import javafx.event.*;
 import javafx.scene.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import javafx.scene.effect.ColorAdjust;
 import model.world.Champion;
 
 public class GameView extends Application {
@@ -46,6 +47,10 @@ public class GameView extends Application {
 		secondPlayerName.setLayoutX(247.0);
 		secondPlayerName.setLayoutY(132.0);
 
+		Alert a = new Alert(AlertType.INFORMATION);
+		a.setTitle("Game Started");
+		a.setHeaderText("Get Ready!");
+
 		stage.setResizable(false);
 		stage.setTitle("Game");
 		stage.setScene(new Scene(mainMenu, 600, 400));
@@ -58,47 +63,83 @@ public class GameView extends Application {
 				Player p2 = (secondPlayerName.getText().isEmpty()) ? new Player("Player 2") : new Player(secondPlayerName.getText());
 				try {
 					Game game = new Game(p1, p2);
+					a.setContentText(p1.getName() + " vs. " + p2.getName());
+					a.showAndWait();
 					ChampSelect(game, stage);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				// System.out.println("Game Started with " + p1.getName() + " and " + p2.getName());	
+
 			}
 		});
 	}
 
 	private void ChampSelect(Game game, Stage stage) {
-		VBox champButtonsBox = new VBox();
-		champButtonsBox.setSpacing(10);
-		champButtonsBox.setLayoutX(1055);
-		champButtonsBox.setLayoutY(18);
-		Pane p = new Pane(champButtonsBox);
+		FlowPane champButtonsBox = new FlowPane();
+		champButtonsBox.setLayoutX(925);
+		champButtonsBox.setLayoutY(100);
+		champButtonsBox.setPrefWrapLength(300);
 
-		stage.setScene(new Scene(p, 1280, 720));
-		for (Champion c : game.getAvailableChampions()) {
-			Button b = new Button(c.getName());
-			champButtonsBox.getChildren().add(b);
-			b.setOnAction(event -> {
+		Label whosChoosing = new Label(game.getFirstPlayer().getName() + " is choosing");
+		whosChoosing.setLayoutX(200);
+		whosChoosing.setLayoutY(30);
+
+		Label firstPlayerTeam = new Label(game.getFirstPlayer().getName() + "'s Team: ");
+		Label secondPlayerTeam = new Label(game.getSecondPlayer().getName() + "'s Team: ");
+		firstPlayerTeam.setLayoutX(87);
+		firstPlayerTeam.setLayoutY(67);
+		secondPlayerTeam.setLayoutX(345);
+		secondPlayerTeam.setLayoutY(67);
+
+		Pane champSelectPane = new Pane(champButtonsBox);
+		champSelectPane.getChildren().addAll(whosChoosing, firstPlayerTeam, secondPlayerTeam);
+
+		stage.setScene(new Scene(champSelectPane, 1280, 720));
+		stage.setTitle("Champion Select");
+
+		ColorAdjust desaturate = new ColorAdjust();
+		desaturate.setSaturation(-1);
+
+		for (Champion c : Game.getAvailableChampions()) {
+			ImageView img = new ImageView(new Image("resources/" + c.getName() + ".png"));
+			img.setFitHeight(100);
+			img.setFitWidth(100);
+			img.setPickOnBounds(true);
+			img.setAccessibleHelp(c.getName());
+			champButtonsBox.getChildren().add(img);
+			img.setOnMouseClicked((MouseEvent e) -> {
 				if (turn == 1) {
 					game.getFirstPlayer().getTeam().add(c);
-					b.setDisable(true);
+					firstPlayerTeam.setText(firstPlayerTeam.getText() + '\n' + c.getName());
+					img.setEffect(desaturate);
+					img.setDisable(true);
 					turn = 2;
+					whosChoosing.setText(game.getSecondPlayer().getName() + " is choosing");
 					counter++;
 					System.out.println(counter);
 				} else {
 					game.getSecondPlayer().getTeam().add(c);
-					b.setDisable(true);
+					secondPlayerTeam.setText(secondPlayerTeam.getText() + '\n' + c.getName());
+					img.setEffect(desaturate);
+					img.setDisable(true);
 					turn = 1;
+					whosChoosing.setText(game.getFirstPlayer().getName() + " is choosing");
 					counter++;
 					System.out.println(counter);
 				}
-				if (counter == 5) {
-					System.out.println("First player team: ");
+
+				if (counter == 6) {
+					System.out.println("First player team: "); // TODO: remove after testing
 					for (Champion c1 : game.getFirstPlayer().getTeam())
 						System.out.println(c1.getName());
-					System.out.println("Second player team: ");
-					for (Champion c1 : game.getFirstPlayer().getTeam())
+					System.out.println("##########################\nSecond player team: ");
+					for (Champion c1 : game.getSecondPlayer().getTeam())
 						System.out.println(c1.getName());
+
+					for (Node n : champButtonsBox.getChildren())
+						n.setDisable(true); // disable all buttons
+
+					whosChoosing.setText("Choose your leaders!");
 				}
 			});
 

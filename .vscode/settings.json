@@ -8,8 +8,5 @@
         "include": [
             "lib/**/*.jar"
         ]
-        // "exclude": [
-        //     "d:\\CS-II-Project\\lib"
-        // ]
     }
 }

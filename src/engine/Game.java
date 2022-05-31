@@ -5,11 +5,6 @@ import java.util.ArrayList;
 import java.util.SplittableRandom;
 import java.awt.*;
 
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.*;
-import javafx.stage.Stage;
-
 import model.abilities.*;
 import model.effects.*;
 import model.world.*;
@@ -28,7 +23,6 @@ public class Game /*extends Application*/ {
     private final static int BOARDHEIGHT = 5;
     private final static int BOARDWIDTH = 5;
 
-    private static Scene scene;
     // private static ArrayList<Damageable> targets = new ArrayList<Damageable>(); // this is allowed
 
     public Game(Player first, Player second) throws IOException {
@@ -47,9 +41,6 @@ public class Game /*extends Application*/ {
         placeCovers();
 
         this.turnOrder = new PriorityQueue(firstPlayer.getTeam().size() + secondPlayer.getTeam().size());
-    }
-
-    public Game() {
     }
 
     // #region HELPER METHODS
