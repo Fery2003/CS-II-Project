@@ -10,7 +10,7 @@
             "request": "launch",
             "mainClass": "view.GameView",
             "projectName": "CS-II-Project",
-            "vmArgs": "--module-path D:/JavaFX/lib --add-modules javafx.controls,javafx.fxml,javafx.graphics,javafx.media,javafx.swing,javafx.web"
+            "vmArgs": "--module-path C:/JavaFX/lib --add-modules javafx.controls,javafx.fxml,javafx.graphics,javafx.media,javafx.swing,javafx.web"
         },
         {
             "type": "java",

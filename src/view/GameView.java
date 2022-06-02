@@ -80,6 +80,14 @@ public class GameView extends Application {
 		champButtonsBox.setLayoutY(100);
 		champButtonsBox.setPrefWrapLength(300);
 
+		VBox firstPlayerTeamBox = new VBox();
+		VBox secondPlayerTeamBox = new VBox();
+
+		firstPlayerTeamBox.setLayoutX(86);
+		firstPlayerTeamBox.setLayoutY(101);
+		secondPlayerTeamBox.setLayoutX(352);
+		secondPlayerTeamBox.setLayoutY(101);
+
 		Label whosChoosing = new Label(game.getFirstPlayer().getName() + " is choosing");
 		whosChoosing.setLayoutX(200);
 		whosChoosing.setLayoutY(30);
@@ -91,14 +99,21 @@ public class GameView extends Application {
 		secondPlayerTeam.setLayoutX(345);
 		secondPlayerTeam.setLayoutY(67);
 
+		Label firstPlayerTeamList = new Label();
+		Label secondPlayerTeamList = new Label();
+		firstPlayerTeamList.setLayoutX(87);
+		firstPlayerTeamList.setLayoutY(95);
+		secondPlayerTeamList.setLayoutX(345);
+		secondPlayerTeamList.setLayoutY(95);
+
 		Pane champSelectPane = new Pane(champButtonsBox);
-		champSelectPane.getChildren().addAll(whosChoosing, firstPlayerTeam, secondPlayerTeam);
+		champSelectPane.getChildren().addAll(whosChoosing, firstPlayerTeam, secondPlayerTeam, firstPlayerTeamBox, secondPlayerTeamBox, firstPlayerTeamList, secondPlayerTeamList);
 
 		stage.setScene(new Scene(champSelectPane, 1280, 720));
 		stage.setTitle("Champion Select");
 
 		ColorAdjust desaturate = new ColorAdjust();
-		desaturate.setSaturation(-1);
+		desaturate.setSaturation(-0.85);
 
 		for (Champion c : Game.getAvailableChampions()) {
 			ImageView img = new ImageView(new Image("resources/" + c.getName() + ".png"));
@@ -110,22 +125,18 @@ public class GameView extends Application {
 			img.setOnMouseClicked((MouseEvent e) -> {
 				if (turn == 1) {
 					game.getFirstPlayer().getTeam().add(c);
-					firstPlayerTeam.setText(firstPlayerTeam.getText() + '\n' + c.getName());
-					img.setEffect(desaturate);
+					firstPlayerTeamBox.getChildren().addAll(new Label('\n' + c.getName()), img);
 					img.setDisable(true);
 					turn = 2;
 					whosChoosing.setText(game.getSecondPlayer().getName() + " is choosing");
 					counter++;
-					System.out.println(counter);
 				} else {
 					game.getSecondPlayer().getTeam().add(c);
-					secondPlayerTeam.setText(secondPlayerTeam.getText() + '\n' + c.getName());
-					img.setEffect(desaturate);
+					secondPlayerTeamBox.getChildren().addAll(new Label('\n' + c.getName()), img);
 					img.setDisable(true);
 					turn = 1;
 					whosChoosing.setText(game.getFirstPlayer().getName() + " is choosing");
 					counter++;
-					System.out.println(counter);
 				}
 
 				if (counter == 6) {
@@ -136,10 +147,13 @@ public class GameView extends Application {
 					for (Champion c1 : game.getSecondPlayer().getTeam())
 						System.out.println(c1.getName());
 
-					for (Node n : champButtonsBox.getChildren())
-						n.setDisable(true); // disable all buttons
-
 					whosChoosing.setText("Choose your leaders!");
+
+					for (Node n : champButtonsBox.getChildren()) {
+						n.setDisable(true); // disable all buttons
+						n.setEffect(desaturate); // desaturate them
+					}
+
 				}
 			});
 
