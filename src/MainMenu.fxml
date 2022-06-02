@@ -5,7 +5,6 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.Pane?>
 
-
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label layoutX="146.0" layoutY="93.0" text="First Player Name:" />
@@ -13,5 +12,6 @@
       <TextField layoutX="247.0" layoutY="89.0" />
       <TextField layoutX="247.0" layoutY="132.0" />
       <Button layoutX="262.0" layoutY="289.0" mnemonicParsing="false" text="Start Game" />
+      <Button layoutX="264.0" layoutY="323.0" mnemonicParsing="false" text="End Game" />
    </children>
 </Pane>

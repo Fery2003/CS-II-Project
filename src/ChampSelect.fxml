@@ -11,7 +11,7 @@
       <Label fx:id="firstPlayerChampsMenu" layoutX="87.0" layoutY="67.0" text="First Player's Team" />
       <Label fx:id="secondPlayerChampsMenu" layoutX="345.0" layoutY="67.0" text="Second Player's Team" />
       <Label fx:id="whosChoosing" layoutX="250.0" layoutY="42.0" text="" />
-      <Button fx:id="chooseLeader" disable="true" layoutX="84.0" layoutY="671.0" mnemonicParsing="false" onAction="#onChooseLeader" text="Choose a Leader" />
+      <Button fx:id="chooseLeader" disable="true" layoutX="407.0" layoutY="605.0" mnemonicParsing="false" onAction="#onChooseLeader" text="Choose a Leader" />
       <VBox layoutX="86.0" layoutY="101.0" prefHeight="200.0" prefWidth="100.0">
          <children>
             <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
