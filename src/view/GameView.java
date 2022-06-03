@@ -311,7 +311,7 @@ public class GameView extends Application {
 
 		BorderPane mainWindow = new BorderPane();
 
-		VBox bottomPanel = new VBox();
+		HBox bottomPanel = new HBox();
 		bottomPanel.setPrefSize(200, 200);
 
 		HBox leftPanel = new HBox();
@@ -346,7 +346,7 @@ public class GameView extends Application {
 					btn[i][j].setPrefSize(200, 200);
 					gameGrid.add(btn[i][j], i, j);
 				} else {
-					btn[i][j] = new Button("Empty");
+					btn[i][j] = new Button(" ");
 					btn[i][j].setPrefSize(200, 200);
 					gameGrid.add(btn[i][j], i, j);
 				}
