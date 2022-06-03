@@ -5,8 +5,7 @@ import java.io.IOException;
 import engine.Game;
 import engine.Player;
 import javafx.application.Application;
-
-import javafx.event.*;
+import javafx.geometry.Pos;
 import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
@@ -15,21 +14,18 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Line;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.scene.effect.ColorAdjust;
-import model.world.Champion;
-import model.world.Cover;
+import model.world.*;
 
 public class GameView extends Application {
 	private static int turn = 1;
-	private static int champCounter = 0;
-	private static int leaderCounter = 0;
 
-	@Override
 	public void start(Stage stage) throws Exception {
 
 		Button startGame = new Button("Start Game");
-		Button endGame = new Button("End Game");
+		Button endGame = new Button("Exit Game");
 		Label firstPlayer = new Label("First Player Name: ");
 		Label secondPlayer = new Label("Second Player Name: ");
 		TextField firstPlayerName = new TextField();
@@ -47,7 +43,7 @@ public class GameView extends Application {
 		startGame.setLayoutX(262.0);
 		startGame.setLayoutY(289.0);
 
-		endGame.setLayoutX(264.0);
+		endGame.setLayoutX(265.0);
 		endGame.setLayoutY(323.0);
 
 		firstPlayerName.setLayoutX(247.0);
@@ -66,29 +62,25 @@ public class GameView extends Application {
 		stage.getIcons().add(new Image("resources/Ironman.png"));
 		stage.show();
 
-		startGame.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				Player p1 = (firstPlayerName.getText().isEmpty()) ? new Player("Player 1") : new Player(firstPlayerName.getText());
-				Player p2 = (secondPlayerName.getText().isEmpty()) ? new Player("Player 2") : new Player(secondPlayerName.getText());
+		startGame.setOnMouseClicked((MouseEvent e) -> {
 
-				try {
-					ChampSelect(p1, p2, stage);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+			Player p1 = (firstPlayerName.getText().isEmpty()) ? new Player("Player 1") : new Player(firstPlayerName.getText());
+			Player p2 = (secondPlayerName.getText().isEmpty()) ? new Player("Player 2") : new Player(secondPlayerName.getText());
+
+			try {
+				ChampSelect(p1, p2, stage);
+			} catch (IOException e1) {
+				e1.printStackTrace();
 			}
 		});
 
-		endGame.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				stage.close();
-			}
+		endGame.setOnMouseClicked((MouseEvent e) -> {
+			stage.close();
 		});
 	}
 
 	private void ChampSelect(Player p1, Player p2, Stage stage) throws IOException {
+
 		FlowPane champButtonsBox = new FlowPane();
 		champButtonsBox.setLayoutX(925);
 		champButtonsBox.setLayoutY(100);
@@ -101,12 +93,14 @@ public class GameView extends Application {
 		chooseLeader.setVisible(false);
 
 		VBox firstPlayerTeamBox = new VBox();
-		VBox secondPlayerTeamBox = new VBox();
-
 		firstPlayerTeamBox.setLayoutX(86);
 		firstPlayerTeamBox.setLayoutY(101);
+		firstPlayerTeamBox.setAlignment(Pos.CENTER);
+
+		VBox secondPlayerTeamBox = new VBox();
 		secondPlayerTeamBox.setLayoutX(352);
 		secondPlayerTeamBox.setLayoutY(101);
+		secondPlayerTeamBox.setAlignment(Pos.CENTER);
 
 		Label whosChoosing = new Label(p1.getName() + " is choosing");
 		whosChoosing.setLayoutX(200);
@@ -119,15 +113,8 @@ public class GameView extends Application {
 		secondPlayerTeam.setLayoutX(345);
 		secondPlayerTeam.setLayoutY(67);
 
-		Label firstPlayerTeamList = new Label();
-		Label secondPlayerTeamList = new Label();
-		firstPlayerTeamList.setLayoutX(87);
-		firstPlayerTeamList.setLayoutY(95);
-		secondPlayerTeamList.setLayoutX(345);
-		secondPlayerTeamList.setLayoutY(95);
-
 		Pane champSelectPane = new Pane(champButtonsBox);
-		champSelectPane.getChildren().addAll(chooseLeader, whosChoosing, firstPlayerTeam, secondPlayerTeam, firstPlayerTeamBox, secondPlayerTeamBox, firstPlayerTeamList, secondPlayerTeamList);
+		champSelectPane.getChildren().addAll(chooseLeader, whosChoosing, firstPlayerTeam, secondPlayerTeam, firstPlayerTeamBox, secondPlayerTeamBox);
 
 		stage.setScene(new Scene(champSelectPane, 1280, 720));
 		stage.setTitle("Champion Select");
@@ -143,31 +130,29 @@ public class GameView extends Application {
 			img.setFitWidth(100);
 			img.setPickOnBounds(true);
 			img.setAccessibleHelp(c.getName());
+
 			champButtonsBox.getChildren().add(img);
+
 			img.setOnMouseClicked((MouseEvent e) -> {
 				if (turn == 1) {
 					p1.getTeam().add(c);
+
 					firstPlayerTeamBox.getChildren().addAll(new Label('\n' + c.getName()), img);
 					img.setDisable(true);
+					whosChoosing.setText(p2.getName() + " is choosing...");
+
 					turn = 2;
-					whosChoosing.setText(p2.getName() + " is choosing");
-					champCounter++;
 				} else {
 					p2.getTeam().add(c);
+
 					secondPlayerTeamBox.getChildren().addAll(new Label('\n' + c.getName()), img);
 					img.setDisable(true);
+					whosChoosing.setText(p1.getName() + " is choosing...");
+
 					turn = 1;
-					whosChoosing.setText(p1.getName() + " is choosing");
-					champCounter++;
 				}
 
-				if (champCounter == 6) {
-					System.out.println("First player team: "); // TODO: remove after testing
-					for (Champion c1 : p1.getTeam())
-						System.out.println(c1.getName());
-					System.out.println("##########################\nSecond player team: ");
-					for (Champion c1 : p2.getTeam())
-						System.out.println(c1.getName());
+				if (p1.getTeam().size() + p2.getTeam().size() == 6) {
 
 					chooseLeader.setDisable(false);
 					chooseLeader.setVisible(true);
@@ -242,24 +227,27 @@ public class GameView extends Application {
 			img.setAccessibleHelp(c.getName());
 
 			HBox champStats = new HBox();
-			Label stats = new Label("\nName: " + c.getName() + "\nHealth: " + c.getMaxHP() + "\nAttack Damage: " + c.getAttackDamage() + "\nAbility 1: " + c.getAbilities().get(0).getName() + "\nAbility 2: " + c.getAbilities().get(1).getName() + "\nAbility 3: " + c.getAbilities().get(2).getName());
-
 			champStats.setTranslateY(10);
 
+			Label stats = new Label("\nName: " + c.getName() + "\nType: " + getHeroType(c) + "\nAttack Damage: " + c.getAttackDamage() + "\nAbility 1: " + c.getAbilities().get(0).getName() + "\nAbility 2: " + c.getAbilities().get(1).getName() + "\nAbility 3: " + c.getAbilities().get(2).getName());
+
 			champStats.getChildren().addAll(img, stats);
-			img.setTranslateY(5);
+			img.setTranslateY(10);
 			stats.setTranslateX(10);
 
 			firstBox.getChildren().add(champStats);
+
 			champStats.setOnMouseClicked((MouseEvent e) -> {
 				p1.setLeader(c);
-				leaderCounter++;
+
 				firstBox.getChildren().add(new Label("\n\nYou have chosen " + c.getName() + " as your leader!"));
+
 				for (Node n : firstBox.getChildren()) {
 					n.setDisable(true); // disable all buttons
 					n.setEffect(desaturate); // desaturate them
 				}
-				if (leaderCounter == 2) {
+
+				if (p1.getLeader() != null && p2.getLeader() != null) {
 					startButton.setDisable(false);
 					startButton.setVisible(true);
 				}
@@ -274,36 +262,42 @@ public class GameView extends Application {
 			img.setAccessibleHelp(c.getName());
 
 			HBox champStats = new HBox();
-			Label stats = new Label("\nName: " + c.getName() + "\nHealth: " + c.getMaxHP() + "\nAttack Damage: " + c.getAttackDamage() + "\nAbility 1: " + c.getAbilities().get(0).getName() + "\nAbility 2: " + c.getAbilities().get(1).getName() + "\nAbility 3: " + c.getAbilities().get(2).getName());
+			champStats.setTranslateY(10);
+
+			Label stats = new Label("\nName: " + c.getName() + "\nType: " + getHeroType(c) + "\nAttack Damage: " + c.getAttackDamage() + "\nAbility 1: " + c.getAbilities().get(0).getName() + "\nAbility 2: " + c.getAbilities().get(1).getName() + "\nAbility 3: " + c.getAbilities().get(2).getName());
 
 			champStats.getChildren().addAll(img, stats);
 			img.setTranslateY(10);
 			stats.setTranslateX(10);
 
 			secondBox.getChildren().add(champStats);
+
 			champStats.setOnMouseClicked((MouseEvent e) -> {
 				p2.setLeader(c);
-				leaderCounter++;
+
 				secondBox.getChildren().add(new Label("\n\nYou have chosen " + c.getName() + " as your leader!"));
+
 				for (Node n : secondBox.getChildren()) {
 					n.setDisable(true); // disable all buttons
 					n.setEffect(desaturate); // desaturate them
 				}
-				if (leaderCounter == 2) {
+
+				if (p1.getLeader() != null && p2.getLeader() != null) {
 					startButton.setDisable(false);
 					startButton.setVisible(true);
 				}
 			});
 
-			startButton.setOnMouseClicked((MouseEvent e) -> {
-				try {
-					Game game = new Game(p1, p2);
-					gameView(game, stage);
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
-			});
 		}
+
+		startButton.setOnMouseClicked((MouseEvent e) -> {
+			try {
+				Game game = new Game(p1, p2);
+				gameView(game, stage);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		});
 
 	}
 
@@ -311,44 +305,58 @@ public class GameView extends Application {
 
 		BorderPane mainWindow = new BorderPane();
 
-		VBox bottomPanel = new VBox();
+		HBox bottomPanel = new HBox();
 		bottomPanel.setPrefSize(200, 200);
 
-		HBox leftPanel = new HBox();
+		VBox leftPanel = new VBox();
 		leftPanel.setPrefSize(200, 200);
 
 		VBox rightPanel = new VBox();
 		rightPanel.setPrefSize(200, 200);
 
-		HBox topPanel = new HBox();
-		topPanel.setPrefSize(200, 200);
+		// HBox topPanel = new HBox();
+		// topPanel.setPrefSize(200, 200);
 
 		GridPane gameGrid = new GridPane();
 		gameGrid.setPrefSize(500, 500);
 		gameGrid.gridLinesVisibleProperty().set(true);
 
 		Button[][] btn = new Button[5][5];
+
 		for (int i = 0; i < game.getBoardheight(); i++) {
 			for (int j = 0; j < game.getBoardwidth(); j++) {
 				if (game.getBoard()[i][j] instanceof Champion) {
+
 					Champion c = (Champion) game.getBoard()[i][j];
 					ImageView img = new ImageView(new Image("resources/" + c.getName() + ".png"));
+
 					img.setFitWidth(100);
 					img.setFitHeight(100);
+
 					btn[i][j] = new Button("", img);
 					btn[i][j].setPrefSize(200, 200);
+
 					gameGrid.add(btn[i][j], i, j);
+
 				} else if (game.getBoard()[i][j] instanceof Cover) {
-					ImageView img = new ImageView(new Image("resources/cover1.png"));
+
+					String[] randomImg = { "Cover1", "Cover2", "Cover3" };
+					ImageView img = new ImageView(new Image("resources/" + randomImg[(int) (Math.random() * 3)] + ".png"));
 					img.setFitWidth(100);
 					img.setFitHeight(100);
+
 					btn[i][j] = new Button("", img);
 					btn[i][j].setPrefSize(200, 200);
+
 					gameGrid.add(btn[i][j], i, j);
+
 				} else {
-					btn[i][j] = new Button("Empty");
+
+					btn[i][j] = new Button();
 					btn[i][j].setPrefSize(200, 200);
+
 					gameGrid.add(btn[i][j], i, j);
+
 				}
 			}
 		}
@@ -360,7 +368,16 @@ public class GameView extends Application {
 		// mainWindow.setTop(topPanel);
 
 		stage.setScene(new Scene(mainWindow, 1280, 720));
+		stage.setTitle("Game");
 	}
+
+	//#region HELPER METHODS
+
+	private String getHeroType(Champion c) {
+		return (c instanceof Hero) ? "Hero" : (c instanceof AntiHero) ? "Anti-Hero" : "Villain";
+	}
+
+	//#endregion
 
 	public static void main(String[] args) {
 		launch();
