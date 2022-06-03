@@ -163,15 +163,15 @@ public class GameView extends Application {
 
 				}
 			});
-
-			chooseLeader.setOnMouseClicked((MouseEvent e) -> {
-				try {
-					leaderSelect(p1, p2, stage);
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
-			});
 		}
+
+		chooseLeader.setOnMouseClicked((MouseEvent e) -> {
+			try {
+				leaderSelect(p1, p2, stage);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		});
 	}
 
 	private void leaderSelect(Player p1, Player p2, Stage stage) throws IOException {
