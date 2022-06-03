@@ -290,14 +290,48 @@ public class GameView extends Application {
 			});
 
 			startButton.setOnMouseClicked((MouseEvent e) -> {
-
+				gameView(game, stage);
 			});
 		}
 
 	}
 
 	private void gameView(Game game, Stage stage) {
-		
+
+		BorderPane mainWindow = new BorderPane();
+
+		VBox bottomPanel = new VBox();
+		bottomPanel.setPrefSize(200, 200);
+
+		HBox leftPanel = new HBox();
+		leftPanel.setPrefSize(200, 200);
+
+		VBox rightPanel = new VBox();
+		rightPanel.setPrefSize(200, 200);
+
+		HBox topPanel = new HBox();
+		topPanel.setPrefSize(200, 200);
+
+		GridPane gameGrid = new GridPane();
+		gameGrid.setPrefSize(500, 500);
+		gameGrid.gridLinesVisibleProperty().set(true);
+
+		Button[][] btn = new Button[5][5];
+		for (int i = 0; i < game.getBoardheight(); i++) {
+			for (int j = 0; j < game.getBoardwidth(); j++) {
+				btn[i][j] = new Button(i + "," + j);
+				btn[i][j].setPrefSize(200, 200);
+				gameGrid.add(btn[i][j], i, j);
+			}
+		}
+
+		mainWindow.setRight(rightPanel);
+		mainWindow.setLeft(leftPanel);
+		mainWindow.setBottom(bottomPanel);
+		mainWindow.setCenter(gameGrid);
+		// mainWindow.setTop(topPanel);
+
+		stage.setScene(new Scene(mainWindow, 1280, 720));
 	}
 
 	public static void main(String[] args) {
