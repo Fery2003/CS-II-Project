@@ -43,6 +43,14 @@ public class Game /*extends Application*/ {
         this.turnOrder = new PriorityQueue(firstPlayer.getTeam().size() + secondPlayer.getTeam().size());
     }
 
+    public Game() throws IOException {
+        availableChampions = new ArrayList<Champion>();
+        availableAbilities = new ArrayList<Ability>();
+
+        loadAbilities("Abilities.csv");
+        loadChampions("Champions.csv");
+    }
+
     // #region HELPER METHODS
 
     public Boolean willDodgeAttack(Champion c) { // HELPER METHOD, returns true if the champion will dodge the attack

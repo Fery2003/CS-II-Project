@@ -71,14 +71,7 @@ public class GameView extends Application {
 			public void handle(ActionEvent event) {
 				Player p1 = (firstPlayerName.getText().isEmpty()) ? new Player("Player 1") : new Player(firstPlayerName.getText());
 				Player p2 = (secondPlayerName.getText().isEmpty()) ? new Player("Player 2") : new Player(secondPlayerName.getText());
-				// try {
-				// 	Game game = new Game(p1, p2);
-				// 	a.setContentText(p1.getName() + " vs. " + p2.getName());
-				// 	a.showAndWait();
-				// 	ChampSelect(game, stage);
-				// } catch (Exception e) {
-				// 	e.printStackTrace();
-				// }
+
 				try {
 					ChampSelect(p1, p2, stage);
 				} catch (IOException e) {
@@ -142,7 +135,7 @@ public class GameView extends Application {
 		ColorAdjust desaturate = new ColorAdjust();
 		desaturate.setSaturation(-1);
 
-		Game preGame = new Game(p1, p2);
+		new Game();
 
 		for (Champion c : Game.getAvailableChampions()) {
 			ImageView img = new ImageView(new Image("resources/" + c.getName() + ".png"));
@@ -217,7 +210,7 @@ public class GameView extends Application {
 		secondBox.setLayoutX(415);
 		secondBox.setLayoutY(16);
 
-		Label firstPlayer = new Label(p2.getName() + "'s Team: ");
+		Label firstPlayer = new Label(p1.getName() + "'s Team: ");
 		firstBox.getChildren().add(firstPlayer);
 		firstPlayer.setTranslateX(10);
 		firstPlayer.setTranslateY(8);
@@ -302,10 +295,13 @@ public class GameView extends Application {
 				}
 			});
 
-			Game game = new Game(p1, p2);
-
 			startButton.setOnMouseClicked((MouseEvent e) -> {
-				gameView(game, stage);
+				try {
+					Game game = new Game(p1, p2);
+					gameView(game, stage);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
 			});
 		}
 
@@ -332,25 +328,27 @@ public class GameView extends Application {
 		gameGrid.gridLinesVisibleProperty().set(true);
 
 		Button[][] btn = new Button[5][5];
-		for (Object o : game.getBoard()) {
-			for (int i = 0; i < game.getBoardheight(); i++) {
-				for (int j = 0; j < game.getBoardwidth(); j++) {
-					if (o instanceof Champion) {
-						Champion c = (Champion) o;
-						ImageView img = new ImageView(new Image("resources/" + c.getName() + ".png"));
-						btn[i][j] = new Button("", img);
-						btn[i][j].setPrefSize(200, 200);
-						gameGrid.add(btn[i][j], i, j);
-					} else if (o instanceof Cover) {
-						ImageView img = new ImageView(new Image("resources/cover1.png"));
-						btn[i][j] = new Button("", img);
-						btn[i][j].setPrefSize(200, 200);
-						gameGrid.add(btn[i][j], i, j);
-					} else {
-						btn[i][j] = new Button("Empty");
-						btn[i][j].setPrefSize(200, 200);
-						gameGrid.add(btn[i][j], i, j);
-					}
+		for (int i = 0; i < game.getBoardheight(); i++) {
+			for (int j = 0; j < game.getBoardwidth(); j++) {
+				if (game.getBoard()[i][j] instanceof Champion) {
+					Champion c = (Champion) game.getBoard()[i][j];
+					ImageView img = new ImageView(new Image("resources/" + c.getName() + ".png"));
+					img.setFitWidth(100);
+					img.setFitHeight(100);
+					btn[i][j] = new Button("", img);
+					btn[i][j].setPrefSize(200, 200);
+					gameGrid.add(btn[i][j], i, j);
+				} else if (game.getBoard()[i][j] instanceof Cover) {
+					ImageView img = new ImageView(new Image("resources/cover1.png"));
+					img.setFitWidth(100);
+					img.setFitHeight(100);
+					btn[i][j] = new Button("", img);
+					btn[i][j].setPrefSize(200, 200);
+					gameGrid.add(btn[i][j], i, j);
+				} else {
+					btn[i][j] = new Button("Empty");
+					btn[i][j].setPrefSize(200, 200);
+					gameGrid.add(btn[i][j], i, j);
 				}
 			}
 		}
