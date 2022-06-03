@@ -306,7 +306,7 @@ public class GameView extends Application {
 		secondPlayerChamp3.getChildren().addAll(img, champDescription);
 		img.setTranslateY(20);
 		champDescription.setTranslateX(5);
-		
+
 	}
 
 	public static void main(String[] args) {
