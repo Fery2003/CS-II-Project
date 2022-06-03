@@ -45,7 +45,7 @@
             <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" translateX="10.0" />
             <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" translateX="10.0" />
             <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" translateX="10.0" />
-            <Label text="Label" translateX="50.0" translateY="10.0" />
+            <Label text="Current Champion Stats:" translateX="50.0" translateY="10.0" />
          </children>
       </HBox>
    </bottom>
