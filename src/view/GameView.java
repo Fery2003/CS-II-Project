@@ -19,7 +19,8 @@ import model.world.Champion;
 
 public class GameView extends Application {
 	private static int turn = 1;
-	private static int counter = 0;
+	private static int champCounter = 0;
+	private static int leaderCounter = 0;
 
 	@Override
 	public void start(Stage stage) throws Exception {
@@ -148,17 +149,17 @@ public class GameView extends Application {
 					img.setDisable(true);
 					turn = 2;
 					whosChoosing.setText(game.getSecondPlayer().getName() + " is choosing");
-					counter++;
+					champCounter++;
 				} else {
 					game.getSecondPlayer().getTeam().add(c);
 					secondPlayerTeamBox.getChildren().addAll(new Label('\n' + c.getName()), img);
 					img.setDisable(true);
 					turn = 1;
 					whosChoosing.setText(game.getFirstPlayer().getName() + " is choosing");
-					counter++;
+					champCounter++;
 				}
 
-				if (counter == 6) {
+				if (champCounter == 6) {
 					System.out.println("First player team: "); // TODO: remove after testing
 					for (Champion c1 : game.getFirstPlayer().getTeam())
 						System.out.println(c1.getName());
@@ -194,48 +195,22 @@ public class GameView extends Application {
 		l.setLayoutY(81);
 
 		VBox firstBox = new VBox();
-		firstBox.setPrefSize(496, 371);
+		firstBox.setPrefSize(496, 425);
 		firstBox.setLayoutX(14);
 		firstBox.setLayoutY(16);
 
 		VBox secondBox = new VBox();
-		secondBox.setPrefSize(496, 371);
+		secondBox.setPrefSize(496, 425);
 		secondBox.setLayoutX(415);
 		secondBox.setLayoutY(16);
 
-		HBox firstPlayerChamp1 = new HBox();
-		firstPlayerChamp1.setTranslateY(10);
-
-		HBox firstPlayerChamp2 = new HBox();
-		firstPlayerChamp2.setTranslateY(10);
-		firstPlayerChamp2.setLayoutX(10);
-		firstPlayerChamp2.setLayoutY(27);
-
-		HBox firstPlayerChamp3 = new HBox();
-		firstPlayerChamp3.setTranslateY(10);
-		firstPlayerChamp3.setLayoutX(10);
-		firstPlayerChamp3.setLayoutY(183);
-
-		HBox secondPlayerChamp1 = new HBox();
-		secondPlayerChamp1.setTranslateY(10);
-
-		HBox secondPlayerChamp2 = new HBox();
-		secondPlayerChamp2.setTranslateY(10);
-		secondPlayerChamp2.setLayoutX(10);
-		secondPlayerChamp2.setLayoutY(27);
-
-		HBox secondPlayerChamp3 = new HBox();
-		secondPlayerChamp3.setTranslateY(10);
-		secondPlayerChamp3.setLayoutX(10);
-		secondPlayerChamp3.setLayoutY(183);
-
 		Label firstPlayer = new Label(game.getFirstPlayer().getName() + "'s Team: ");
-		firstBox.getChildren().addAll(firstPlayer, firstPlayerChamp1, firstPlayerChamp2, firstPlayerChamp3);
+		firstBox.getChildren().add(firstPlayer);
 		firstPlayer.setTranslateX(10);
 		firstPlayer.setTranslateY(8);
 
 		Label secondPlayer = new Label(game.getSecondPlayer().getName() + "'s Team: ");
-		secondBox.getChildren().addAll(secondPlayer, secondPlayerChamp1, secondPlayerChamp2, secondPlayerChamp3);
+		secondBox.getChildren().add(secondPlayer);
 		secondPlayer.setTranslateX(10);
 		secondPlayer.setTranslateY(8);
 
@@ -250,63 +225,79 @@ public class GameView extends Application {
 		stage.setResizable(false);
 		stage.setTitle("Leader Select");
 
-		ImageView img;
-		Label champDescription;
+		ColorAdjust desaturate = new ColorAdjust();
+		desaturate.setSaturation(-1);
 
-		img = new ImageView(new Image("resources/" + game.getFirstPlayer().getTeam().get(0).getName() + ".png"));
-		img.setFitHeight(100);
-		img.setFitWidth(100);
-		champDescription = new Label("\nName: " + game.getFirstPlayer().getTeam().get(0).getName() + "\n" + "Health: " + game.getFirstPlayer().getTeam().get(0).getMaxHP() + "\n" + "Attack Damage: " + game.getFirstPlayer().getTeam().get(0).getAttackDamage() + "\n" + "Ability 1: " + game.getFirstPlayer().getTeam().get(0).getAbilities().get(0).getName() + "\n" + "Ability 2: " + game.getFirstPlayer().getTeam().get(0).getAbilities().get(1).getName() + "\n" + "Ability 3: "
-				+ game.getFirstPlayer().getTeam().get(0).getAbilities().get(2).getName() + "\n");
-		firstPlayerChamp1.getChildren().addAll(img, champDescription);
-		img.setTranslateY(20);
-		champDescription.setTranslateX(5);
+		for (Champion c : game.getFirstPlayer().getTeam()) {
+			ImageView img = new ImageView(new Image("resources/" + c.getName() + ".png"));
+			img.setFitHeight(100);
+			img.setFitWidth(100);
+			img.setPickOnBounds(true);
+			img.setAccessibleHelp(c.getName());
 
-		img = new ImageView(new Image("resources/" + game.getFirstPlayer().getTeam().get(1).getName() + ".png"));
-		img.setFitHeight(100);
-		img.setFitWidth(100);
-		champDescription = new Label("\nName: " + game.getFirstPlayer().getTeam().get(1).getName() + "\n" + "Health: " + game.getFirstPlayer().getTeam().get(1).getMaxHP() + "\n" + "Attack Damage: " + game.getFirstPlayer().getTeam().get(1).getAttackDamage() + "\n" + "Ability 1: " + game.getFirstPlayer().getTeam().get(1).getAbilities().get(0).getName() + "\n" + "Ability 2: " + game.getFirstPlayer().getTeam().get(1).getAbilities().get(1).getName() + "\n" + "Ability 3: "
-				+ game.getFirstPlayer().getTeam().get(1).getAbilities().get(2).getName() + "\n");
-		firstPlayerChamp2.getChildren().addAll(img, champDescription);
-		img.setTranslateY(20);
-		champDescription.setTranslateX(5);
+			HBox champStats = new HBox();
+			Label stats = new Label("\nName: " + c.getName() + "\nHealth: " + c.getMaxHP() + "\nAttack Damage: " + c.getAttackDamage() + "\nAbility 1: " + c.getAbilities().get(0).getName() + "\nAbility 2: " + c.getAbilities().get(1).getName() + "\nAbility 3: " + c.getAbilities().get(2).getName());
 
-		img = new ImageView(new Image("resources/" + game.getFirstPlayer().getTeam().get(2).getName() + ".png"));
-		img.setFitHeight(100);
-		img.setFitWidth(100);
-		champDescription = new Label("\nName: " + game.getFirstPlayer().getTeam().get(2).getName() + "\n" + "Health: " + game.getFirstPlayer().getTeam().get(2).getMaxHP() + "\n" + "Attack Damage: " + game.getFirstPlayer().getTeam().get(2).getAttackDamage() + "\n" + "Ability 1: " + game.getFirstPlayer().getTeam().get(2).getAbilities().get(0).getName() + "\n" + "Ability 2: " + game.getFirstPlayer().getTeam().get(2).getAbilities().get(1).getName() + "\n" + "Ability 3: "
-				+ game.getFirstPlayer().getTeam().get(2).getAbilities().get(2).getName() + "\n");
-		firstPlayerChamp3.getChildren().addAll(img, champDescription);
-		img.setTranslateY(20);
-		champDescription.setTranslateX(5);
+			champStats.setTranslateY(10);
 
-		img = new ImageView(new Image("resources/" + game.getSecondPlayer().getTeam().get(0).getName() + ".png"));
-		img.setFitHeight(100);
-		img.setFitWidth(100);
-		champDescription = new Label("\nName: " + game.getSecondPlayer().getTeam().get(0).getName() + "\n" + "Health: " + game.getSecondPlayer().getTeam().get(0).getMaxHP() + "\n" + "Attack Damage: " + game.getSecondPlayer().getTeam().get(0).getAttackDamage() + "\n" + "Ability 1: " + game.getSecondPlayer().getTeam().get(0).getAbilities().get(0).getName() + "\n" + "Ability 2: " + game.getSecondPlayer().getTeam().get(0).getAbilities().get(1).getName() + "\n" + "Ability 3: "
-				+ game.getSecondPlayer().getTeam().get(0).getAbilities().get(2).getName() + "\n");
-		secondPlayerChamp1.getChildren().addAll(img, champDescription);
-		img.setTranslateY(20);
-		champDescription.setTranslateX(5);
+			champStats.getChildren().addAll(img, stats);
+			img.setTranslateY(5);
+			stats.setTranslateX(10);
 
-		img = new ImageView(new Image("resources/" + game.getSecondPlayer().getTeam().get(1).getName() + ".png"));
-		img.setFitHeight(100);
-		img.setFitWidth(100);
-		champDescription = new Label("\nName: " + game.getSecondPlayer().getTeam().get(1).getName() + "\n" + "Health: " + game.getSecondPlayer().getTeam().get(1).getMaxHP() + "\n" + "Attack Damage: " + game.getSecondPlayer().getTeam().get(1).getAttackDamage() + "\n" + "Ability 1: " + game.getSecondPlayer().getTeam().get(1).getAbilities().get(0).getName() + "\n" + "Ability 2: " + game.getSecondPlayer().getTeam().get(1).getAbilities().get(1).getName() + "\n" + "Ability 3: "
-				+ game.getSecondPlayer().getTeam().get(1).getAbilities().get(2).getName() + "\n");
-		secondPlayerChamp2.getChildren().addAll(img, champDescription);
-		img.setTranslateY(20);
-		champDescription.setTranslateX(5);
+			firstBox.getChildren().add(champStats);
+			champStats.setOnMouseClicked((MouseEvent e) -> {
+				game.getFirstPlayer().setLeader(c);
+				leaderCounter++;
+				firstBox.getChildren().add(new Label("\n\nYou have chosen " + c.getName() + " as your leader!"));
+				for (Node n : firstBox.getChildren()) {
+					n.setDisable(true); // disable all buttons
+					n.setEffect(desaturate); // desaturate them
+				}
+				if (leaderCounter == 2) {
+					startButton.setDisable(false);
+					startButton.setVisible(true);
+				}
+			});
+		}
 
-		img = new ImageView(new Image("resources/" + game.getSecondPlayer().getTeam().get(2).getName() + ".png"));
-		img.setFitHeight(100);
-		img.setFitWidth(100);
-		champDescription = new Label("\nName: " + game.getSecondPlayer().getTeam().get(2).getName() + "\n" + "Health: " + game.getSecondPlayer().getTeam().get(2).getMaxHP() + "\n" + "Attack Damage: " + game.getSecondPlayer().getTeam().get(2).getAttackDamage() + "\n" + "Ability 1: " + game.getSecondPlayer().getTeam().get(2).getAbilities().get(0).getName() + "\n" + "Ability 2: " + game.getSecondPlayer().getTeam().get(2).getAbilities().get(1).getName() + "\n" + "Ability 3: "
-				+ game.getSecondPlayer().getTeam().get(2).getAbilities().get(2).getName() + "\n");
-		secondPlayerChamp3.getChildren().addAll(img, champDescription);
-		img.setTranslateY(20);
-		champDescription.setTranslateX(5);
+		for (Champion c : game.getSecondPlayer().getTeam()) {
+			ImageView img = new ImageView(new Image("resources/" + c.getName() + ".png"));
+			img.setFitHeight(100);
+			img.setFitWidth(100);
+			img.setPickOnBounds(true);
+			img.setAccessibleHelp(c.getName());
 
+			HBox champStats = new HBox();
+			Label stats = new Label("\nName: " + c.getName() + "\nHealth: " + c.getMaxHP() + "\nAttack Damage: " + c.getAttackDamage() + "\nAbility 1: " + c.getAbilities().get(0).getName() + "\nAbility 2: " + c.getAbilities().get(1).getName() + "\nAbility 3: " + c.getAbilities().get(2).getName());
+
+			champStats.getChildren().addAll(img, stats);
+			img.setTranslateY(10);
+			stats.setTranslateX(10);
+
+			secondBox.getChildren().add(champStats);
+			champStats.setOnMouseClicked((MouseEvent e) -> {
+				game.getSecondPlayer().setLeader(c);
+				leaderCounter++;
+				secondBox.getChildren().add(new Label("\n\nYou have chosen " + c.getName() + " as your leader!"));
+				for (Node n : secondBox.getChildren()) {
+					n.setDisable(true); // disable all buttons
+					n.setEffect(desaturate); // desaturate them
+				}
+				if (leaderCounter == 2) {
+					startButton.setDisable(false);
+					startButton.setVisible(true);
+				}
+			});
+
+			startButton.setOnMouseClicked((MouseEvent e) -> {
+
+			});
+		}
+
+	}
+
+	private void gameView(Game game, Stage stage) {
+		
 	}
 
 	public static void main(String[] args) {
