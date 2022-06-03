@@ -78,6 +78,13 @@ public class GameView extends Application {
 
 			}
 		});
+
+		endGame.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				stage.close();
+			}
+		});
 	}
 
 	private void ChampSelect(Game game, Stage stage) {
@@ -158,7 +165,7 @@ public class GameView extends Application {
 					System.out.println("##########################\nSecond player team: ");
 					for (Champion c1 : game.getSecondPlayer().getTeam())
 						System.out.println(c1.getName());
-					
+
 					chooseLeader.setDisable(false);
 					chooseLeader.setVisible(true);
 
@@ -177,34 +184,53 @@ public class GameView extends Application {
 	}
 
 	private void leaderSelect(Game game, Stage stage) {
-		
+
 		Line l = new Line();
-		l.setStartX(100);
+		l.setStartX(-100);
 		l.setStartY(-65);
 		l.setEndX(-100);
 		l.setEndY(430);
 		l.setLayoutX(500);
 		l.setLayoutY(81);
-		
+
 		VBox firstBox = new VBox();
+		firstBox.setLayoutX(14);
+		firstBox.setLayoutY(16);
+
 		VBox secondBox = new VBox();
+		secondBox.setLayoutX(415);
+		secondBox.setLayoutY(16);
+
 		HBox firstPlayerChamp1 = new HBox();
+		firstPlayerChamp1.setPrefSize(371, 156);
+		firstPlayerChamp1.setTranslateY(10);
+
 		HBox firstPlayerChamp2 = new HBox();
+		firstPlayerChamp1.setPrefSize(371, 156);
+		firstPlayerChamp1.setTranslateY(10);
+		firstPlayerChamp1.setLayoutX(10);
+		firstPlayerChamp1.setLayoutY(27);
+
 		HBox firstPlayerChamp3 = new HBox();
+
 		HBox secondPlayerChamp1 = new HBox();
 		HBox secondPlayerChamp2 = new HBox();
 		HBox secondPlayerChamp3 = new HBox();
 
-
 		Label firstPlayer = new Label(game.getFirstPlayer().getName() + "'s Team: ");
 		firstBox.getChildren().addAll(firstPlayer, firstPlayerChamp1, firstPlayerChamp2, firstPlayerChamp3);
+		firstPlayer.setTranslateX(10);
+		firstPlayer.setTranslateY(8);
 
 		Label secondPlayer = new Label(game.getSecondPlayer().getName() + "'s Team: ");
 		secondBox.getChildren().addAll(secondPlayer, secondPlayerChamp1, secondPlayerChamp2, secondPlayerChamp3);
-
-		
+		secondPlayer.setTranslateX(10);
+		secondPlayer.setTranslateY(8);
 
 		Pane p = new Pane(l, firstBox, secondBox);
+		stage.setScene(new Scene(p, 800, 600));
+		stage.setResizable(false);
+		stage.setTitle("Leader Select");
 	}
 
 	public static void main(String[] args) {

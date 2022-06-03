@@ -871,26 +871,4 @@ public class Game /*extends Application*/ {
 
     // #endregion
 
-    // public void start(Stage stage) throws IOException {
-    //     scene = new Scene(loadFXML("MainMenu"));
-    //     stage.setScene(scene);
-    //     stage.show();
-    //     stage.setTitle("Game");
-    // }
-
-    // // public Scene getScene() {
-    // //     return scene;
-    // // }
-
-    // public static void setRoot(String fxml) throws IOException {
-    //     scene.setRoot(loadFXML(fxml));
-    // }
-
-    // public static Parent loadFXML(String fxml) throws IOException {
-    //     return FXMLLoader.load(Game.class.getClassLoader().getResource(fxml + ".fxml"));
-    // }
-
-    // public static void main(String[] args) {
-    //     launch();
-    // }
 }
