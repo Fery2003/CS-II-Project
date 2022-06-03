@@ -109,10 +109,6 @@ public class GameView extends Application {
 		Label secondPlayerTeam = new Label(p2.getName() + "'s Team: ");
 		firstPlayerTeamBox.getChildren().add(firstPlayerTeam);
 		secondPlayerTeamBox.getChildren().add(secondPlayerTeam);
-		// firstPlayerTeam.setLayoutX(87);
-		// firstPlayerTeam.setLayoutY(67);
-		// secondPlayerTeam.setLayoutX(345);
-		// secondPlayerTeam.setLayoutY(67);
 
 		Pane champSelectPane = new Pane(champButtonsBox);
 		champSelectPane.getChildren().addAll(chooseLeader, whosChoosing, firstPlayerTeamBox, secondPlayerTeamBox);
