@@ -107,13 +107,15 @@ public class GameView extends Application {
 
 		Label firstPlayerTeam = new Label(p1.getName() + "'s Team: ");
 		Label secondPlayerTeam = new Label(p2.getName() + "'s Team: ");
-		firstPlayerTeam.setLayoutX(87);
-		firstPlayerTeam.setLayoutY(67);
-		secondPlayerTeam.setLayoutX(345);
-		secondPlayerTeam.setLayoutY(67);
+		firstPlayerTeamBox.getChildren().add(firstPlayerTeam);
+		secondPlayerTeamBox.getChildren().add(secondPlayerTeam);
+		// firstPlayerTeam.setLayoutX(87);
+		// firstPlayerTeam.setLayoutY(67);
+		// secondPlayerTeam.setLayoutX(345);
+		// secondPlayerTeam.setLayoutY(67);
 
 		Pane champSelectPane = new Pane(champButtonsBox);
-		champSelectPane.getChildren().addAll(chooseLeader, whosChoosing, firstPlayerTeam, secondPlayerTeam, firstPlayerTeamBox, secondPlayerTeamBox);
+		champSelectPane.getChildren().addAll(chooseLeader, whosChoosing, firstPlayerTeamBox, secondPlayerTeamBox);
 
 		stage.setScene(new Scene(champSelectPane, 1280, 720));
 		stage.setTitle("Champion Select");
