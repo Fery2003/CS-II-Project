@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import engine.Game;
 import engine.Player;
-import engine.PriorityQueue;
 import exceptions.ChampionDisarmedException;
 import exceptions.InvalidTargetException;
 import exceptions.NotEnoughResourcesException;
@@ -20,7 +19,6 @@ import javafx.scene.layout.*;
 import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 import javafx.scene.effect.ColorAdjust;
-import javafx.scene.effect.Glow;
 import model.world.*;
 
 public class GameView extends Application {
@@ -306,28 +304,28 @@ public class GameView extends Application {
 	private void gameView(Game game, Stage stage) {
 
 		BorderPane mainWindow = new BorderPane();
-		
+
 		ImageView attackImg = new ImageView(new Image("resources/Attack.png"));
 		attackImg.setFitWidth(150);
 		attackImg.setFitHeight(150);
-		
+
 		Button attack = new Button("", attackImg);
 		attack.setPrefSize(200, 200);
-		
-		Button ability1;
-		Button ability2;
-		Button ability3;
-		
+
+		// Button ability1;
+		// Button ability2;
+		// Button ability3;
+
 		ImageView upButton = new ImageView(new Image("resources/Arrow.png"));
 		upButton.setRotate(-90);
 		upButton.setFitHeight(60);
 		upButton.setFitWidth(60);
-		
+
 		ImageView downButton = new ImageView(new Image("resources/Arrow.png"));
 		downButton.setRotate(90);
 		downButton.setFitHeight(60);
 		downButton.setFitWidth(60);
-		
+
 		ImageView rightButton = new ImageView(new Image("resources/Arrow.png"));
 		rightButton.setRotate(0);
 		rightButton.setFitHeight(60);
@@ -338,12 +336,12 @@ public class GameView extends Application {
 		leftButton.setFitHeight(60);
 		leftButton.setFitWidth(60);
 
-		Label turns = new Label("Turns:\n" + game.getCurrentChampion().getName());
-		PriorityQueue temp = game.getTurnOrder();
-		for (int i = 0; i < temp.size(); i++) {
-			temp.remove();
-			turns.setText(turns.getText() + '\n' + ((Champion) temp.peekMin()).getName());
-		}
+		// Label turns = new Label("Turns:\n" + game.getCurrentChampion().getName());
+		// PriorityQueue temp = game.getTurnOrder();
+		// for (int i = 0; i < temp.size(); i++) {
+		// 	temp.remove();
+		// 	turns.setText(turns.getText() + '\n' + ((Champion) temp.peekMin()).getName());
+		// }
 
 		Pane arrowBox = new Pane();
 		arrowBox.setPrefSize(200, 200);
@@ -357,22 +355,22 @@ public class GameView extends Application {
 		rightButton.setLayoutY(75);
 		leftButton.setLayoutX(-13);
 		leftButton.setLayoutY(75);
-		
+
 		HBox bottomPanel = new HBox();
 		bottomPanel.setPrefSize(100, 200);
 		bottomPanel.getChildren().addAll(attack, arrowBox);
 		arrowBox.setDisable(true);
 		arrowBox.setVisible(false);
 
-
 		VBox leftPanel = new VBox();
 		leftPanel.setPrefSize(200, 200);
 		leftPanel.setAlignment(Pos.TOP_CENTER);
-		leftPanel.getChildren().add(turns);
+		leftPanel.getChildren().add(new Label(game.getFirstPlayer().getName()));
 
 		VBox rightPanel = new VBox();
 		rightPanel.setPrefSize(200, 200);
-
+		rightPanel.setAlignment(Pos.TOP_CENTER);
+		rightPanel.getChildren().add(new Label(game.getSecondPlayer().getName()));
 
 		// HBox topPanel = new HBox();
 		// topPanel.setPrefSize(200, 200);
@@ -381,101 +379,63 @@ public class GameView extends Application {
 		gameGrid.setPrefSize(500, 500);
 		gameGrid.gridLinesVisibleProperty().set(true);
 
-		Button[][] btn = new Button[5][5];
-
-		for (int i = 0; i < game.getBoardheight(); i++) {
-			for (int j = 0; j < game.getBoardwidth(); j++) {
-				if (game.getBoard()[i][j] instanceof Champion) {
-
-					Champion c = (Champion) game.getBoard()[i][j];
-					ImageView img = new ImageView(new Image("resources/" + c.getName() + ".png"));
-
-					img.setFitWidth(100);
-					img.setFitHeight(100);
-
-					btn[i][j] = new Button(c.getCurrentHP() + "", img);
-					btn[i][j].setPrefSize(200, 200);
-
-					gameGrid.add(btn[i][j], i, j);
-
-				} else if (game.getBoard()[i][j] instanceof Cover) {
-
-					String[] randomImg = { "Cover1", "Cover2", "Cover3" };
-					ImageView img = new ImageView(new Image("resources/" + randomImg[(int) (Math.random() * 3)] + ".png"));
-					img.setFitWidth(100);
-					img.setFitHeight(100);
-
-					btn[i][j] = new Button(((Cover) game.getBoard()[i][j]).getCurrentHP() + "", img);
-					btn[i][j].setPrefSize(200, 200);
-
-					gameGrid.add(btn[i][j], i, j);
-
-				} else {
-
-					btn[i][j] = new Button();
-					btn[i][j].setPrefSize(200, 200);
-
-					gameGrid.add(btn[i][j], i, j);
-
-				}
-			}
-		}
+		updateBoard(game, gameGrid, leftPanel, rightPanel);
 
 		attack.setOnMouseClicked(e -> {
-			
+
 			arrowBox.setDisable(false);
 			arrowBox.setVisible(true);
 
 			upButton.setOnMouseClicked(e1 -> {
 				Direction d = Direction.UP;
-				attack.setDisable(true);
-				attack.setVisible(false);
-				arrowBox.setDisable(true);
-				arrowBox.setVisible(false);
 				try {
 					game.attack(d);
+					updateBoard(game, gameGrid, leftPanel, rightPanel);
 				} catch (ChampionDisarmedException | InvalidTargetException | NotEnoughResourcesException e2) {
-					e2.printStackTrace();
+					Alert a = new Alert(AlertType.ERROR, e2.getMessage(), ButtonType.OK);
+					a.showAndWait();
 				}
+				arrowBox.setDisable(true);
+				arrowBox.setVisible(false);
 			});
 
 			downButton.setOnMouseClicked(e1 -> {
 				Direction d = Direction.DOWN;
-				attack.setDisable(true);
-				attack.setVisible(false);
-				arrowBox.setDisable(true);
-				arrowBox.setVisible(false);
 				try {
 					game.attack(d);
+					updateBoard(game, gameGrid, leftPanel, rightPanel);
 				} catch (ChampionDisarmedException | InvalidTargetException | NotEnoughResourcesException e2) {
-					e2.printStackTrace();
+					Alert a = new Alert(AlertType.ERROR, e2.getMessage(), ButtonType.OK);
+					a.showAndWait();
 				}
+				arrowBox.setDisable(true);
+				arrowBox.setVisible(false);
 			});
 
 			rightButton.setOnMouseClicked(e1 -> {
 				Direction d = Direction.RIGHT;
-				attack.setDisable(true);
-				attack.setVisible(false);
-				arrowBox.setDisable(true);
-				arrowBox.setVisible(false);
 				try {
 					game.attack(d);
+					updateBoard(game, gameGrid, leftPanel, rightPanel);
 				} catch (ChampionDisarmedException | InvalidTargetException | NotEnoughResourcesException e2) {
-					e2.printStackTrace();
+					Alert a = new Alert(AlertType.ERROR, e2.getMessage(), ButtonType.OK);
+					a.showAndWait();
 				}
+				arrowBox.setDisable(true);
+				arrowBox.setVisible(false);
 			});
 
 			leftButton.setOnMouseClicked(e1 -> {
 				Direction d = Direction.LEFT;
-				attack.setDisable(true);
-				attack.setVisible(false);
-				arrowBox.setDisable(true);
-				arrowBox.setVisible(false);
 				try {
 					game.attack(d);
+					updateBoard(game, gameGrid, leftPanel, rightPanel);
 				} catch (ChampionDisarmedException | InvalidTargetException | NotEnoughResourcesException e2) {
-					e2.printStackTrace();
+					Alert a = new Alert(AlertType.ERROR, e2.getMessage(), ButtonType.OK);
+					a.showAndWait();
 				}
+				arrowBox.setDisable(true);
+				arrowBox.setVisible(false);
 			});
 
 		});
@@ -494,6 +454,93 @@ public class GameView extends Application {
 
 	private String getHeroType(Champion c) {
 		return (c instanceof Hero) ? "Hero" : (c instanceof AntiHero) ? "Anti-Hero" : "Villain";
+	}
+
+	private void updateBoard(Game game, GridPane gameGrid, VBox leftPanel, VBox rightPanel) {
+		Button[][] btn = new Button[5][5];
+
+		for (int i = 0; i < game.getBoardheight(); i++) {
+			for (int j = 0; j < game.getBoardwidth(); j++) {
+				if (game.getBoard()[i][j] instanceof Champion) {
+
+					Champion c = (Champion) game.getBoard()[i][j];
+					ImageView img = new ImageView(new Image("resources/" + c.getName() + ".png"));
+
+					img.setFitWidth(100);
+					img.setFitHeight(100);
+
+					btn[i][j] = new Button("HP: " + c.getCurrentHP(), img);
+					btn[i][j].wrapTextProperty().set(true);
+					btn[i][j].setPrefSize(200, 200);
+
+					gameGrid.add(btn[i][j], i, j);
+
+				} else if (game.getBoard()[i][j] instanceof Cover) {
+
+					String[] randomImg = { "Cover1", "Cover2", "Cover3" };
+					ImageView img = new ImageView(new Image("resources/" + randomImg[(int) (Math.random() * 3)] + ".png"));
+					img.setFitWidth(100);
+					img.setFitHeight(100);
+
+					btn[i][j] = new Button("HP: " + ((Cover) game.getBoard()[i][j]).getCurrentHP(), img);
+					btn[i][j].setPrefSize(200, 200);
+
+					gameGrid.add(btn[i][j], i, j);
+
+				} else {
+
+					btn[i][j] = new Button();
+					btn[i][j].setPrefSize(200, 200);
+
+					gameGrid.add(btn[i][j], i, j);
+
+				}
+			}
+		}
+
+		for (Champion c : game.getFirstPlayer().getTeam()) {
+			ImageView img = new ImageView(new Image("resources/" + c.getName() + ".png"));
+			img.setFitHeight(25);
+			img.setFitWidth(25);
+			img.setPickOnBounds(true);
+			img.setAccessibleHelp(c.getName());
+
+			HBox champStats = new HBox();
+			champStats.setTranslateX(10);
+
+			Label stats = new Label("\nName: " + c.getName() + "\nType: " + getHeroType(c) + "\nAttack Range: " + c.getAttackRange() + "\nAttack Damage: " + c.getAttackDamage() + "\nMax Action Points: " + c.getMaxActionPointsPerTurn() + "\nMana: " + c.getMana() + "\nSpeed: " + c.getSpeed());
+
+			champStats.getChildren().addAll(img, stats);
+			img.setTranslateY(20);
+			stats.setTranslateX(10);
+
+			leftPanel.getChildren().add(champStats);
+		}
+
+		for (Champion c : game.getSecondPlayer().getTeam()) {
+			ImageView img = new ImageView(new Image("resources/" + c.getName() + ".png"));
+			img.setFitHeight(25);
+			img.setFitWidth(25);
+			img.setPickOnBounds(true);
+			img.setAccessibleHelp(c.getName());
+
+			HBox champStats = new HBox();
+			champStats.setTranslateX(10);
+
+			Label stats = new Label("\nName: " + c.getName() + "\nType: " + getHeroType(c) + "\nAttack Range: " + c.getAttackRange() + "\nAttack Damage: " + c.getAttackDamage() + "\nMax Action Points: " + c.getMaxActionPointsPerTurn() + "\nMana: " + c.getMana() + "\nSpeed: " + c.getSpeed());
+
+			if (game.getSecondPlayer().getLeader().equals(c)) {
+				ImageView leaderImg = new ImageView(new Image("resources/LeaderIcon.png"));
+				// LeaderImg.setFitHeight(25);
+				img.setFitWidth(25);
+				champStats.getChildren().addAll(img, stats);
+			} else
+				champStats.getChildren().addAll(img, stats);
+			img.setTranslateY(20);
+			stats.setTranslateX(10);
+
+			rightPanel.getChildren().add(champStats);
+		}
 	}
 
 	//#endregion
