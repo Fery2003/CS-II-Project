@@ -340,15 +340,16 @@ public class Game /*extends Application*/ {
 
                         firstPlayer.getTeam().remove((Champion) target);
                         ((Champion) target).setCondition(Condition.KNOCKEDOUT);
+                        removeChampionFromTurnOrder();
 
                     } else {
 
                         secondPlayer.getTeam().remove((Champion) target);
                         ((Champion) target).setCondition(Condition.KNOCKEDOUT);
+                        removeChampionFromTurnOrder();
 
                     }
 
-                removeChampionFromTurnOrder();
                 board[target.getLocation().x][target.getLocation().y] = null;
             }
         }

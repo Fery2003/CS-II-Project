@@ -16,9 +16,12 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 import javafx.scene.effect.ColorAdjust;
+import javafx.scene.effect.Glow;
+import model.effects.Effect;
 import model.world.*;
 
 public class GameView extends Application {
@@ -311,6 +314,7 @@ public class GameView extends Application {
 
 		Button attack = new Button("", attackImg);
 		attack.setPrefSize(200, 200);
+		attack.setStyle("-fx-background-color: transparent;");
 
 		// Button ability1;
 		// Button ability2;
@@ -336,23 +340,20 @@ public class GameView extends Application {
 		leftButton.setFitHeight(60);
 		leftButton.setFitWidth(60);
 
-		// Label turns = new Label("Turns:\n" + game.getCurrentChampion().getName());
-		// PriorityQueue temp = game.getTurnOrder();
-		// for (int i = 0; i < temp.size(); i++) {
-		// 	temp.remove();
-		// 	turns.setText(turns.getText() + '\n' + ((Champion) temp.peekMin()).getName());
-		// }
-
 		Pane arrowBox = new Pane();
 		arrowBox.setPrefSize(200, 200);
 		arrowBox.getChildren().addAll(upButton, downButton, rightButton, leftButton);
 		arrowBox.setTranslateX(850);
+
 		upButton.setLayoutX(72);
 		upButton.setLayoutY(-2);
+		
 		downButton.setLayoutX(72);
 		downButton.setLayoutY(75);
+		
 		rightButton.setLayoutX(158);
 		rightButton.setLayoutY(75);
+		
 		leftButton.setLayoutX(-13);
 		leftButton.setLayoutY(75);
 
@@ -363,14 +364,12 @@ public class GameView extends Application {
 		arrowBox.setVisible(false);
 
 		VBox leftPanel = new VBox();
-		leftPanel.setPrefSize(200, 200);
+		leftPanel.setPrefSize(200, 350);
 		leftPanel.setAlignment(Pos.TOP_CENTER);
-		leftPanel.getChildren().add(new Label(game.getFirstPlayer().getName()));
 
 		VBox rightPanel = new VBox();
-		rightPanel.setPrefSize(200, 200);
+		rightPanel.setPrefSize(200, 350);
 		rightPanel.setAlignment(Pos.TOP_CENTER);
-		rightPanel.getChildren().add(new Label(game.getSecondPlayer().getName()));
 
 		// HBox topPanel = new HBox();
 		// topPanel.setPrefSize(200, 200);
@@ -378,6 +377,7 @@ public class GameView extends Application {
 		GridPane gameGrid = new GridPane();
 		gameGrid.setPrefSize(500, 500);
 		gameGrid.gridLinesVisibleProperty().set(true);
+		gameGrid.setBackground(new Background(new BackgroundImage(new Image("resources/Background.jpg"), null, null, null, null)));
 
 		updateBoard(game, gameGrid, leftPanel, rightPanel);
 
@@ -459,6 +459,12 @@ public class GameView extends Application {
 	private void updateBoard(Game game, GridPane gameGrid, VBox leftPanel, VBox rightPanel) {
 		Button[][] btn = new Button[5][5];
 
+		rightPanel.getChildren().clear();
+		rightPanel.getChildren().add(new Label(game.getSecondPlayer().getName()));
+
+		leftPanel.getChildren().clear();
+		leftPanel.getChildren().add(new Label(game.getFirstPlayer().getName()));
+
 		for (int i = 0; i < game.getBoardheight(); i++) {
 			for (int j = 0; j < game.getBoardwidth(); j++) {
 				if (game.getBoard()[i][j] instanceof Champion) {
@@ -469,9 +475,11 @@ public class GameView extends Application {
 					img.setFitWidth(100);
 					img.setFitHeight(100);
 
-					btn[i][j] = new Button("HP: " + c.getCurrentHP(), img);
+					btn[i][j] = new Button("HP: " + c.getCurrentHP() + "\nAP: " + c.getCurrentActionPoints() + "\nTeam: " + game.getChampionTeam(c), img);
 					btn[i][j].wrapTextProperty().set(true);
 					btn[i][j].setPrefSize(200, 200);
+					btn[i][j].setStyle("-fx-background-color: transparent;");
+					btn[i][j].setTextFill(Color.WHITE);
 
 					gameGrid.add(btn[i][j], i, j);
 
@@ -484,13 +492,16 @@ public class GameView extends Application {
 
 					btn[i][j] = new Button("HP: " + ((Cover) game.getBoard()[i][j]).getCurrentHP(), img);
 					btn[i][j].setPrefSize(200, 200);
+					btn[i][j].setStyle("-fx-background-color: transparent;");
+					btn[i][j].setTextFill(Color.WHITE);
 
 					gameGrid.add(btn[i][j], i, j);
 
-				} else {
+				} else if (game.getBoard()[i][j] == null) {
 
 					btn[i][j] = new Button();
 					btn[i][j].setPrefSize(200, 200);
+					btn[i][j].setStyle("-fx-background-color: transparent;");
 
 					gameGrid.add(btn[i][j], i, j);
 
@@ -500,6 +511,10 @@ public class GameView extends Application {
 
 		for (Champion c : game.getFirstPlayer().getTeam()) {
 			ImageView img = new ImageView(new Image("resources/" + c.getName() + ".png"));
+
+			if (game.getCurrentChampion().equals(c))
+				img.setEffect(new Glow(0.9));
+
 			img.setFitHeight(25);
 			img.setFitWidth(25);
 			img.setPickOnBounds(true);
@@ -508,9 +523,25 @@ public class GameView extends Application {
 			HBox champStats = new HBox();
 			champStats.setTranslateX(10);
 
-			Label stats = new Label("\nName: " + c.getName() + "\nType: " + getHeroType(c) + "\nAttack Range: " + c.getAttackRange() + "\nAttack Damage: " + c.getAttackDamage() + "\nMax Action Points: " + c.getMaxActionPointsPerTurn() + "\nMana: " + c.getMana() + "\nSpeed: " + c.getSpeed());
+			String effects = "";
 
-			champStats.getChildren().addAll(img, stats);
+			if (c.getAppliedEffects() != null) {
+				for (Effect e : c.getAppliedEffects()) {
+					effects = e.getName() + " for " + e.getDuration() + " turns";
+				}
+			}
+
+			Label stats = new Label("\nName: " + c.getName() + "\nType: " + getHeroType(c) + "\nAttack Range: " + c.getAttackRange() + "\nAttack Damage: " + c.getAttackDamage() + "\nMax Action Points: " + c.getMaxActionPointsPerTurn() + "\nMana: " + c.getMana() + "\nSpeed: " + c.getSpeed() + "\nCurrent HP: " + c.getCurrentHP() + "\nEffects: " + effects);
+
+			if (game.getFirstPlayer().getLeader().equals(c)) {
+				ImageView leaderImg = new ImageView(new Image("resources/LeaderIcon.png"));
+
+				leaderImg.setFitHeight(12);
+				leaderImg.setFitWidth(12);
+				champStats.getChildren().addAll(leaderImg, img, stats);
+			} else
+				champStats.getChildren().addAll(img, stats);
+
 			img.setTranslateY(20);
 			stats.setTranslateX(10);
 
@@ -519,6 +550,8 @@ public class GameView extends Application {
 
 		for (Champion c : game.getSecondPlayer().getTeam()) {
 			ImageView img = new ImageView(new Image("resources/" + c.getName() + ".png"));
+			if (game.getCurrentChampion().equals(c))
+					img.setEffect(new Glow(0.9));
 			img.setFitHeight(25);
 			img.setFitWidth(25);
 			img.setPickOnBounds(true);
@@ -527,15 +560,24 @@ public class GameView extends Application {
 			HBox champStats = new HBox();
 			champStats.setTranslateX(10);
 
-			Label stats = new Label("\nName: " + c.getName() + "\nType: " + getHeroType(c) + "\nAttack Range: " + c.getAttackRange() + "\nAttack Damage: " + c.getAttackDamage() + "\nMax Action Points: " + c.getMaxActionPointsPerTurn() + "\nMana: " + c.getMana() + "\nSpeed: " + c.getSpeed());
+			String effects = "";
+
+			if (c.getAppliedEffects() != null) {
+				for (Effect e : c.getAppliedEffects()) {
+					effects = e.getName() + " for " + e.getDuration() + " turns";
+				}
+			}
+
+			Label stats = new Label("\nName: " + c.getName() + "\nType: " + getHeroType(c) + "\nAttack Range: " + c.getAttackRange() + "\nAttack Damage: " + c.getAttackDamage() + "\nMax Action Points: " + c.getMaxActionPointsPerTurn() + "\nMana: " + c.getMana() + "\nSpeed: " + c.getSpeed() + "\nCurrent HP: " + c.getCurrentHP() + "\nEffects: " + effects);
 
 			if (game.getSecondPlayer().getLeader().equals(c)) {
 				ImageView leaderImg = new ImageView(new Image("resources/LeaderIcon.png"));
-				// LeaderImg.setFitHeight(25);
-				img.setFitWidth(25);
-				champStats.getChildren().addAll(img, stats);
+				leaderImg.setFitHeight(12);
+				leaderImg.setFitWidth(12);
+				champStats.getChildren().addAll(leaderImg, img, stats);
 			} else
 				champStats.getChildren().addAll(img, stats);
+
 			img.setTranslateY(20);
 			stats.setTranslateX(10);
 
