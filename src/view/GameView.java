@@ -4,6 +4,10 @@ import java.io.IOException;
 
 import engine.Game;
 import engine.Player;
+import engine.PriorityQueue;
+import exceptions.ChampionDisarmedException;
+import exceptions.InvalidTargetException;
+import exceptions.NotEnoughResourcesException;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.*;
@@ -16,6 +20,7 @@ import javafx.scene.layout.*;
 import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 import javafx.scene.effect.ColorAdjust;
+import javafx.scene.effect.Glow;
 import model.world.*;
 
 public class GameView extends Application {
@@ -301,15 +306,73 @@ public class GameView extends Application {
 	private void gameView(Game game, Stage stage) {
 
 		BorderPane mainWindow = new BorderPane();
+		
+		ImageView attackImg = new ImageView(new Image("resources/Attack.png"));
+		attackImg.setFitWidth(150);
+		attackImg.setFitHeight(150);
+		
+		Button attack = new Button("", attackImg);
+		attack.setPrefSize(200, 200);
+		
+		Button ability1;
+		Button ability2;
+		Button ability3;
+		
+		ImageView upButton = new ImageView(new Image("resources/Arrow.png"));
+		upButton.setRotate(-90);
+		upButton.setFitHeight(60);
+		upButton.setFitWidth(60);
+		
+		ImageView downButton = new ImageView(new Image("resources/Arrow.png"));
+		downButton.setRotate(90);
+		downButton.setFitHeight(60);
+		downButton.setFitWidth(60);
+		
+		ImageView rightButton = new ImageView(new Image("resources/Arrow.png"));
+		rightButton.setRotate(0);
+		rightButton.setFitHeight(60);
+		rightButton.setFitWidth(60);
 
+		ImageView leftButton = new ImageView(new Image("resources/Arrow.png"));
+		leftButton.setRotate(180);
+		leftButton.setFitHeight(60);
+		leftButton.setFitWidth(60);
+
+		Label turns = new Label("Turns:\n" + game.getCurrentChampion().getName());
+		PriorityQueue temp = game.getTurnOrder();
+		for (int i = 0; i < temp.size(); i++) {
+			temp.remove();
+			turns.setText(turns.getText() + '\n' + ((Champion) temp.peekMin()).getName());
+		}
+
+		Pane arrowBox = new Pane();
+		arrowBox.setPrefSize(200, 200);
+		arrowBox.getChildren().addAll(upButton, downButton, rightButton, leftButton);
+		arrowBox.setTranslateX(850);
+		upButton.setLayoutX(72);
+		upButton.setLayoutY(-2);
+		downButton.setLayoutX(72);
+		downButton.setLayoutY(75);
+		rightButton.setLayoutX(158);
+		rightButton.setLayoutY(75);
+		leftButton.setLayoutX(-13);
+		leftButton.setLayoutY(75);
+		
 		HBox bottomPanel = new HBox();
-		bottomPanel.setPrefSize(200, 200);
+		bottomPanel.setPrefSize(100, 200);
+		bottomPanel.getChildren().addAll(attack, arrowBox);
+		arrowBox.setDisable(true);
+		arrowBox.setVisible(false);
+
 
 		VBox leftPanel = new VBox();
 		leftPanel.setPrefSize(200, 200);
+		leftPanel.setAlignment(Pos.TOP_CENTER);
+		leftPanel.getChildren().add(turns);
 
 		VBox rightPanel = new VBox();
 		rightPanel.setPrefSize(200, 200);
+
 
 		// HBox topPanel = new HBox();
 		// topPanel.setPrefSize(200, 200);
@@ -330,7 +393,7 @@ public class GameView extends Application {
 					img.setFitWidth(100);
 					img.setFitHeight(100);
 
-					btn[i][j] = new Button("", img);
+					btn[i][j] = new Button(c.getCurrentHP() + "", img);
 					btn[i][j].setPrefSize(200, 200);
 
 					gameGrid.add(btn[i][j], i, j);
@@ -342,7 +405,7 @@ public class GameView extends Application {
 					img.setFitWidth(100);
 					img.setFitHeight(100);
 
-					btn[i][j] = new Button("", img);
+					btn[i][j] = new Button(((Cover) game.getBoard()[i][j]).getCurrentHP() + "", img);
 					btn[i][j].setPrefSize(200, 200);
 
 					gameGrid.add(btn[i][j], i, j);
@@ -357,6 +420,65 @@ public class GameView extends Application {
 				}
 			}
 		}
+
+		attack.setOnMouseClicked(e -> {
+			
+			arrowBox.setDisable(false);
+			arrowBox.setVisible(true);
+
+			upButton.setOnMouseClicked(e1 -> {
+				Direction d = Direction.UP;
+				attack.setDisable(true);
+				attack.setVisible(false);
+				arrowBox.setDisable(true);
+				arrowBox.setVisible(false);
+				try {
+					game.attack(d);
+				} catch (ChampionDisarmedException | InvalidTargetException | NotEnoughResourcesException e2) {
+					e2.printStackTrace();
+				}
+			});
+
+			downButton.setOnMouseClicked(e1 -> {
+				Direction d = Direction.DOWN;
+				attack.setDisable(true);
+				attack.setVisible(false);
+				arrowBox.setDisable(true);
+				arrowBox.setVisible(false);
+				try {
+					game.attack(d);
+				} catch (ChampionDisarmedException | InvalidTargetException | NotEnoughResourcesException e2) {
+					e2.printStackTrace();
+				}
+			});
+
+			rightButton.setOnMouseClicked(e1 -> {
+				Direction d = Direction.RIGHT;
+				attack.setDisable(true);
+				attack.setVisible(false);
+				arrowBox.setDisable(true);
+				arrowBox.setVisible(false);
+				try {
+					game.attack(d);
+				} catch (ChampionDisarmedException | InvalidTargetException | NotEnoughResourcesException e2) {
+					e2.printStackTrace();
+				}
+			});
+
+			leftButton.setOnMouseClicked(e1 -> {
+				Direction d = Direction.LEFT;
+				attack.setDisable(true);
+				attack.setVisible(false);
+				arrowBox.setDisable(true);
+				arrowBox.setVisible(false);
+				try {
+					game.attack(d);
+				} catch (ChampionDisarmedException | InvalidTargetException | NotEnoughResourcesException e2) {
+					e2.printStackTrace();
+				}
+			});
+
+		});
 
 		mainWindow.setRight(rightPanel);
 		mainWindow.setLeft(leftPanel);
