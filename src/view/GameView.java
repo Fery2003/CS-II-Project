@@ -25,6 +25,9 @@ import javafx.scene.effect.ColorAdjust;
 import javafx.scene.effect.Glow;
 import model.abilities.Ability;
 import model.abilities.AreaOfEffect;
+import model.abilities.CrowdControlAbility;
+import model.abilities.DamagingAbility;
+import model.abilities.HealingAbility;
 import model.effects.Effect;
 import model.world.*;
 
@@ -312,26 +315,6 @@ public class GameView extends Application {
 
 		BorderPane mainWindow = new BorderPane();
 
-		ImageView attackImg = new ImageView(new Image("resources/Attack.png"));
-		attackImg.setFitWidth(150);
-		attackImg.setFitHeight(150);
-
-		Button attack = new Button("", attackImg);
-		attack.setPrefSize(200, 200);
-		attack.setStyle("-fx-background-color: transparent;");
-
-		ImageView moveImg = new ImageView(new Image("resources/Move.png"));
-		moveImg.setFitWidth(150);
-		moveImg.setFitHeight(150);
-
-		Button move = new Button("", moveImg);
-		move.setPrefSize(200, 200);
-		move.setStyle("-fx-background-color: transparent;");
-
-		// Button ability1;
-		// Button ability2;
-		// Button ability3;
-
 		ImageView upButton = new ImageView(new Image("resources/Arrow.png"));
 		upButton.setPickOnBounds(true);
 		upButton.setRotate(-90);
@@ -376,9 +359,7 @@ public class GameView extends Application {
 
 		HBox bottomPanel = new HBox();
 		bottomPanel.setPrefSize(100, 200);
-		bottomPanel.getChildren().addAll(attack, move, arrowBox);
-		attack.setTranslateY(-13);
-		move.setTranslateY(-10);
+
 		arrowBox.setDisable(true);
 		arrowBox.setVisible(false);
 
@@ -391,7 +372,7 @@ public class GameView extends Application {
 		rightPanel.setAlignment(Pos.TOP_CENTER);
 
 		HBox topPanel = new HBox();
-		topPanel.setPrefSize(100, 35);
+		topPanel.setPrefSize(100, 30);
 		topPanel.setAlignment(Pos.CENTER);
 
 		// topPanel.getChildren().addAll(new Label("Turns: "), new ImageView(new Image("resources/" + game.getCurrentChampion().getName() + ".png", 20, 20, true, true)));
@@ -402,6 +383,56 @@ public class GameView extends Application {
 		gameGrid.setBackground(new Background(new BackgroundImage(new Image("resources/Background.jpg"), null, null, null, null)));
 
 		updateBoard(game, gameGrid, leftPanel, rightPanel, topPanel, bottomPanel, arrowBox, upButton, downButton, leftButton, rightButton);
+
+		mainWindow.setRight(rightPanel);
+		mainWindow.setLeft(leftPanel);
+		mainWindow.setBottom(bottomPanel);
+		mainWindow.setCenter(gameGrid);
+		mainWindow.setTop(topPanel);
+
+		stage.setScene(new Scene(mainWindow, 1280, 720));
+		stage.setTitle("Game");
+	}
+
+	//#region HELPER METHODS
+
+	private String getHeroType(Champion c) {
+		return (c instanceof Hero) ? "Hero" : (c instanceof AntiHero) ? "Anti-Hero" : "Villain";
+	}
+
+	private void updateBoard(Game game, GridPane gameGrid, VBox leftPanel, VBox rightPanel, HBox topPanel, HBox bottomPanel, Pane arrowBox, ImageView upButton, ImageView downButton, ImageView leftButton, ImageView rightButton) {
+		Button[][] btn = new Button[5][5];
+		clearBoard(gameGrid);
+
+		rightPanel.getChildren().clear();
+		rightPanel.getChildren().add(new Label(game.getSecondPlayer().getName()));
+
+		leftPanel.getChildren().clear();
+		leftPanel.getChildren().add(new Label(game.getFirstPlayer().getName()));
+
+		topPanel.getChildren().clear();
+
+		bottomPanel.getChildren().clear();
+
+		ImageView attackImg = new ImageView(new Image("resources/Attack.png"));
+		attackImg.setFitWidth(150);
+		attackImg.setFitHeight(150);
+
+		Button attack = new Button("", attackImg);
+		attack.setPrefSize(200, 200);
+		attack.setStyle("-fx-background-color: transparent;");
+
+		ImageView moveImg = new ImageView(new Image("resources/Move.png"));
+		moveImg.setFitWidth(150);
+		moveImg.setFitHeight(150);
+
+		Button move = new Button("", moveImg);
+		move.setPrefSize(200, 200);
+		move.setStyle("-fx-background-color: transparent;");
+
+		bottomPanel.getChildren().addAll(attack, move, arrowBox);
+		attack.setTranslateY(-15);
+		move.setTranslateY(-10);
 
 		attack.setOnMouseClicked(e -> {
 
@@ -512,45 +543,21 @@ public class GameView extends Application {
 			});
 		});
 
-		
-
-		mainWindow.setRight(rightPanel);
-		mainWindow.setLeft(leftPanel);
-		mainWindow.setBottom(bottomPanel);
-		mainWindow.setCenter(gameGrid);
-		mainWindow.setTop(topPanel);
-
-		stage.setScene(new Scene(mainWindow, 1280, 720));
-		stage.setTitle("Game");
-	}
-
-	//#region HELPER METHODS
-
-	private String getHeroType(Champion c) {
-		return (c instanceof Hero) ? "Hero" : (c instanceof AntiHero) ? "Anti-Hero" : "Villain";
-	}
-
-	private void updateBoard(Game game, GridPane gameGrid, VBox leftPanel, VBox rightPanel, HBox topPanel, HBox bottomPanel, Pane arrowBox, ImageView upButton, ImageView downButton, ImageView leftButton, ImageView rightButton) {
-		Button[][] btn = new Button[5][5];
-		clearBoard(gameGrid);
-
-		rightPanel.getChildren().clear();
-		rightPanel.getChildren().add(new Label(game.getSecondPlayer().getName()));
-
-		leftPanel.getChildren().clear();
-		leftPanel.getChildren().add(new Label(game.getFirstPlayer().getName()));
-
-		topPanel.getChildren().clear();
-
-		bottomPanel.getChildren().clear();
-
 		Button endTurn = new Button("End Turn");
 		topPanel.getChildren().add(endTurn);
-		endTurn.setTranslateY(-2);
 		endTurn.setTranslateX(-10);
 
 		for (Ability a : game.getCurrentChampion().getAbilities()) {
-			Button b = new Button(a.getName());
+			String type = (a instanceof CrowdControlAbility) ? "CC/" + ((CrowdControlAbility) a).getEffect().getDuration() + " turns" : (a instanceof HealingAbility) ? "Healing/" + ((HealingAbility) a).getHealAmount() + "HP" : "Damaging/" + ((DamagingAbility) a).getDamageAmount();
+			Label abilityLabel = new Label("Name: " + a.getName() 
+			+ "\nType: " + type 
+			+ "\nArea Of Effect: " + a.getCastArea() 
+			+ "\nCast Range: " + a.getCastRange() 
+			+ "\nMana Cost: " + a.getManaCost() 
+			+ "\nAction Cost: " + a.getRequiredActionPoints() 
+			+ "\nCooldown: " + a.getCurrentCooldown() 
+			+ "\nBase Cooldown:" + a.getBaseCooldown());
+			Button b = new Button(abilityLabel.getText());
 			b.setOnMouseClicked(e -> {
 				try {
 					if (a.getCastArea() == AreaOfEffect.SELFTARGET || a.getCastArea() == AreaOfEffect.SURROUND || a.getCastArea() == AreaOfEffect.TEAMTARGET)
@@ -602,8 +609,7 @@ public class GameView extends Application {
 							arrowBox.setDisable(true);
 							arrowBox.setVisible(false);
 						});
-					}
-					else {
+					} else {
 						for (Node img : gameGrid.getChildren()) {
 							img.setOnMouseClicked(event -> {
 								try {
@@ -627,54 +633,53 @@ public class GameView extends Application {
 			bottomPanel.getChildren().add(b);
 		}
 
-		
 		endTurn.setOnMouseClicked(e -> {
 			game.endTurn();
 			// System.out.println(game.getCurrentChampion().getName());
 			updateBoard(game, gameGrid, leftPanel, rightPanel, topPanel, bottomPanel, arrowBox, upButton, downButton, leftButton, rightButton);
 		});
-		
+
 		ArrayList<Champion> turns = new ArrayList<Champion>();
-		
+
 		for (int i = game.getTurnOrder().size() - 1; i >= 0; i--) {
 			turns.add(((Champion) game.getTurnOrder().peekMin()));
 			game.getTurnOrder().remove();
 		}
-		
+
 		Label turnsLabel = new Label("Turns: ");
 		topPanel.getChildren().add(turnsLabel);
-		
+
 		for (Champion c : turns) {
 			game.getTurnOrder().insert(c);
 			topPanel.getChildren().add(new ImageView(new Image("resources/" + c.getName() + ".png", 20, 20, true, true)));
 		}
-		
+
 		for (int i = 0; i < Game.getBoardheight(); i++) {
 			for (int j = 0; j < Game.getBoardwidth(); j++) {
 				if (game.getBoard()[i][j] instanceof Champion) {
 
 					Champion c = (Champion) game.getBoard()[i][j];
 					ImageView img = new ImageView(new Image("resources/" + c.getName() + ".png"));
-					
+
 					img.setFitWidth(100);
 					img.setFitHeight(100);
 					img.setEffect(new Glow(3));
-					
+
 					btn[i][j] = new Button("HP: " + c.getCurrentHP() + "\nAP: " + c.getCurrentActionPoints() + "\nTeam: " + game.getChampionTeam(c), img);
 					btn[i][j].wrapTextProperty().set(true);
 					btn[i][j].setPrefSize(200, 200);
 					btn[i][j].setStyle("-fx-background-color: transparent;");
 					btn[i][j].setTextFill(Color.WHITE);
-					
+
 					gameGrid.add(btn[i][j], j, i);
-					
+
 				} else if (game.getBoard()[i][j] instanceof Cover) {
 
 					String[] randomImg = { "Cover1", "Cover2", "Cover3" };
 					ImageView img = new ImageView(new Image("resources/" + randomImg[(int) (Math.random() * 3)] + ".png"));
 					img.setFitWidth(100);
 					img.setFitHeight(100);
-					
+
 					btn[i][j] = new Button("HP: " + ((Cover) game.getBoard()[i][j]).getCurrentHP(), img);
 					btn[i][j].setPrefSize(200, 200);
 					btn[i][j].setStyle("-fx-background-color: transparent;");
@@ -683,31 +688,31 @@ public class GameView extends Application {
 					gameGrid.add(btn[i][j], j, i);
 
 				} else if (game.getBoard()[i][j] == null) {
-					
+
 					btn[i][j] = new Button();
 					btn[i][j].setPrefSize(200, 200);
 					btn[i][j].setStyle("-fx-background-color: transparent;");
-					
+
 					gameGrid.add(btn[i][j], j, i);
-					
+
 				}
 			}
 		}
-		
+
 		for (Champion c : game.getFirstPlayer().getTeam()) {
 			ImageView img = new ImageView(new Image("resources/" + c.getName() + ".png"));
-			
+
 			if (game.getCurrentChampion().equals(c))
-			img.setEffect(new Glow(0.9));
-			
+				img.setEffect(new Glow(0.9));
+
 			img.setFitHeight(25);
 			img.setFitWidth(25);
 			img.setPickOnBounds(true);
 			img.setAccessibleHelp(c.getName());
-			
+
 			HBox champStats = new HBox();
 			champStats.setTranslateX(10);
-			
+
 			String effects = "";
 
 			if (c.getAppliedEffects() != null) {
@@ -727,37 +732,37 @@ public class GameView extends Application {
 				champStats.getChildren().addAll(leaderImg, img, stats);
 			} else
 				champStats.getChildren().addAll(img, stats);
-				
-				img.setTranslateY(20);
+
+			img.setTranslateY(20);
 			stats.setTranslateX(10);
-			
+
 			leftPanel.getChildren().add(champStats);
 		}
-		
+
 		for (Champion c : game.getSecondPlayer().getTeam()) {
 			ImageView img = new ImageView(new Image("resources/" + c.getName() + ".png"));
-			
+
 			if (game.getCurrentChampion().equals(c))
-			img.setEffect(new Glow(0.9));
-			
+				img.setEffect(new Glow(0.9));
+
 			img.setFitHeight(25);
 			img.setFitWidth(25);
 			img.setPickOnBounds(true);
 			img.setAccessibleHelp(c.getName());
-			
+
 			HBox champStats = new HBox();
 			champStats.setTranslateX(10);
-			
+
 			String effects = "";
-			
+
 			if (c.getAppliedEffects() != null) {
 				for (Effect e : c.getAppliedEffects()) {
 					effects = e.getName() + " for " + e.getDuration() + " turns";
 				}
 			}
-			
+
 			Label stats = new Label("\nName: " + c.getName() + "\nType: " + getHeroType(c) + "\nAttack Range: " + c.getAttackRange() + "\nAttack Damage: " + c.getAttackDamage() + "\nMax Action Points: " + c.getMaxActionPointsPerTurn() + "\nMana: " + c.getMana() + "\nSpeed: " + c.getSpeed() + "\nCurrent HP: " + c.getCurrentHP() + "\nEffects: " + effects);
-			
+
 			if (game.getSecondPlayer().getLeader().equals(c)) {
 				ImageView leaderImg = new ImageView(new Image("resources/LeaderIcon.png"));
 				String leaderAbilityUsed = (game.isSecondLeaderAbilityUsed()) ? "\nLeader Ability Used." : "\nLeader Ability Available.";
@@ -766,17 +771,17 @@ public class GameView extends Application {
 				leaderImg.setFitWidth(12);
 				champStats.getChildren().addAll(leaderImg, img, stats);
 			} else
-			champStats.getChildren().addAll(img, stats);
-			
+				champStats.getChildren().addAll(img, stats);
+
 			img.setTranslateY(20);
 			stats.setTranslateX(10);
-			
+
 			rightPanel.getChildren().add(champStats);
-			
+
 			game.checkGameOver();
 		}
 	}
-	
+
 	private void clearBoard(GridPane gameGrid) {
 		for (int i = 0; i < gameGrid.getRowCount(); i++) {
 			for (int j = 0; j < gameGrid.getColumnCount(); j++) {
