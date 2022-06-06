@@ -1,12 +1,14 @@
 package view;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import engine.Game;
 import engine.Player;
 import exceptions.ChampionDisarmedException;
 import exceptions.InvalidTargetException;
 import exceptions.NotEnoughResourcesException;
+import exceptions.UnallowedMovementException;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.*;
@@ -14,7 +16,6 @@ import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
@@ -67,7 +68,7 @@ public class GameView extends Application {
 		stage.getIcons().add(new Image("resources/Ironman.png"));
 		stage.show();
 
-		startGame.setOnMouseClicked((MouseEvent e) -> {
+		startGame.setOnMouseClicked(e -> {
 
 			Player p1 = (firstPlayerName.getText().isEmpty()) ? new Player("Player 1") : new Player(firstPlayerName.getText());
 			Player p2 = (secondPlayerName.getText().isEmpty()) ? new Player("Player 2") : new Player(secondPlayerName.getText());
@@ -79,7 +80,7 @@ public class GameView extends Application {
 			}
 		});
 
-		endGame.setOnMouseClicked((MouseEvent e) -> {
+		endGame.setOnMouseClicked(e -> {
 			stage.close();
 		});
 	}
@@ -136,7 +137,7 @@ public class GameView extends Application {
 
 			champButtonsBox.getChildren().add(img);
 
-			img.setOnMouseClicked((MouseEvent e) -> {
+			img.setOnMouseClicked(e -> {
 				if (turn == 1) {
 					p1.getTeam().add(c);
 
@@ -169,7 +170,7 @@ public class GameView extends Application {
 			});
 		}
 
-		chooseLeader.setOnMouseClicked((MouseEvent e) -> {
+		chooseLeader.setOnMouseClicked(e -> {
 			try {
 				leaderSelect(p1, p2, stage);
 			} catch (IOException e1) {
@@ -240,7 +241,7 @@ public class GameView extends Application {
 
 			firstBox.getChildren().add(champStats);
 
-			champStats.setOnMouseClicked((MouseEvent e) -> {
+			champStats.setOnMouseClicked(e -> {
 				p1.setLeader(c);
 
 				firstBox.getChildren().add(new Label("\n\nYou have chosen " + c.getName() + " as your leader!"));
@@ -275,7 +276,7 @@ public class GameView extends Application {
 
 			secondBox.getChildren().add(champStats);
 
-			champStats.setOnMouseClicked((MouseEvent e) -> {
+			champStats.setOnMouseClicked(e -> {
 				p2.setLeader(c);
 
 				secondBox.getChildren().add(new Label("\n\nYou have chosen " + c.getName() + " as your leader!"));
@@ -293,7 +294,7 @@ public class GameView extends Application {
 
 		}
 
-		startButton.setOnMouseClicked((MouseEvent e) -> {
+		startButton.setOnMouseClicked(e -> {
 			try {
 				Game game = new Game(p1, p2);
 				gameView(game, stage);
@@ -316,26 +317,39 @@ public class GameView extends Application {
 		attack.setPrefSize(200, 200);
 		attack.setStyle("-fx-background-color: transparent;");
 
+		ImageView moveImg = new ImageView(new Image("resources/Move.png"));
+		moveImg.setFitWidth(150);
+		moveImg.setFitHeight(150);
+
+		Button move = new Button("", moveImg);
+		move.setPrefSize(200, 200);
+		move.setStyle("-fx-background-color: transparent;");
+
+
 		// Button ability1;
 		// Button ability2;
 		// Button ability3;
 
 		ImageView upButton = new ImageView(new Image("resources/Arrow.png"));
+		upButton.setPickOnBounds(true);
 		upButton.setRotate(-90);
 		upButton.setFitHeight(60);
 		upButton.setFitWidth(60);
 
 		ImageView downButton = new ImageView(new Image("resources/Arrow.png"));
+		downButton.setPickOnBounds(true);
 		downButton.setRotate(90);
 		downButton.setFitHeight(60);
 		downButton.setFitWidth(60);
 
 		ImageView rightButton = new ImageView(new Image("resources/Arrow.png"));
+		rightButton.setPickOnBounds(true);
 		rightButton.setRotate(0);
 		rightButton.setFitHeight(60);
 		rightButton.setFitWidth(60);
 
 		ImageView leftButton = new ImageView(new Image("resources/Arrow.png"));
+		leftButton.setPickOnBounds(true);
 		leftButton.setRotate(180);
 		leftButton.setFitHeight(60);
 		leftButton.setFitWidth(60);
@@ -343,23 +357,26 @@ public class GameView extends Application {
 		Pane arrowBox = new Pane();
 		arrowBox.setPrefSize(200, 200);
 		arrowBox.getChildren().addAll(upButton, downButton, rightButton, leftButton);
-		arrowBox.setTranslateX(850);
+		arrowBox.setTranslateX(600);
+		arrowBox.setTranslateY(15);
 
 		upButton.setLayoutX(72);
 		upButton.setLayoutY(-2);
-		
+
 		downButton.setLayoutX(72);
 		downButton.setLayoutY(75);
-		
+
 		rightButton.setLayoutX(158);
 		rightButton.setLayoutY(75);
-		
+
 		leftButton.setLayoutX(-13);
 		leftButton.setLayoutY(75);
 
 		HBox bottomPanel = new HBox();
 		bottomPanel.setPrefSize(100, 200);
-		bottomPanel.getChildren().addAll(attack, arrowBox);
+		bottomPanel.getChildren().addAll(attack, move, arrowBox);
+		attack.setTranslateY(-13);
+		move.setTranslateY(-10);
 		arrowBox.setDisable(true);
 		arrowBox.setVisible(false);
 
@@ -371,15 +388,18 @@ public class GameView extends Application {
 		rightPanel.setPrefSize(200, 350);
 		rightPanel.setAlignment(Pos.TOP_CENTER);
 
-		// HBox topPanel = new HBox();
-		// topPanel.setPrefSize(200, 200);
+		HBox topPanel = new HBox();
+		topPanel.setPrefSize(100, 35);
+		topPanel.setAlignment(Pos.CENTER);
+
+		// topPanel.getChildren().addAll(new Label("Turns: "), new ImageView(new Image("resources/" + game.getCurrentChampion().getName() + ".png", 20, 20, true, true)));
 
 		GridPane gameGrid = new GridPane();
 		gameGrid.setPrefSize(500, 500);
 		gameGrid.gridLinesVisibleProperty().set(true);
 		gameGrid.setBackground(new Background(new BackgroundImage(new Image("resources/Background.jpg"), null, null, null, null)));
 
-		updateBoard(game, gameGrid, leftPanel, rightPanel);
+		updateBoard(game, gameGrid, leftPanel, rightPanel, topPanel);
 
 		attack.setOnMouseClicked(e -> {
 
@@ -387,10 +407,9 @@ public class GameView extends Application {
 			arrowBox.setVisible(true);
 
 			upButton.setOnMouseClicked(e1 -> {
-				Direction d = Direction.UP;
 				try {
-					game.attack(d);
-					updateBoard(game, gameGrid, leftPanel, rightPanel);
+					game.attack(Direction.DOWN);
+					updateBoard(game, gameGrid, leftPanel, rightPanel, topPanel);
 				} catch (ChampionDisarmedException | InvalidTargetException | NotEnoughResourcesException e2) {
 					Alert a = new Alert(AlertType.ERROR, e2.getMessage(), ButtonType.OK);
 					a.showAndWait();
@@ -400,10 +419,9 @@ public class GameView extends Application {
 			});
 
 			downButton.setOnMouseClicked(e1 -> {
-				Direction d = Direction.DOWN;
 				try {
-					game.attack(d);
-					updateBoard(game, gameGrid, leftPanel, rightPanel);
+					game.attack(Direction.UP);
+					updateBoard(game, gameGrid, leftPanel, rightPanel, topPanel);
 				} catch (ChampionDisarmedException | InvalidTargetException | NotEnoughResourcesException e2) {
 					Alert a = new Alert(AlertType.ERROR, e2.getMessage(), ButtonType.OK);
 					a.showAndWait();
@@ -413,10 +431,9 @@ public class GameView extends Application {
 			});
 
 			rightButton.setOnMouseClicked(e1 -> {
-				Direction d = Direction.RIGHT;
 				try {
-					game.attack(d);
-					updateBoard(game, gameGrid, leftPanel, rightPanel);
+					game.attack(Direction.RIGHT);
+					updateBoard(game, gameGrid, leftPanel, rightPanel, topPanel);
 				} catch (ChampionDisarmedException | InvalidTargetException | NotEnoughResourcesException e2) {
 					Alert a = new Alert(AlertType.ERROR, e2.getMessage(), ButtonType.OK);
 					a.showAndWait();
@@ -426,10 +443,9 @@ public class GameView extends Application {
 			});
 
 			leftButton.setOnMouseClicked(e1 -> {
-				Direction d = Direction.LEFT;
 				try {
-					game.attack(d);
-					updateBoard(game, gameGrid, leftPanel, rightPanel);
+					game.attack(Direction.LEFT);
+					updateBoard(game, gameGrid, leftPanel, rightPanel, topPanel);
 				} catch (ChampionDisarmedException | InvalidTargetException | NotEnoughResourcesException e2) {
 					Alert a = new Alert(AlertType.ERROR, e2.getMessage(), ButtonType.OK);
 					a.showAndWait();
@@ -440,11 +456,65 @@ public class GameView extends Application {
 
 		});
 
+		move.setOnMouseClicked(e -> {
+			
+			arrowBox.setDisable(false);
+			arrowBox.setVisible(true);
+
+			upButton.setOnMouseClicked(e1 -> {
+				try {
+					game.move(Direction.DOWN);
+					updateBoard(game, gameGrid, leftPanel, rightPanel, topPanel);
+				} catch (UnallowedMovementException | NotEnoughResourcesException e2) {
+					Alert a = new Alert(AlertType.ERROR, e2.getMessage(), ButtonType.OK);
+					a.showAndWait();
+				}
+				arrowBox.setDisable(true);
+				arrowBox.setVisible(false);
+			});
+
+			downButton.setOnMouseClicked(e1 -> {
+				try {
+					game.move(Direction.UP);
+					updateBoard(game, gameGrid, leftPanel, rightPanel, topPanel);
+				} catch (UnallowedMovementException | NotEnoughResourcesException e2) {
+					Alert a = new Alert(AlertType.ERROR, e2.getMessage(), ButtonType.OK);
+					a.showAndWait();
+				}
+				arrowBox.setDisable(true);
+				arrowBox.setVisible(false);
+			});
+
+			rightButton.setOnMouseClicked(e1 -> {
+				try {
+					game.move(Direction.RIGHT);
+					updateBoard(game, gameGrid, leftPanel, rightPanel, topPanel);
+				} catch (UnallowedMovementException | NotEnoughResourcesException e2) {
+					Alert a = new Alert(AlertType.ERROR, e2.getMessage(), ButtonType.OK);
+					a.showAndWait();
+				}
+				arrowBox.setDisable(true);
+				arrowBox.setVisible(false);
+			});
+
+			leftButton.setOnMouseClicked(e1 -> {
+				try {
+					game.move(Direction.LEFT);
+					updateBoard(game, gameGrid, leftPanel, rightPanel, topPanel);
+				} catch (UnallowedMovementException | NotEnoughResourcesException e2) {
+					Alert a = new Alert(AlertType.ERROR, e2.getMessage(), ButtonType.OK);
+					a.showAndWait();
+				}
+				arrowBox.setDisable(true);
+				arrowBox.setVisible(false);
+			});
+		});
+
 		mainWindow.setRight(rightPanel);
 		mainWindow.setLeft(leftPanel);
 		mainWindow.setBottom(bottomPanel);
 		mainWindow.setCenter(gameGrid);
-		// mainWindow.setTop(topPanel);
+		mainWindow.setTop(topPanel);
 
 		stage.setScene(new Scene(mainWindow, 1280, 720));
 		stage.setTitle("Game");
@@ -456,8 +526,9 @@ public class GameView extends Application {
 		return (c instanceof Hero) ? "Hero" : (c instanceof AntiHero) ? "Anti-Hero" : "Villain";
 	}
 
-	private void updateBoard(Game game, GridPane gameGrid, VBox leftPanel, VBox rightPanel) {
+	private void updateBoard(Game game, GridPane gameGrid, VBox leftPanel, VBox rightPanel, HBox topPanel) {
 		Button[][] btn = new Button[5][5];
+		clearBoard(gameGrid);
 
 		rightPanel.getChildren().clear();
 		rightPanel.getChildren().add(new Label(game.getSecondPlayer().getName()));
@@ -465,8 +536,36 @@ public class GameView extends Application {
 		leftPanel.getChildren().clear();
 		leftPanel.getChildren().add(new Label(game.getFirstPlayer().getName()));
 
-		for (int i = 0; i < game.getBoardheight(); i++) {
-			for (int j = 0; j < game.getBoardwidth(); j++) {
+		topPanel.getChildren().clear();
+
+		Button endTurn = new Button("End Turn");
+		topPanel.getChildren().add(endTurn);
+		endTurn.setTranslateY(-2);
+		endTurn.setTranslateX(-10);
+
+		endTurn.setOnMouseClicked(e -> {
+			game.endTurn();
+			System.out.println(game.getCurrentChampion().getName());
+			updateBoard(game, gameGrid, leftPanel, rightPanel, topPanel);
+		});
+
+		ArrayList<Champion> turns = new ArrayList<Champion>();
+
+		for (int i = game.getTurnOrder().size() - 1; i >= 0; i--) {
+			turns.add(((Champion) game.getTurnOrder().peekMin()));
+			game.getTurnOrder().remove();
+		}
+
+		Label turnsLabel = new Label("Turns: ");
+		topPanel.getChildren().add(turnsLabel);
+
+		for (Champion c : turns) {
+			game.getTurnOrder().insert(c);
+			topPanel.getChildren().add(new ImageView(new Image("resources/" + c.getName() + ".png", 20, 20, true, true)));
+		}
+
+		for (int i = 0; i < Game.getBoardheight(); i++) {
+			for (int j = 0; j < Game.getBoardwidth(); j++) {
 				if (game.getBoard()[i][j] instanceof Champion) {
 
 					Champion c = (Champion) game.getBoard()[i][j];
@@ -474,6 +573,7 @@ public class GameView extends Application {
 
 					img.setFitWidth(100);
 					img.setFitHeight(100);
+					img.setEffect(new Glow(3));
 
 					btn[i][j] = new Button("HP: " + c.getCurrentHP() + "\nAP: " + c.getCurrentActionPoints() + "\nTeam: " + game.getChampionTeam(c), img);
 					btn[i][j].wrapTextProperty().set(true);
@@ -481,7 +581,7 @@ public class GameView extends Application {
 					btn[i][j].setStyle("-fx-background-color: transparent;");
 					btn[i][j].setTextFill(Color.WHITE);
 
-					gameGrid.add(btn[i][j], i, j);
+					gameGrid.add(btn[i][j], j, i);
 
 				} else if (game.getBoard()[i][j] instanceof Cover) {
 
@@ -495,7 +595,7 @@ public class GameView extends Application {
 					btn[i][j].setStyle("-fx-background-color: transparent;");
 					btn[i][j].setTextFill(Color.WHITE);
 
-					gameGrid.add(btn[i][j], i, j);
+					gameGrid.add(btn[i][j], j, i);
 
 				} else if (game.getBoard()[i][j] == null) {
 
@@ -503,7 +603,7 @@ public class GameView extends Application {
 					btn[i][j].setPrefSize(200, 200);
 					btn[i][j].setStyle("-fx-background-color: transparent;");
 
-					gameGrid.add(btn[i][j], i, j);
+					gameGrid.add(btn[i][j], j, i);
 
 				}
 			}
@@ -535,7 +635,8 @@ public class GameView extends Application {
 
 			if (game.getFirstPlayer().getLeader().equals(c)) {
 				ImageView leaderImg = new ImageView(new Image("resources/LeaderIcon.png"));
-
+				String leaderAbilityUsed = (game.isFirstLeaderAbilityUsed()) ? "\nLeader Ability Used." : "\nLeader Ability Available.";
+				stats.setText(leaderAbilityUsed + stats.getText());
 				leaderImg.setFitHeight(12);
 				leaderImg.setFitWidth(12);
 				champStats.getChildren().addAll(leaderImg, img, stats);
@@ -550,8 +651,10 @@ public class GameView extends Application {
 
 		for (Champion c : game.getSecondPlayer().getTeam()) {
 			ImageView img = new ImageView(new Image("resources/" + c.getName() + ".png"));
+
 			if (game.getCurrentChampion().equals(c))
-					img.setEffect(new Glow(0.9));
+				img.setEffect(new Glow(0.9));
+
 			img.setFitHeight(25);
 			img.setFitWidth(25);
 			img.setPickOnBounds(true);
@@ -572,6 +675,8 @@ public class GameView extends Application {
 
 			if (game.getSecondPlayer().getLeader().equals(c)) {
 				ImageView leaderImg = new ImageView(new Image("resources/LeaderIcon.png"));
+				String leaderAbilityUsed = (game.isSecondLeaderAbilityUsed()) ? "\nLeader Ability Used." : "\nLeader Ability Available.";
+				stats.setText(leaderAbilityUsed + stats.getText());
 				leaderImg.setFitHeight(12);
 				leaderImg.setFitWidth(12);
 				champStats.getChildren().addAll(leaderImg, img, stats);
@@ -582,6 +687,16 @@ public class GameView extends Application {
 			stats.setTranslateX(10);
 
 			rightPanel.getChildren().add(champStats);
+
+			game.checkGameOver();
+		}
+	}
+
+	private void clearBoard(GridPane gameGrid) {
+		for (int i = 0; i < gameGrid.getRowCount(); i++) {
+			for (int j = 0; j < gameGrid.getColumnCount(); j++) {
+				gameGrid.getChildren().clear();
+			}
 		}
 	}
 
