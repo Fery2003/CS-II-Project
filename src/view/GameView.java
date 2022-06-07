@@ -8,6 +8,8 @@ import engine.Player;
 import exceptions.AbilityUseException;
 import exceptions.ChampionDisarmedException;
 import exceptions.InvalidTargetException;
+import exceptions.LeaderAbilityAlreadyUsedException;
+import exceptions.LeaderNotCurrentException;
 import exceptions.NotEnoughResourcesException;
 import exceptions.UnallowedMovementException;
 import javafx.application.Application;
@@ -549,7 +551,7 @@ public class GameView extends Application {
 
 		for (Ability a : game.getCurrentChampion().getAbilities()) {
 			String type = (a instanceof CrowdControlAbility) ? "CC/" + ((CrowdControlAbility) a).getEffect().getDuration() + " turns" : (a instanceof HealingAbility) ? "Healing/" + ((HealingAbility) a).getHealAmount() + "HP" : "Damaging/" + ((DamagingAbility) a).getDamageAmount();
-			Label abilityLabel = new Label("Name: " + a.getName() + "\nType: " + type + "\nArea Of Effect: " + a.getCastArea() + "\nCast Range: " + a.getCastRange() + "\nMana Cost: " + a.getManaCost() + "\nAction Cost: " + a.getRequiredActionPoints() + "\nCooldown: " + a.getCurrentCooldown() + "\nBase Cooldown:" + a.getBaseCooldown());
+			Label abilityLabel = new Label("Name: " + a.getName() + "\nType: " + type + "\nArea Of Effect: " + a.getCastArea() + "\nCast Range: " + a.getCastRange() + "\nMana Cost: " + a.getManaCost() + "\nAction Cost: " + a.getRequiredActionPoints() + "\nCooldown: " + a.getCurrentCooldown() + "\nBase Cooldown: " + a.getBaseCooldown());
 			Button b = new Button(abilityLabel.getText());
 			b.setOnMouseClicked(e -> {
 				try {
@@ -626,6 +628,20 @@ public class GameView extends Application {
 			b.setTranslateX(-190);
 			b.setTranslateY(5);
 		}
+
+		Button leaderAbility = new Button("Use Leader Ability");
+		bottomPanel.getChildren().add(leaderAbility);
+		leaderAbility.setTranslateX(-175);
+
+		leaderAbility.setOnAction(e -> {
+			try {
+				game.useLeaderAbility();
+				updateBoard(game, gameGrid, leftPanel, rightPanel, topPanel, bottomPanel, arrowBox, upButton, downButton, leftButton, rightButton);
+			} catch (LeaderAbilityAlreadyUsedException | LeaderNotCurrentException e1) {
+				Alert alert = new Alert(AlertType.ERROR, e1.getMessage(), ButtonType.OK);
+				alert.showAndWait();
+			}
+		});
 
 		endTurn.setOnMouseClicked(e -> {
 			game.endTurn();
@@ -773,6 +789,10 @@ public class GameView extends Application {
 			rightPanel.getChildren().add(champStats);
 
 			game.checkGameOver();
+			if(game.checkGameOver() != null) {
+				Alert alertBox = new Alert(AlertType.INFORMATION, "Player: " + game.checkGameOver().getName() + "is victorious!", ButtonType.OK);
+				alertBox.showAndWait();
+			}
 		}
 	}
 
