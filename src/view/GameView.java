@@ -300,7 +300,7 @@ public class GameView extends Application {
 
 		}
 
-		startButton.setOnMouseClicked(e -> {
+		startButton.setOnAction(e -> {
 			try {
 				Game game = new Game(p1, p2);
 				gameView(game, stage);
@@ -549,14 +549,7 @@ public class GameView extends Application {
 
 		for (Ability a : game.getCurrentChampion().getAbilities()) {
 			String type = (a instanceof CrowdControlAbility) ? "CC/" + ((CrowdControlAbility) a).getEffect().getDuration() + " turns" : (a instanceof HealingAbility) ? "Healing/" + ((HealingAbility) a).getHealAmount() + "HP" : "Damaging/" + ((DamagingAbility) a).getDamageAmount();
-			Label abilityLabel = new Label("Name: " + a.getName() 
-			+ "\nType: " + type 
-			+ "\nArea Of Effect: " + a.getCastArea() 
-			+ "\nCast Range: " + a.getCastRange() 
-			+ "\nMana Cost: " + a.getManaCost() 
-			+ "\nAction Cost: " + a.getRequiredActionPoints() 
-			+ "\nCooldown: " + a.getCurrentCooldown() 
-			+ "\nBase Cooldown:" + a.getBaseCooldown());
+			Label abilityLabel = new Label("Name: " + a.getName() + "\nType: " + type + "\nArea Of Effect: " + a.getCastArea() + "\nCast Range: " + a.getCastRange() + "\nMana Cost: " + a.getManaCost() + "\nAction Cost: " + a.getRequiredActionPoints() + "\nCooldown: " + a.getCurrentCooldown() + "\nBase Cooldown:" + a.getBaseCooldown());
 			Button b = new Button(abilityLabel.getText());
 			b.setOnMouseClicked(e -> {
 				try {
@@ -609,11 +602,11 @@ public class GameView extends Application {
 							arrowBox.setDisable(true);
 							arrowBox.setVisible(false);
 						});
-					} else {
-						for (Node img : gameGrid.getChildren()) {
-							img.setOnMouseClicked(event -> {
+					} else if (a.getCastArea() == AreaOfEffect.SINGLETARGET) {
+						for (Node button : gameGrid.getChildren()) {
+							button.setOnMouseClicked(event -> {
 								try {
-									game.castAbility(a, (int) img.getLayoutX(), (int) img.getLayoutY());
+									game.castAbility(a, GridPane.getRowIndex(button), GridPane.getColumnIndex(button));
 									updateBoard(game, gameGrid, leftPanel, rightPanel, topPanel, bottomPanel, arrowBox, upButton, downButton, leftButton, rightButton);
 								} catch (AbilityUseException | CloneNotSupportedException | NotEnoughResourcesException | InvalidTargetException e2) {
 									Alert alert = new Alert(AlertType.ERROR, e2.getMessage(), ButtonType.OK);
@@ -624,13 +617,14 @@ public class GameView extends Application {
 							});
 						}
 					}
-					updateBoard(game, gameGrid, leftPanel, rightPanel, topPanel, bottomPanel, arrowBox, upButton, downButton, leftButton, rightButton);
 				} catch (AbilityUseException | CloneNotSupportedException | NotEnoughResourcesException e1) {
 					Alert alert = new Alert(AlertType.ERROR, e1.getMessage(), ButtonType.OK);
 					alert.showAndWait();
 				}
 			});
 			bottomPanel.getChildren().add(b);
+			b.setTranslateX(-190);
+			b.setTranslateY(5);
 		}
 
 		endTurn.setOnMouseClicked(e -> {
