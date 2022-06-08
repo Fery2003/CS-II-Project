@@ -136,6 +136,7 @@ public class GameView extends Application {
 		stage.setScene(new Scene(champSelectBorderPane));
 		stage.setTitle("Champion Select");
 		stage.setResizable(true);
+		stage.setMaximized(true);
 		//stage.setFullScreen(true);
 
 		ColorAdjust desaturate = new ColorAdjust();
@@ -232,7 +233,7 @@ public class GameView extends Application {
 
 		Pane p = new Pane(l, firstBox, secondBox, startButton);
 		//stage.setFullScreen(true);
-		
+
 		ColorAdjust desaturate = new ColorAdjust();
 		desaturate.setSaturation(-1);
 
@@ -258,7 +259,7 @@ public class GameView extends Application {
 				p1.setLeader(c);
 
 				firstBox.getChildren().add(new Label("\n\nYou have chosen " + c.getName() + " as your leader!"));
-				
+
 				for (Node n : firstBox.getChildren()) {
 					n.setDisable(true); // disable all buttons
 					n.setEffect(desaturate); // desaturate them
@@ -280,13 +281,13 @@ public class GameView extends Application {
 
 			HBox champStats = new HBox();
 			champStats.setTranslateY(10);
-			
+
 			Label stats = new Label("\nName: " + c.getName() + "\nType: " + getHeroType(c) + "\nAttack Damage: " + c.getAttackDamage() + "\nAbility 1: " + c.getAbilities().get(0).getName() + "\nAbility 2: " + c.getAbilities().get(1).getName() + "\nAbility 3: " + c.getAbilities().get(2).getName());
 
 			champStats.getChildren().addAll(img, stats);
 			img.setTranslateY(10);
 			stats.setTranslateX(10);
-			
+
 			secondBox.getChildren().add(champStats);
 
 			champStats.setOnMouseClicked(e -> {
@@ -306,7 +307,7 @@ public class GameView extends Application {
 			});
 
 		}
-		
+
 		startButton.setOnAction(e -> {
 			try {
 				Game game = new Game(p1, p2);
@@ -315,14 +316,15 @@ public class GameView extends Application {
 				e1.printStackTrace();
 			}
 		});
-		
+
 		BorderPane bp = new BorderPane();
 		bp.setCenter(p);
 		bp.setPadding(new Insets(100, 100, 300, 300));
 		stage.setScene(new Scene(bp));
 		stage.setTitle("Leader Select");
 		stage.setResizable(true);
-		
+		stage.setMaximized(true);
+
 	}
 
 	private void gameView(Game game, Stage stage) {
@@ -359,20 +361,21 @@ public class GameView extends Application {
 		arrowBox.setTranslateX(600);
 		arrowBox.setTranslateY(15);
 
-		upButton.setLayoutX(72);
+		upButton.setLayoutX(162);
 		upButton.setLayoutY(-2);
 
-		downButton.setLayoutX(72);
+		downButton.setLayoutX(162);
 		downButton.setLayoutY(75);
 
-		rightButton.setLayoutX(158);
+		rightButton.setLayoutX(248);
 		rightButton.setLayoutY(75);
 
-		leftButton.setLayoutX(-13);
+		leftButton.setLayoutX(83);
 		leftButton.setLayoutY(75);
 
 		HBox bottomPanel = new HBox();
 		bottomPanel.setPrefSize(100, 200);
+		bottomPanel.setAlignment(Pos.CENTER);
 
 		arrowBox.setDisable(true);
 		arrowBox.setVisible(false);
@@ -404,9 +407,10 @@ public class GameView extends Application {
 		mainWindow.setCenter(gameGrid);
 		mainWindow.setTop(topPanel);
 
-		stage.setScene(new Scene(mainWindow, 1280, 720));
+		// stage.setScene(new Scene(mainWindow, 1280, 720));
+		stage.setScene(new Scene(mainWindow));
 		stage.setTitle("Game");
-		//stage.setFullScreen(true);
+		stage.setFullScreen(true);
 		stage.setResizable(true);
 	}
 
@@ -447,8 +451,8 @@ public class GameView extends Application {
 		move.setStyle("-fx-background-color: transparent;");
 
 		bottomPanel.getChildren().addAll(attack, move, arrowBox);
-		attack.setTranslateY(-15);
-		move.setTranslateY(-10);
+		// attack.setTranslateY(-15);
+		// move.setTranslateY(-10);
 
 		attack.setOnMouseClicked(e -> {
 
@@ -640,15 +644,15 @@ public class GameView extends Application {
 			});
 			bottomPanel.getChildren().add(b);
 			b.setTranslateX(-190);
-			b.setTranslateY(5);
+			// b.setTranslateY(5);
 		}
 
-		ImageView LeaderAbility = new ImageView(new Image("resources/Leader_Icon.png"));
-		Button leaderAbility = new Button("", LeaderAbility);
-		LeaderAbility.setStyle("-fx-background-color: transparent;");
-		leaderAbility.setPrefSize(50.0, 50.0);
-		LeaderAbility.setFitHeight(50.0);
-		LeaderAbility.setFitWidth(50.0);
+		ImageView leaderAbilityImg = new ImageView(new Image("resources/Leader_Icon.png"));
+		Button leaderAbility = new Button("", leaderAbilityImg);
+		leaderAbility.setStyle("-fx-background-color: transparent;");
+		leaderAbility.setPrefSize(150, 150);
+		leaderAbilityImg.setFitHeight(150);
+		leaderAbilityImg.setFitWidth(150);
 
 		bottomPanel.getChildren().add(leaderAbility);
 		leaderAbility.setTranslateX(-175);
