@@ -1,6 +1,5 @@
 package view;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -14,6 +13,7 @@ import exceptions.LeaderNotCurrentException;
 import exceptions.NotEnoughResourcesException;
 import exceptions.UnallowedMovementException;
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.*;
 import javafx.scene.control.*;
@@ -21,8 +21,6 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.stage.Stage;
@@ -97,9 +95,7 @@ public class GameView extends Application {
 	}
 
 	private void ChampSelect(Player p1, Player p2, Stage stage) throws IOException {
-		
 
-		ArrayList<Champion> champList = new ArrayList<Champion>();
 		FlowPane champButtonsBox = new FlowPane();
 		champButtonsBox.setLayoutX(925);
 		champButtonsBox.setLayoutY(100);
@@ -121,7 +117,7 @@ public class GameView extends Application {
 		secondPlayerTeamBox.setLayoutY(101);
 		secondPlayerTeamBox.setAlignment(Pos.CENTER);
 
-		Label whosChoosing = new Label(p1.getName() + " is choosing");
+		Label whosChoosing = new Label(p1.getName() + " is choosing...");
 		whosChoosing.setLayoutX(200);
 		whosChoosing.setLayoutY(30);
 
@@ -133,16 +129,17 @@ public class GameView extends Application {
 		Pane champSelectPane = new Pane(champButtonsBox);
 		champSelectPane.getChildren().addAll(chooseLeader, whosChoosing, firstPlayerTeamBox, secondPlayerTeamBox);
 
-		stage.setScene(new Scene(champSelectPane, 1280, 720));
+		BorderPane champSelectBorderPane = new BorderPane();
+		champSelectBorderPane.setCenter(champSelectPane);
+		champSelectBorderPane.setPadding(new Insets(100, 100, 100, 100));
+
+		stage.setScene(new Scene(champSelectBorderPane));
 		stage.setTitle("Champion Select");
 		stage.setResizable(true);
 		//stage.setFullScreen(true);
 
 		ColorAdjust desaturate = new ColorAdjust();
 		desaturate.setSaturation(-1);
-
-		
-		
 
 		new Game();
 
@@ -152,7 +149,7 @@ public class GameView extends Application {
 			img.setFitWidth(100);
 			img.setPickOnBounds(true);
 			img.setAccessibleHelp(c.getName());
-
+			Tooltip.install(img, new Tooltip("Name: " + c.getName() + "\nType: " + getHeroType(c) + "\nAttack Damage: " + c.getAttackDamage() + "\nAbility 1: " + c.getAbilities().get(0).getName() + "\nAbility 2: " + c.getAbilities().get(1).getName() + "\nAbility 3: " + c.getAbilities().get(2).getName()));
 			champButtonsBox.getChildren().add(img);
 
 			img.setOnMouseClicked(e -> {
@@ -234,11 +231,8 @@ public class GameView extends Application {
 		startButton.setVisible(false);
 
 		Pane p = new Pane(l, firstBox, secondBox, startButton);
-		stage.setScene(new Scene(p, 800, 600));
-		stage.setTitle("Leader Select");
-		stage.setResizable(true);
 		//stage.setFullScreen(true);
-
+		
 		ColorAdjust desaturate = new ColorAdjust();
 		desaturate.setSaturation(-1);
 
@@ -264,7 +258,7 @@ public class GameView extends Application {
 				p1.setLeader(c);
 
 				firstBox.getChildren().add(new Label("\n\nYou have chosen " + c.getName() + " as your leader!"));
-
+				
 				for (Node n : firstBox.getChildren()) {
 					n.setDisable(true); // disable all buttons
 					n.setEffect(desaturate); // desaturate them
@@ -286,13 +280,13 @@ public class GameView extends Application {
 
 			HBox champStats = new HBox();
 			champStats.setTranslateY(10);
-
+			
 			Label stats = new Label("\nName: " + c.getName() + "\nType: " + getHeroType(c) + "\nAttack Damage: " + c.getAttackDamage() + "\nAbility 1: " + c.getAbilities().get(0).getName() + "\nAbility 2: " + c.getAbilities().get(1).getName() + "\nAbility 3: " + c.getAbilities().get(2).getName());
 
 			champStats.getChildren().addAll(img, stats);
 			img.setTranslateY(10);
 			stats.setTranslateX(10);
-
+			
 			secondBox.getChildren().add(champStats);
 
 			champStats.setOnMouseClicked(e -> {
@@ -312,7 +306,7 @@ public class GameView extends Application {
 			});
 
 		}
-
+		
 		startButton.setOnAction(e -> {
 			try {
 				Game game = new Game(p1, p2);
@@ -321,7 +315,14 @@ public class GameView extends Application {
 				e1.printStackTrace();
 			}
 		});
-
+		
+		BorderPane bp = new BorderPane();
+		bp.setCenter(p);
+		bp.setPadding(new Insets(100, 100, 300, 300));
+		stage.setScene(new Scene(bp));
+		stage.setTitle("Leader Select");
+		stage.setResizable(true);
+		
 	}
 
 	private void gameView(Game game, Stage stage) {
@@ -643,7 +644,7 @@ public class GameView extends Application {
 		}
 
 		ImageView LeaderAbility = new ImageView(new Image("resources/Leader_Icon.png"));
-		Button leaderAbility = new Button("" , LeaderAbility);
+		Button leaderAbility = new Button("", LeaderAbility);
 		LeaderAbility.setStyle("-fx-background-color: transparent;");
 		leaderAbility.setPrefSize(50.0, 50.0);
 		LeaderAbility.setFitHeight(50.0);
@@ -808,7 +809,7 @@ public class GameView extends Application {
 			rightPanel.getChildren().add(champStats);
 
 			game.checkGameOver();
-			if(game.checkGameOver() != null) {
+			if (game.checkGameOver() != null) {
 				Alert alertBox = new Alert(AlertType.INFORMATION, "Player: " + game.checkGameOver().getName() + "is victorious!", ButtonType.OK);
 				alertBox.showAndWait();
 			}
