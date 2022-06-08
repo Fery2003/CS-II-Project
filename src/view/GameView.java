@@ -136,7 +136,7 @@ public class GameView extends Application {
 		stage.setScene(new Scene(champSelectPane, 1280, 720));
 		stage.setTitle("Champion Select");
 		stage.setResizable(true);
-		stage.setFullScreen(true);
+		//stage.setFullScreen(true);
 
 		ColorAdjust desaturate = new ColorAdjust();
 		desaturate.setSaturation(-1);
@@ -237,7 +237,7 @@ public class GameView extends Application {
 		stage.setScene(new Scene(p, 800, 600));
 		stage.setTitle("Leader Select");
 		stage.setResizable(true);
-		stage.setFullScreen(true);
+		//stage.setFullScreen(true);
 
 		ColorAdjust desaturate = new ColorAdjust();
 		desaturate.setSaturation(-1);
@@ -405,7 +405,7 @@ public class GameView extends Application {
 
 		stage.setScene(new Scene(mainWindow, 1280, 720));
 		stage.setTitle("Game");
-		stage.setFullScreen(true);
+		//stage.setFullScreen(true);
 		stage.setResizable(true);
 	}
 
@@ -645,9 +645,9 @@ public class GameView extends Application {
 		ImageView LeaderAbility = new ImageView(new Image("resources/Leader_Icon.png"));
 		Button leaderAbility = new Button("" , LeaderAbility);
 		LeaderAbility.setStyle("-fx-background-color: transparent;");
-		leaderAbility.setPrefSize(200.0, 200.0);
-		LeaderAbility.setFitHeight(200.0);
-		LeaderAbility.setFitWidth(200.0);
+		leaderAbility.setPrefSize(50.0, 50.0);
+		LeaderAbility.setFitHeight(50.0);
+		LeaderAbility.setFitWidth(50.0);
 
 		bottomPanel.getChildren().add(leaderAbility);
 		leaderAbility.setTranslateX(-175);
