@@ -1,5 +1,6 @@
 package view;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -20,6 +21,8 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.stage.Stage;
@@ -73,7 +76,7 @@ public class GameView extends Application {
 		stage.setResizable(false);
 		stage.setTitle("Game");
 		stage.setScene(new Scene(mainMenu, 600, 400));
-		stage.getIcons().add(new Image("resources/Ironman.png"));
+		stage.getIcons().add(new Image("resources/Marvel_icon.png"));
 		stage.show();
 
 		startGame.setOnMouseClicked(e -> {
@@ -94,7 +97,9 @@ public class GameView extends Application {
 	}
 
 	private void ChampSelect(Player p1, Player p2, Stage stage) throws IOException {
+		
 
+		ArrayList<Champion> champList = new ArrayList<Champion>();
 		FlowPane champButtonsBox = new FlowPane();
 		champButtonsBox.setLayoutX(925);
 		champButtonsBox.setLayoutY(100);
@@ -130,9 +135,14 @@ public class GameView extends Application {
 
 		stage.setScene(new Scene(champSelectPane, 1280, 720));
 		stage.setTitle("Champion Select");
+		stage.setResizable(true);
+		stage.setFullScreen(true);
 
 		ColorAdjust desaturate = new ColorAdjust();
 		desaturate.setSaturation(-1);
+
+		
+		
 
 		new Game();
 
@@ -225,8 +235,9 @@ public class GameView extends Application {
 
 		Pane p = new Pane(l, firstBox, secondBox, startButton);
 		stage.setScene(new Scene(p, 800, 600));
-		stage.setResizable(false);
 		stage.setTitle("Leader Select");
+		stage.setResizable(true);
+		stage.setFullScreen(true);
 
 		ColorAdjust desaturate = new ColorAdjust();
 		desaturate.setSaturation(-1);
@@ -382,7 +393,7 @@ public class GameView extends Application {
 		GridPane gameGrid = new GridPane();
 		gameGrid.setPrefSize(500, 500);
 		gameGrid.gridLinesVisibleProperty().set(true);
-		gameGrid.setBackground(new Background(new BackgroundImage(new Image("resources/Background.jpg"), null, null, null, null)));
+		gameGrid.setBackground(new Background(new BackgroundImage(new Image("resources/Background2.jpg"), null, null, null, null)));
 
 		updateBoard(game, gameGrid, leftPanel, rightPanel, topPanel, bottomPanel, arrowBox, upButton, downButton, leftButton, rightButton);
 
@@ -394,6 +405,8 @@ public class GameView extends Application {
 
 		stage.setScene(new Scene(mainWindow, 1280, 720));
 		stage.setTitle("Game");
+		stage.setFullScreen(true);
+		stage.setResizable(true);
 	}
 
 	//#region HELPER METHODS
@@ -629,7 +642,13 @@ public class GameView extends Application {
 			b.setTranslateY(5);
 		}
 
-		Button leaderAbility = new Button("Use Leader Ability");
+		ImageView LeaderAbility = new ImageView(new Image("resources/Leader_Icon.png"));
+		Button leaderAbility = new Button("" , LeaderAbility);
+		LeaderAbility.setStyle("-fx-background-color: transparent;");
+		leaderAbility.setPrefSize(200.0, 200.0);
+		LeaderAbility.setFitHeight(200.0);
+		LeaderAbility.setFitWidth(200.0);
+
 		bottomPanel.getChildren().add(leaderAbility);
 		leaderAbility.setTranslateX(-175);
 
@@ -685,7 +704,7 @@ public class GameView extends Application {
 
 				} else if (game.getBoard()[i][j] instanceof Cover) {
 
-					String[] randomImg = { "Cover1", "Cover2", "Cover3" };
+					String[] randomImg = { "cover", "cover", "cover" };
 					ImageView img = new ImageView(new Image("resources/" + randomImg[(int) (Math.random() * 3)] + ".png"));
 					img.setFitWidth(100);
 					img.setFitHeight(100);
