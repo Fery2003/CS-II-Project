@@ -11,6 +11,14 @@
             "mainClass": "view.GameView",
             "projectName": "CS-II-Project",
             "vmArgs": "--module-path C:/JavaFX/lib --add-modules javafx.controls,javafx.fxml,javafx.graphics,javafx.media,javafx.swing,javafx.web"
+        },
+        {
+            "type": "java",
+            "name": "Temp",
+            "request": "launch",
+            "mainClass": "view.Quiz",
+            "projectName": "CS-II-Project",
+            "vmArgs": "--module-path C:/JavaFX/lib --add-modules javafx.controls,javafx.fxml,javafx.graphics,javafx.media,javafx.swing,javafx.web"
         }
     ]
 }
