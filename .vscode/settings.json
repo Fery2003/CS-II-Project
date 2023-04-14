@@ -8,5 +8,6 @@
         "include": [
             "lib/**/*.jar"
         ]
-    }
+    },
+    "FSharp.suggestGitignore": false
 }
